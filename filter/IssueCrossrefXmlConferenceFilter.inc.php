@@ -15,7 +15,7 @@
 
 import('lib.pkp.plugins.importexport.native.filter.NativeExportFilter');
 
-class IssueCrossrefXmlFilter extends NativeExportFilter {
+class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	/**
 	 * Constructor
 	 * @param $filterGroup FilterGroup
