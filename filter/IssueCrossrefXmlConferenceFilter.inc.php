@@ -80,10 +80,10 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 */
 	function createRootNode($doc) {
 		$deployment = $this->getDeployment();
-		$rootNode = $doc->createElementNS($deployment->getNamespace(), $deployment->getRootElementName());
-		$rootNode->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', $deployment->getXmlSchemaInstance());
-		$rootNode->setAttribute('version', $deployment->getXmlSchemaVersion());
-		$rootNode->setAttribute('xsi:schemaLocation', $deployment->getNamespace() . ' ' . $deployment->getSchemaFilename());
+		$rootNode = $doc->createElementNS($deployment->getNamespace(), "doi_batch");
+		// $rootNode->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', $deployment->getXmlSchemaInstance());
+		// $rootNode->setAttribute('version', $deployment->getXmlSchemaVersion());
+		// $rootNode->setAttribute('xsi:schemaLocation', $deployment->getNamespace() . ' ' . $deployment->getSchemaFilename());
 		return $rootNode;
 	}
 
