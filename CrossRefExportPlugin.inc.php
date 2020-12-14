@@ -176,7 +176,7 @@ class CrossRefExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc PubObjectsExportPlugin::getExportDeploymentClassName()
 	 */
 	function getExportDeploymentClassName() {
-		return 'CrossrefExportDeployment';
+		return 'CrossrefExportConferenceDeployment';
 	}
 
 	/**

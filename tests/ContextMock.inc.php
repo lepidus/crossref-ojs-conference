@@ -17,8 +17,8 @@
  // should be requested or required during submission
  define('METADATA_DISABLE', 0);
  define('METADATA_ENABLE', 'enable');
- define('METADATA_REQUEST', 'request');
- define('METADATA_REQUIRE', 'require');
+//  define('METADATA_REQUEST', 'request');
+//  define('METADATA_REQUIRE', 'require');
 
 class ContextMock extends DataObject {
 

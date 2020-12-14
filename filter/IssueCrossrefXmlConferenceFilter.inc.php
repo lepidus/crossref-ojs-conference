@@ -32,7 +32,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @copydoc PersistableFilter::getClassName()
 	 */
 	function getClassName() {
-		return 'plugins.importexport.crossref.filter.IssueCrossrefXmlFilter';
+		return 'plugins.importexport.crossref.filter.IssueCrossrefConferenceXmlFilter';
 	}
 
 	//
@@ -78,12 +78,12 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $doc DOMDocument
 	 * @return DOMElement
 	 */
+	
 	function createRootNode($doc) {
-		$deployment = $this->getDeployment();
-		$rootNode = $doc->createElementNS($deployment->getNamespace(), "doi_batch");
-		// $rootNode->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', $deployment->getXmlSchemaInstance());
-		// $rootNode->setAttribute('version', $deployment->getXmlSchemaVersion());
-		// $rootNode->setAttribute('xsi:schemaLocation', $deployment->getNamespace() . ' ' . $deployment->getSchemaFilename());
+		$rootNode = $doc->createElementNS('', CrossrefExportConferenceDeployment::getRootElementName());
+		//$rootNode->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', CrossrefExportConferenceDeployment::getXmlSchemaInstance());
+		//$rootNode->setAttribute('version', CrossrefExportConferenceDeployment::getXmlSchemaVersion());
+		//$rootNode->setAttribute('xsi:schemaLocation', CrossrefExportConferenceDeployment::getNamespace() . ' ' . CrossrefExportConferenceDeployment::getSchemaFilename());
 		return $rootNode;
 	}
 

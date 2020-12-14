@@ -1,3 +1,215 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<doi_batch></doi_batch>
+<doi_batch version="4.3.3" xsi:schemaLocation="http://www.crossref.org/schema/4.3.3 http://www.crossref.org/schema/deposit/crossref4.3.3.xsd">
+    <head>
+    <doi_batch_id>proceeding_1606846180</doi_batch_id>
+    <timestamp>1606846180</timestamp>
+    <depositor>
+    <name>Lepidus Tecnologia</name>
+    <email_address>doi@lepidus.com.br</email_address>
+    </depositor>
+    <registrant>SBMAC</registrant>
+    </head>
+    <body>
+    <conference>
+    <event_metadata>
+    <conference_name>
+    CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional
+    </conference_name>
+    </event_metadata>
+    <proceedings_series_metadata>
+    <series_metadata>
+    <titles>
+    <title>
+    Proceeding Series of the Brazilian Society of Computational and Applied Mathematics
+    </title>
+    </titles>
+    <issn media_type="electronic">2359-0793</issn>
+    </series_metadata>
+    <publisher>
+    <publisher_name>SBMAC</publisher_name>
+    </publisher>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    </proceedings_series_metadata>
+    <conference_paper publication_type="full_text" metadata_distribution_opts="any">
+    <contributors>
+    <person_name contributor_role="author" sequence="first">
+    <given_name>Amanda</given_name>
+    <surname>Aléssio</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Cristiane</given_name>
+    <surname>Nespoli</surname>
+    </person_name>
+    </contributors>
+    <titles>
+    <title>
+    A importância do Cálculo Diferencial e Integral para a formação do professor de Matemática da Educação Básica
+    </title>
+    </titles>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    <doi_data>
+    <doi>10.5540/03.2020.007.01.0339</doi>
+    <resource>
+    https://proceedings.sbmac.org.br/sbmac/article/view/2680
+    </resource>
+    <collection property="text-mining">
+    <item>
+    <resource mime_type="application/pdf">
+    https://proceedings.sbmac.org.br/sbmac/article/viewFile/2680/2700
+    </resource>
+    </item>
+    </collection>
+    </doi_data>
+    </conference_paper>
+    </conference>
+    <conference>
+    <event_metadata>
+    <conference_name>
+    CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional
+    </conference_name>
+    </event_metadata>
+    <proceedings_series_metadata>
+    <series_metadata>
+    <titles>
+    <title>
+    Proceeding Series of the Brazilian Society of Computational and Applied Mathematics
+    </title>
+    </titles>
+    <issn media_type="electronic">2359-0793</issn>
+    </series_metadata>
+    <publisher>
+    <publisher_name>SBMAC</publisher_name>
+    </publisher>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    </proceedings_series_metadata>
+    <conference_paper publication_type="full_text" metadata_distribution_opts="any">
+    <contributors>
+    <person_name contributor_role="author" sequence="first">
+    <given_name>Erik David Perozini de</given_name>
+    <surname>Oliveira</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Márcio Fabiano da</given_name>
+    <surname>Silva</surname>
+    </person_name>
+    </contributors>
+    <titles>
+    <title>
+    Uma Prova Analı́tica para a Determinação do Trapézio Isoperimétrico
+    </title>
+    </titles>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    <doi_data>
+    <doi>10.5540/03.2020.007.01.0462</doi>
+    <resource>
+    https://proceedings.sbmac.org.br/sbmac/article/view/2681
+    </resource>
+    <collection property="text-mining">
+    <item>
+    <resource mime_type="application/pdf">
+    https://proceedings.sbmac.org.br/sbmac/article/viewFile/2681/2701
+    </resource>
+    </item>
+    </collection>
+    </doi_data>
+    </conference_paper>
+    </conference>
+    <conference>
+    <event_metadata>
+    <conference_name>
+    CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional
+    </conference_name>
+    </event_metadata>
+    <proceedings_series_metadata>
+    <series_metadata>
+    <titles>
+    <title>
+    Proceeding Series of the Brazilian Society of Computational and Applied Mathematics
+    </title>
+    </titles>
+    <issn media_type="electronic">2359-0793</issn>
+    </series_metadata>
+    <publisher>
+    <publisher_name>SBMAC</publisher_name>
+    </publisher>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    </proceedings_series_metadata>
+    <conference_paper publication_type="full_text" metadata_distribution_opts="any">
+    <contributors>
+    <person_name contributor_role="author" sequence="first">
+    <given_name>Wanessa</given_name>
+    <surname>Da Silva</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Nandamudi L.</given_name>
+    <surname>Vijaykumar</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Sandra A.</given_name>
+    <surname>Sandri</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Haroldo F. de Campos</given_name>
+    <surname>Velho</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Zoran</given_name>
+    <surname>Sjanic</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Elcio H.</given_name>
+    <surname>Shiguemori</surname>
+    </person_name>
+    <person_name contributor_role="author" sequence="additional">
+    <given_name>Osamu</given_name>
+    <surname>Saotome</surname>
+    </person_name>
+    </contributors>
+    <titles>
+    <title>
+    Image Edge Extraction by Artificial Intelligence Schemes for UAV Autonomous Navigation
+    </title>
+    </titles>
+    <publication_date media_type="online">
+    <month>02</month>
+    <day>20</day>
+    <year>2020</year>
+    </publication_date>
+    <doi_data>
+    <doi>10.5540/03.2020.007.01.0391</doi>
+    <resource>
+    https://proceedings.sbmac.org.br/sbmac/article/view/2685
+    </resource>
+    <collection property="text-mining">
+    <item>
+    <resource mime_type="application/pdf">
+    https://proceedings.sbmac.org.br/sbmac/article/viewFile/2685/2705
+    </resource>
+    </item>
+    </collection>
+    </doi_data>
+    </conference_paper>
+    </conference>
+    <conference>
+</doi_batch>
