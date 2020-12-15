@@ -9,36 +9,6 @@ import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployme
 echo("");
 echo("CROSSREFCONFERENCE\n");
 
-/*
-$expectedDoiBatch = new DOMDocument('1.0', 'utf-8');
-$expectedDoiBatch->loadXML(getTestData());
-print_r($expectedDoiBatch->getElementsByTagName("doi_batch")[0]);
-
-echo("\n");
-*/
-
-/*
-$filterGroup = new FilterGroup();
-$context = new ContextMock();
-$user = new User();
-$deployment = new NativeImportExportDeployment($context,$user);
-
-
-$doc = new DOMDocument('1.0', 'utf-8');
-$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
-$crossRef->setDeployment($deployment);
-$doiBatch = $crossRef->createRootNode($doc);
-$doc->appendChild($doiBatch);
-
-print_r($doc->getElementsByTagName("doi_batch")[0]);
-
-
-function getTestData() {
-	$sampleFile = '../crossrefConference/tests/conference-test.xml';
-	return file_get_contents($sampleFile);
-}
-
-*/
 class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 
@@ -67,7 +37,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 	}
 
 	private function getTestData() {
-		$sampleFile = '../crossrefConference/tests/conference-test.xml';
+		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
 		return file_get_contents($sampleFile);
 	}
 

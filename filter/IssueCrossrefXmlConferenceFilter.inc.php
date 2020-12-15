@@ -80,10 +80,10 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 */
 	
 	function createRootNode($doc) {
-		$rootNode = $doc->createElementNS('', CrossrefExportConferenceDeployment::getRootElementName());
-		//$rootNode->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', CrossrefExportConferenceDeployment::getXmlSchemaInstance());
-		//$rootNode->setAttribute('version', CrossrefExportConferenceDeployment::getXmlSchemaVersion());
-		//$rootNode->setAttribute('xsi:schemaLocation', CrossrefExportConferenceDeployment::getNamespace() . ' ' . CrossrefExportConferenceDeployment::getSchemaFilename());
+		$rootNode = $doc->createElementNS(CrossrefExportConferenceDeployment::getNamespace(), CrossrefExportConferenceDeployment::getRootElementName());
+		$rootNode->setAttribute('xmlns:xsi', CrossrefExportConferenceDeployment::getXmlSchemaInstance());
+		$rootNode->setAttribute('version', CrossrefExportConferenceDeployment::getXmlSchemaVersion());
+		$rootNode->setAttribute('xsi:schemaLocation', CrossrefExportConferenceDeployment::getNamespace() . ' ' . CrossrefExportConferenceDeployment::getSchemaFilename());
 		return $rootNode;
 	}
 

@@ -21,7 +21,7 @@
 define('CROSSREF_XMLNS' , 'http://www.crossref.org/schema/4.4.2');
 define('CROSSREF_XMLNS_XSI' , 'http://www.w3.org/2001/XMLSchema-instance');
 define('CROSSREF_XSI_SCHEMAVERSION' , '4.4.2');
-define('CROSSREF_XSI_SCHEMALOCATION' , 'https://www.crossref.org/schemas/crossref4.4.2.xsd');
+define('CROSSREF_XSI_SCHEMALOCATION' , 'http://www.crossref.org/schema/crossref4.4.2.xsd');
 
 
 class CrossrefExportConferenceDeployment {
@@ -96,7 +96,7 @@ class CrossrefExportConferenceDeployment {
 	 * @return string
 	 */
 	function getSchemaFilename() {
-		return $this->getXmlSchemaLocation();
+		return CROSSREF_XSI_SCHEMALOCATION;
 	}
 
 	//
