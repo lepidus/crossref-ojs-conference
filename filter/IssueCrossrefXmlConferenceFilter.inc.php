@@ -96,8 +96,9 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 		$plugin = $deployment->getPlugin();
-		$headNode = $doc->createElementNS($deployment->getNamespace(), 'head');
-		$headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'doi_batch_id', htmlspecialchars($context->getData('initials', $context->getPrimaryLocale()) . '_' . time(), ENT_COMPAT, 'UTF-8')));
+		$headNode = $doc->createElement('head');
+		$headNode->appendChild($node = $doc->createElement('doi_batch_id', htmlspecialchars($context->getData('initials', $context->getPrimaryLocale()) . '_' . time(), ENT_COMPAT, 'UTF-8')));
+		/*
 		$headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'timestamp', time()));
 		$depositorNode = $doc->createElementNS($deployment->getNamespace(), 'depositor');
 		$depositorName = $plugin->getSetting($context->getId(), 'depositorName');
@@ -113,6 +114,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$headNode->appendChild($depositorNode);
 		$publisherInstitution = $context->getData('publisherInstitution');
 		$headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'registrant', htmlspecialchars($publisherInstitution, ENT_COMPAT, 'UTF-8')));
+		*/
 		return $headNode;
 	}
 
