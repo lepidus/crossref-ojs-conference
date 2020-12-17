@@ -11,7 +11,7 @@ echo("CROSSREFCONFERENCE\n");
 
 $expectedDoiBatch = new DOMDocument('1.0', 'utf-8');
 $expectedDoiBatch->loadXML(getTestData());
-
+//print_r(getTestData());
 $filterGroup = new FilterGroup();
 
 $context = new ContextMock();
@@ -27,7 +27,10 @@ $doiBatch = $crossRef->createRootNode($doc);
 $doiBatch = $doc->appendChild($doiBatch);
 $head = $crossRef->createHeadNode($doc);
 $head = $doiBatch->appendChild($head);
-echo $doc->saveXML() . "\n";
+//echo $doc->saveXML() . "\n";
+$elements = $expectedDoiBatch->getElementsByTagName('doi_batch')->item(0);
+$expected = $elements->childNodes[1];
+print_r($expected);
 
 // $doiBatch->appendChild($crossRef->createHeadNode($doc));
 
@@ -80,19 +83,23 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$deployment = new CrossrefExportConferenceDeployment($context,$user);
 
 		$doc = $this->doc; 
-		$doc->formatOutput = true;
+		//$doc->formatOutput = true;
 		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$head = $crossRef->createHeadNode($doc);
 		$head = $doc->appendChild($head);
 		// echo $doc->saveXML() . "\n";
+
+		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
+		$expected = $elements->childNodes[1];
 		
 		self::assertEquals(
-			$this->expectedFile->getElementsByTagName("doi_batch")->item(0)->textContent,
+			$expected,
 			$this->doc->getElementsByTagName("head")->item(0),
 			"actual xml is equal to expected xml"
 		);
+		
 	}
 	
 
