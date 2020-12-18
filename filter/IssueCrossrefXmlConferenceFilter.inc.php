@@ -98,23 +98,22 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$plugin = $deployment->getPlugin();
 		$headNode = $doc->createElement('head');
 		$headNode->appendChild($node = $doc->createElement('doi_batch_id', htmlspecialchars($context->getData('initials', $context->getPrimaryLocale()) . '_' . time(), ENT_COMPAT, 'UTF-8')));
-		/*
-		$headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'timestamp', time()));
-		$depositorNode = $doc->createElementNS($deployment->getNamespace(), 'depositor');
+		$headNode->appendChild($node = $doc->createElement('timestamp', time()));
+		$depositorNode = $doc->createElement('depositor');
 		$depositorName = $plugin->getSetting($context->getId(), 'depositorName');
 		if (empty($depositorName)) {
 			$depositorName = $context->getData('supportName');
+			$depositorEmail = $plugin->getSetting($context->getId(), 'depositorEmail');
 		}
-		$depositorEmail = $plugin->getSetting($context->getId(), 'depositorEmail');
+		
 		if (empty($depositorEmail)) {
 			$depositorEmail = $context->getData('supportEmail');
 		}
-		$depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'depositor_name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
-		$depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
+		$depositorNode->appendChild($node = $doc->createElement('name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
+		$depositorNode->appendChild($node = $doc->createElement('email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
 		$headNode->appendChild($depositorNode);
 		$publisherInstitution = $context->getData('publisherInstitution');
-		$headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'registrant', htmlspecialchars($publisherInstitution, ENT_COMPAT, 'UTF-8')));
-		*/
+		$headNode->appendChild($node = $doc->createElement('registrant', htmlspecialchars($publisherInstitution, ENT_COMPAT, 'UTF-8')));
 		return $headNode;
 	}
 
