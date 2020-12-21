@@ -7,6 +7,7 @@ import('plugins.importexport.native.NativeImportExportDeployment');
 import('plugins.importexport.crossrefConference.tests.ContextMock');
 import('plugins.importexport.crossrefConference.tests.PluginMock');
 import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployment');
+import("classes.submission.Submission");
 echo("");
 echo("CROSSREFCONFERENCE\n");
 
@@ -73,16 +74,17 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
         $this->doc->appendChild($doiBatch);
 		
 		$elements = $this->expectedFile->documentElement;
-		$element = $elements->getElementsByTagName("head")->item(0);
-		$expected = $elements->removeChild($element);
+		$elementHead = $elements->getElementsByTagName("head")->item(0);
+		$removeNode = $elements->removeChild($elementHead);
+		$elementBody = $elements->getElementsByTagName("body")->item(0);
+		$removeNode = $elements->removeChild($elementBody);
 
-		$element = $this->expectedFile->getElementsByTagName("doi_batch")->item(0);
-		$expected = $this->expectedFile->removeChild($element);
+		$doiBatchNode = $this->expectedFile->getElementsByTagName("doi_batch")->item(0);
 
 		$actual = $this->doc->getElementsByTagName("doi_batch")->item(0);
 
 		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expected),
+			$this->expectedFile->saveXML($doiBatchNode),
 			$this->doc->saveXML($actual),
 			"actual xml is equal to expected xml"
 		);
@@ -120,6 +122,39 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 	}
 	
+	public function testCreateConferenceNode(){
+
+		$filterGroup = new FilterGroup();
+
+		$context = new ContextMock();
+		$user = new User();
+		$plugin = new PluginMock();
+		$deployment = new CrossrefExportConferenceDeployment($context,$user);
+		$deployment->setPlugin($plugin);
+
+		$doc = $this->doc; 
+		$doc->formatOutput = true;
+		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef->setDeployment($deployment);
+
+		$submission = new Submission();
+		$bodyNode = $doc->createElement('body');
+		$conference = $crossRef->createConferenceNode($doc, $submission);
+		$bodyNode->appendChild($conference);
+		$doc->appendChild($bodyNode);
+
+		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
+		$expected = $elements->childNodes[1];
+		
+		$actual = $this->doc->getElementsByTagName("body")->item(0);
+
+		self::assertXmlStringEqualsXmlString(
+			$this->expectedFile->saveXML($expected),
+			$this->doc->saveXML($actual),
+			"actual xml is equal to expected xml"
+		);
+		
+	}
 
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';

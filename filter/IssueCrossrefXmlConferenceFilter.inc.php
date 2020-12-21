@@ -118,17 +118,16 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	}
 
 	/**
-	 * Create and return the journal node 'journal'.
+	 * Create and return the conference node 'conference'.
 	 * @param $doc DOMDocument
 	 * @param $pubObject object Issue or Submission
 	 * @return DOMElement
 	 */
-	function createJournalNode($doc, $pubObject) {
-		$deployment = $this->getDeployment();
-		$journalNode = $doc->createElementNS($deployment->getNamespace(), 'journal');
-		$journalNode->appendChild($this->createJournalMetadataNode($doc));
-		$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
-		return $journalNode;
+	function createConferenceNode($doc, $pubObject) {
+		$conferenceNode = $doc->createElement('conference');
+		//$journalNode->appendChild($this->createJournalMetadataNode($doc));
+		//$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
+		return $conferenceNode;
 	}
 
 	/**
