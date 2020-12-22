@@ -126,12 +126,13 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	function createConferenceNode($doc, $pubObject) {
 		$conferenceNode = $doc->createElement('conference');
 		$conferenceNode->appendChild($this->createEventMetadataNode($doc));
+		$conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc));
 		//$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
 		return $conferenceNode;
 	}
 
 	/**
-	 * Create and return the journal metadata node 'journal_metadata'.
+	 * Create and return the event metadata node 'event_metadata'.
 	 * @param $doc DOMDocument
 	 * @return DOMElement
 	 */
@@ -166,6 +167,47 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		*/
 		return $eventMetadataNode;
 	}
+
+	/**
+	 * Create and return the proceedings series metadata node 'proceedings_series_metadata'.
+	 * @param $doc DOMDocument
+	 * @param $issue Issue
+	 * @return DOMElement
+	 */
+	
+	function createProceedingsSeriesMetadataNode($doc) {
+		$deployment = $this->getDeployment();
+		$context = $deployment->getContext();
+
+		$proceedingsSeriesMetadata = $doc->createElement('proceedings_series_metadata');
+		$seriesMetadata = $doc->createElement('series_metadata');
+		$seriesMetadata->appendChild($node = $doc->createElement('proceedings_title'));
+		$seriesMetadata->appendChild($node = $doc->createElement('volume'));
+		$seriesMetadata->appendChild($node = $doc->createElement('proceedings_subject'));
+		$seriesMetadata->appendChild($node = $doc->createElement('publisher'));
+		$seriesMetadata->appendChild($node = $doc->createElement('publication_date'));
+		$proceedingsSeriesMetadata->appendChild($seriesMetadata);
+		/*
+		if ($issue->getDatePublished()) {
+			$journalIssueNode->appendChild($this->createPublicationDateNode($doc, $issue->getDatePublished()));
+		}
+		if ($issue->getVolume() && $issue->getShowVolume()){
+			$journalVolumeNode = $doc->createElementNS($deployment->getNamespace(), 'journal_volume');
+			$journalVolumeNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'volume', htmlspecialchars($issue->getVolume(), ENT_COMPAT, 'UTF-8')));
+			$journalIssueNode->appendChild($journalVolumeNode);
+		}
+		if ($issue->getNumber() && $issue->getShowNumber()) {
+			$journalIssueNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issue', htmlspecialchars($issue->getNumber(), ENT_COMPAT, 'UTF-8')));
+		}
+		if ($issue->getDatePublished() && $issue->getStoredPubId('doi')) {
+			$request = Application::get()->getRequest();
+			$journalIssueNode->appendChild($this->createDOIDataNode($doc, $issue->getStoredPubId('doi'), $request->url($context->getPath(), 'issue', 'view', $issue->getBestIssueId($context), null, null, true)));
+		}
+		*/
+		return $proceedingsSeriesMetadata;
+	}
+
+
 
 	/**
 	 * Create and return the journal issue node 'journal_issue'.
