@@ -125,7 +125,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 */
 	function createConferenceNode($doc, $pubObject) {
 		$conferenceNode = $doc->createElement('conference');
-		//$journalNode->appendChild($this->createJournalMetadataNode($doc));
+		$conferenceNode->appendChild($this->createEventMetadataNode($doc));
 		//$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
 		return $conferenceNode;
 	}
@@ -135,35 +135,36 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $doc DOMDocument
 	 * @return DOMElement
 	 */
-	function createJournalMetadataNode($doc) {
+	function createEventMetadataNode($doc) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 
-		$journalMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'journal_metadata');
+		$eventMetadataNode = $doc->createElement('event_metadata');
 		// Full title
-		$journalTitle = $context->getName($context->getPrimaryLocale());
+		$conferenceName = $context->getName($context->getPrimaryLocale());
 		// Attempt a fall back, in case the localized name is not set.
-		if ($journalTitle == '') {
-			$journalTitle = $context->getData('abbreviation', $context->getPrimaryLocale());
+		if ($conferenceName == '') {
+			$conferenceName = $context->getData('abbreviation', $context->getPrimaryLocale());
 		}
-		$journalMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'full_title', htmlspecialchars($journalTitle, ENT_COMPAT, 'UTF-8')));
+		$eventMetadataNode->appendChild($node = $doc->createElement('conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
 		/* Abbreviated title - defaulting to initials if no abbreviation found */
-		$journalAbbrev = $context->getData('abbreviation', $context->getPrimaryLocale());
-		if ( $journalAbbrev == '' ) {
-			$journalAbbrev = $context->getData('acronym', $context->getPrimaryLocale());
+		$conferenceAbbrev = $context->getData('abbreviation', $context->getPrimaryLocale());
+		if ( $conferenceAbbrev == '' ) {
+			$conferenceAbbrev = $context->getData('acronym', $context->getPrimaryLocale());
 		}
-		$journalMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'abbrev_title', htmlspecialchars($journalAbbrev, ENT_COMPAT, 'UTF-8')));
-		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both) */
+		$eventMetadataNode->appendChild($node = $doc->createElement('conference_acronym', htmlspecialchars($conferenceAbbrev, ENT_COMPAT, 'UTF-8')));
+		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both) 
 		if ($ISSN = $context->getData('onlineIssn') ) {
-			$journalMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
+			$eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
 			$node->setAttribute('media_type', 'electronic');
 		}
-		/* Both ISSNs are permitted for CrossRef so sending whichever one (or both) */
+		Both ISSNs are permitted for CrossRef so sending whichever one (or both) 
 		if ($ISSN = $context->getData('printIssn') ) {
-			$journalMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
+			$eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
 			$node->setAttribute('media_type', 'print');
 		}
-		return $journalMetadataNode;
+		*/
+		return $eventMetadataNode;
 	}
 
 	/**
