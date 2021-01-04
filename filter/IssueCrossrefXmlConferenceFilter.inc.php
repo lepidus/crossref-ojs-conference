@@ -126,7 +126,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	function createConferenceNode($doc, $pubObject) {
 		$conferenceNode = $doc->createElement('conference');
 		$conferenceNode->appendChild($this->createEventMetadataNode($doc));
-		$conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc));
+		$conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc, $pubObject));
 		//$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
 		return $conferenceNode;
 	}
@@ -175,18 +175,24 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @return DOMElement
 	 */
 	
-	function createProceedingsSeriesMetadataNode($doc) {
+	function createProceedingsSeriesMetadataNode($doc, $issue) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 
 		$proceedingsSeriesMetadata = $doc->createElement('proceedings_series_metadata');
 		$seriesMetadata = $doc->createElement('series_metadata');
-		$seriesMetadata->appendChild($node = $doc->createElement('proceedings_title'));
-		$seriesMetadata->appendChild($node = $doc->createElement('volume'));
-		$seriesMetadata->appendChild($node = $doc->createElement('proceedings_subject'));
-		$seriesMetadata->appendChild($node = $doc->createElement('publisher'));
-		$seriesMetadata->appendChild($node = $doc->createElement('publication_date'));
+		$titles = $seriesMetadata->appendChild($node = $doc->createElement('titles'));
+		$titles->appendChild($node = $doc->createElement('title'));
+		/* issn */
 		$proceedingsSeriesMetadata->appendChild($seriesMetadata);
+
+		$publisher = $doc->createElement('publisher');
+		$publisher->appendChild($node = $doc->createElement('publisher_name'));
+		$proceedingsSeriesMetadata->appendChild($publisher);
+		if ($issue->getDatePublished()) {
+			$proceedingsSeriesMetadata->appendChild($this->createPublicationDateNode($doc,$issue->getDatePublished()));
+		}
+
 		/*
 		if ($issue->getDatePublished()) {
 			$journalIssueNode->appendChild($this->createPublicationDateNode($doc, $issue->getDatePublished()));
@@ -248,15 +254,15 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	function createPublicationDateNode($doc, $objectPublicationDate) {
 		$deployment = $this->getDeployment();
 		$publicationDate = strtotime($objectPublicationDate);
-		$publicationDateNode = $doc->createElementNS($deployment->getNamespace(), 'publication_date');
+		$publicationDateNode = $doc->createElement('publication_date');
 		$publicationDateNode->setAttribute('media_type', 'online');
 		if (date('m', $publicationDate)) {
-			$publicationDateNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'month', date('m', $publicationDate)));
+			$publicationDateNode->appendChild($node = $doc->createElement('month', date('m', $publicationDate)));
 		}
 		if (date('d', $publicationDate)) {
-			$publicationDateNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'day', date('d', $publicationDate)));
+			$publicationDateNode->appendChild($node = $doc->createElement('day', date('d', $publicationDate)));
 		}
-		$publicationDateNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'year', date('Y', $publicationDate)));
+		$publicationDateNode->appendChild($node = $doc->createElement('year', date('Y', $publicationDate)));
 		return $publicationDateNode;
 	}
 

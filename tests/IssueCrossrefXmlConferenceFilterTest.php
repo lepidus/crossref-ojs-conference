@@ -2,11 +2,13 @@
 
 import('lib.pkp.tests.PKPTestCase');
 import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
+import('plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter');
 import('lib.pkp.classes.user.User');
 import('plugins.importexport.native.NativeImportExportDeployment');
 import('plugins.importexport.crossrefConference.tests.ContextMock');
 import('plugins.importexport.crossrefConference.tests.PluginMock');
 import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployment');
+import('classes.issue.Issue');
 import("classes.submission.Submission");
 echo("");
 echo("CROSSREFCONFERENCE\n");
@@ -137,14 +139,18 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
+		// $issue = new Issue();
+		// $issue->setDatePublished(date("Y/m/d"));
+
 		$submission = new Submission();
+
 		$bodyNode = $doc->createElement('body');
 		$conference = $crossRef->createConferenceNode($doc, $submission);
 		$bodyNode->appendChild($conference);
 		$doc->appendChild($bodyNode);
 
 		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
-		$expected = $elements->childNodes[1];
+		$expected = $elements->childNodePapers[1];
 		
 		$actual = $this->doc->getElementsByTagName("body")->item(0);
 

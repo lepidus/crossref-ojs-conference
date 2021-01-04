@@ -7,7 +7,8 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'issuecrossrefxmlfilter' => '/filter/IssueCrossrefXmlFilter.inc.php'
+                'issuecrossrefxmlconferencefilter' => '/filter/IssueCrossrefXmlConferenceFilter.inc.php',
+                'papercrossrefconferenceXmlfilter' => '/filter/PaperCrossrefXmlConferenceFilter.inc.php'
             );
         }
         $cn = strtolower($class);
