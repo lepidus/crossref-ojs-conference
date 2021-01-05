@@ -11,7 +11,7 @@ import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployme
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 echo("");
-echo("CROSSREFCONFERENCE\n");
+echo("CROSSREFCONFERENCEPAPER\n");
 
 /*
 $expectedDoiBatch = new DOMDocument('1.0', 'utf-8');
@@ -59,7 +59,7 @@ function getTestData() {
 	return file_get_contents($sampleFile);
 }
 */
-class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
+class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
 	private $doc; 
@@ -72,68 +72,6 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		parent::setUp();
 	}
 
-	public function testCreateRootNode(){
-
-		$filterGroup = new FilterGroup();
-		
-		$context = new ContextMock();
-		$user = new User();
-		$deployment = new CrossrefExportConferenceDeployment($context,$user);
-		
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
-        $doiBatch = $crossRef->createRootNode($this->doc);
-        $this->doc->appendChild($doiBatch);
-		
-		$elements = $this->expectedFile->documentElement;
-		$elementHead = $elements->getElementsByTagName("head")->item(0);
-		$removeNode = $elements->removeChild($elementHead);
-		$elementBody = $elements->getElementsByTagName("body")->item(0);
-		$removeNode = $elements->removeChild($elementBody);
-
-		$doiBatchNode = $this->expectedFile->getElementsByTagName("doi_batch")->item(0);
-
-		$actual = $this->doc->getElementsByTagName("doi_batch")->item(0);
-
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($doiBatchNode),
-			$this->doc->saveXML($actual),
-			"actual xml is equal to expected xml"
-		);
-	}
-	
-	
-	public function testCreateHeadNode(){
-
-		$filterGroup = new FilterGroup();
-
-		$context = new ContextMock();
-		$user = new User();
-		$plugin = new PluginMock();
-		$deployment = new CrossrefExportConferenceDeployment($context,$user);
-		$deployment->setPlugin($plugin);
-
-		$doc = $this->doc; 
-		$doc->formatOutput = true;
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
-
-		$head = $crossRef->createHeadNode($doc);
-		$head = $doc->appendChild($head);
-
-		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
-		$expected = $elements->childNodes[0];
-		
-		$actual = $this->doc->getElementsByTagName("head")->item(0);
-
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expected),
-			$this->doc->saveXML($actual),
-			"actual xml is equal to expected xml"
-		);
-		
-	}
-	
 	public function testCreateConferenceNode(){
 
 		$filterGroup = new FilterGroup();
@@ -146,7 +84,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$doc = $this->doc; 
 		$doc->formatOutput = true;
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$issue = new Issue();
@@ -155,7 +93,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$submission = new Submission();
 
 		$bodyNode = $doc->createElement('body');
-		$conference = $crossRef->createConferenceNode($doc, $issue);
+		$conference = $crossRef->createConferenceNode($doc, $submission);
 		$bodyNode->appendChild($conference);
 		$doc->appendChild($bodyNode);
 
@@ -177,14 +115,6 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		return file_get_contents($sampleFile);
 	}
 
-	function setDeployment($deployment) {
-		$this->_deployment = $deployment;
-	}
-
-	function getDeployment() {
-		return $this->_deployment;
-	}
-    
 }
 
 ?>

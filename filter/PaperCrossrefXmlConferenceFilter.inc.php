@@ -85,12 +85,12 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 		$request = Application::get()->getRequest();
 
 		$publication = $submission->getCurrentPublication();
-		$locale = $publication->getData('locale');
+		//$locale = $publication->getData('locale');
 
 		// Issue shoulld be set by now
 		$issue = $deployment->getIssue();
 
-		$conferencePaperNode = $doc->createElementNS($deployment->getNamespace(), 'conference_paper');
+		$conferencePaperNode = $doc->createElement('conference_paper');
 		$conferencePaperNode->setAttribute('publication_type', 'full_text');
 		$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
 
