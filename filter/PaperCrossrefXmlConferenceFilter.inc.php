@@ -94,6 +94,29 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 		$conferencePaperNode->setAttribute('publication_type', 'full_text');
 		$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
 
+		$contributorsNode = $doc->createElement('contributors');
+		/*
+		$authors = $publication->getData('authors');
+		$isFirst = true;
+		foreach ($authors as $author) { /** @var $author Author 
+			$personNameNode = $doc->createElement('person_name');
+			$personNameNode->setAttribute('contributor_role', 'author');
+
+			if ($isFirst) {
+				$personNameNode->setAttribute('sequence', 'first');
+			} else {
+				$personNameNode->setAttribute('sequence', 'additional');
+			}
+
+			$familyNames = $author->getFamilyName(null);
+			$givenNames = $author->getGivenName(null);
+
+			$contributorsNode->appendChild($personNameNode);
+		}
+		*/
+		$conferencePaperNode->appendChild($contributorsNode);
+
+
 
 		return $conferencePaperNode;
 	}

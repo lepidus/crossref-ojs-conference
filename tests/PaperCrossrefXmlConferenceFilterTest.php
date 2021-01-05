@@ -11,54 +11,7 @@ import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployme
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 echo("");
-echo("CROSSREFCONFERENCEPAPER\n");
 
-/*
-$expectedDoiBatch = new DOMDocument('1.0', 'utf-8');
-$expectedDoiBatch->loadXML(getTestData());
-$expectedDoiBatch->formatOutput = true;
-//print_r(getTestData());
-
-$filterGroup = new FilterGroup();
-
-$context = new ContextMock();
-$user = new User();
-$deployment = new CrossrefExportConferenceDeployment($context,$user);
-
-$doc = new DOMDocument('1.0', 'utf-8');
-$doc->preserveWhiteSpace = false;
-$doc->formatOutput = true;
-$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
-$crossRef->setDeployment($deployment);
-
-
-$issue = new Issue();
-$issue->setDatePublished(date("Y/m/d"));
-
-$submission = new Submission();
-
-$bodyNode = $doc->createElement('body');
-$conference = $crossRef->createConferenceNode($doc, $submission);
-$bodyNode->appendChild($conference);
-$doc->appendChild($bodyNode);
-
-//$doiBatch = $doc->appendChild($doiBatch);
-//$head = $crossRef->createHeadNode($doc);
-//$head = $doiBatch->appendChild($head);
-echo $doc->saveXML() . "\n";
-//$elements = $expectedDoiBatch->getElementsByTagName('doi_batch')->item(0);
-// /expected = $elements->childNodes[0];
-//echo $expectedDoiBatch->saveXML($expected);
-
-//print_r($doc->getContext());
-
-// $doiBatch->appendChild($crossRef->createHeadNode($doc));
-
-function getTestData() {
-	$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
-	return file_get_contents($sampleFile);
-}
-*/
 class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
