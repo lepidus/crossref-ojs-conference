@@ -10,6 +10,7 @@ import('plugins.importexport.crossrefConference.tests.PluginMock');
 import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployment');
 import('classes.issue.Issue');
 import("classes.submission.Submission");
+import("classes.publication.Publication");
 echo("");
 
 class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
@@ -42,11 +43,22 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$issue = new Issue();
 		$issue->setDatePublished(date("Y/m/d"));
+		
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); 
+		$publicationDao = DAORegistry::getDAO('PublicationDAO');
 
 		$submission = new Submission();
+		$submissionId = $submission->getData('id');
+
+		$publication = new Publication();
+		$publication->setData('submissionId',$submissionId);
+		$publication->setData('locale', 'pt_br');
+
+		//$submissionDao->insertObject($submission);
+		$publicationDao->insertObject($publication);
 
 		$bodyNode = $doc->createElement('body');
-		$conference = $crossRef->createConferenceNode($doc, $submission);
+		$conference = $crossRef->createConferenceNode($doc, $submissionDao);
 		$bodyNode->appendChild($conference);
 		$doc->appendChild($bodyNode);
 

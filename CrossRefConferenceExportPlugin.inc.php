@@ -33,13 +33,13 @@ define('CROSSREF_API_STATUS_URL_DEV', 'https://test.crossref.org/servlet/submiss
 define('CROSSREF_DEPOSIT_STATUS', 'depositStatus');
 
 
-class CrossRefExportPlugin extends DOIPubIdExportPlugin {
+class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 
 	/**
 	 * @copydoc Plugin::getName()
 	 */
 	function getName() {
-		return 'CrossRefExportPlugin';
+		return 'CrossRefConferenceExportPlugin';
 	}
 
 	/**
