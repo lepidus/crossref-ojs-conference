@@ -43,22 +43,26 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$issue = new Issue();
 		$issue->setDatePublished(date("Y/m/d"));
-		
-		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); 
-		$publicationDao = DAORegistry::getDAO('PublicationDAO');
+		/*
+		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
+		$publicationDao =& DAORegistry::getDAO('PublicationDAO');
 
 		$submission = new Submission();
 		$submissionId = $submission->getData('id');
 
 		$publication = new Publication();
 		$publication->setData('submissionId',$submissionId);
-		$publication->setData('locale', 'pt_br');
+		$publication->setData('locale', 'pt_BR');
 
-		//$submissionDao->insertObject($submission);
+		$submissionDao->insertObject($submission);
 		$publicationDao->insertObject($publication);
-
+		*/
+		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
+		$submissions = $submissionDao->getByContextId(1);
+		$submission = $submissions->toArray();
+		
 		$bodyNode = $doc->createElement('body');
-		$conference = $crossRef->createConferenceNode($doc, $submissionDao);
+		$conference = $crossRef->createConferenceNode($doc, $submission[0]);
 		$bodyNode->appendChild($conference);
 		$doc->appendChild($bodyNode);
 
