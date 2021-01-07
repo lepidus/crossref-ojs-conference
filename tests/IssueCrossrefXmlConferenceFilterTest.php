@@ -172,6 +172,8 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 	}
 
+	
+
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
 		return file_get_contents($sampleFile);

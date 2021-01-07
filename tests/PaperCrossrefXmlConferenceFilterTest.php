@@ -79,6 +79,39 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 	}
 
+	public function testCreateXML(){
+		$filterGroup = new FilterGroup();
+
+		$context = new ContextMock();
+		$user = new User();
+		$plugin = new PluginMock();
+		$deployment = new CrossrefExportConferenceDeployment($context,$user);
+		$deployment->setPlugin($plugin);
+
+		$doc = $this->doc; 
+		$doc->formatOutput = true;
+		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef->setDeployment($deployment);
+
+		$issue = new Issue();
+		$issue->setDatePublished(date("Y/m/d"));
+		//$issues = array($issue);
+		
+		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
+		$submissions = $submissionDao->getByContextId(1);
+		$submission = $submissions->toArray();
+		
+
+		$conference = $crossRef->process($submission);
+
+		self::assertXmlStringEqualsXmlString(
+			$this->expectedFile->saveXML(),
+			$conference->saveXML(),
+			"actual xml is equal to expected xml"
+		);
+		
+	}
+
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
 		return file_get_contents($sampleFile);

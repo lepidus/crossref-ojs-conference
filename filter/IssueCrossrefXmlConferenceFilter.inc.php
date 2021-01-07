@@ -59,13 +59,13 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$rootNode->appendChild($this->createHeadNode($doc));
 
 		// Create and append the 'body' node, that contains everything
-		$bodyNode = $doc->createElementNS($deployment->getNamespace(), 'body');
+		$bodyNode = $doc->createElement('body');
 		$rootNode->appendChild($bodyNode);
 
 		foreach($pubObjects as $pubObject) {
 			// pubObject is either Issue or Submission
-			$journalNode = $this->createJournalNode($doc, $pubObject);
-			$bodyNode->appendChild($journalNode);
+			$conferenceNode = $this->createConferenceNode($doc, $pubObject);
+			$bodyNode->appendChild($conferenceNode);
 		}
 		return $doc;
 	}
@@ -154,17 +154,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 			$conferenceAbbrev = $context->getData('acronym', $context->getPrimaryLocale());
 		}
 		$eventMetadataNode->appendChild($node = $doc->createElement('conference_acronym', htmlspecialchars($conferenceAbbrev, ENT_COMPAT, 'UTF-8')));
-		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both) 
-		if ($ISSN = $context->getData('onlineIssn') ) {
-			$eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
-			$node->setAttribute('media_type', 'electronic');
-		}
-		Both ISSNs are permitted for CrossRef so sending whichever one (or both) 
-		if ($ISSN = $context->getData('printIssn') ) {
-			$eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
-			$node->setAttribute('media_type', 'print');
-		}
-		*/
+		
 		return $eventMetadataNode;
 	}
 
@@ -183,7 +173,17 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$seriesMetadata = $doc->createElement('series_metadata');
 		$titles = $seriesMetadata->appendChild($node = $doc->createElement('titles'));
 		$titles->appendChild($node = $doc->createElement('title'));
-		/* issn */
+		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both)*/
+		if ($ISSN = $context->getData('onlineIssn') ) {
+			$proceedingsSeriesMetadataNode->appendChild($node = $doc->createElement('issn', $ISSN));
+			$node->setAttribute('media_type', 'electronic');
+		}
+		/*Both ISSNs are permitted for CrossRef so sending whichever one (or both)*/ 
+		if ($ISSN = $context->getData('printIssn') ) {
+			$proceedingsSeriesMetadataNode->appendChild($node = $doc->createElement('issn', $ISSN));
+			$node->setAttribute('media_type', 'print');
+		}
+		
 		$proceedingsSeriesMetadata->appendChild($seriesMetadata);
 
 		$publisher = $doc->createElement('publisher');
