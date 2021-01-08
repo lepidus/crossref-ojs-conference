@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @file plugins/importexport/crossref/filter/ArticleCrossrefXmlFilter.inc.php
+ * @file plugins/importexport/crossref/filter/PaperCrossrefXmlConferenceFilter.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class ArticleCrossrefXmlFilter
+ * @class PaperCrossrefXmlConferenceFilter
  * @ingroup plugins_importexport_crossref
  *
  * @brief Class that converts an Article to a Crossref XML document.
@@ -32,7 +32,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	 * @copydoc PersistableFilter::getClassName()
 	 */
 	function getClassName() {
-		return 'plugins.importexport.crossref.filter.PaperCrossrefXmlConferenceFilter';
+		return 'plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter';
 	}
 
 

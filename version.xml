@@ -11,7 +11,7 @@
   * Plugin version information.
   -->
 <version>
-	<application>crossref</application>
+	<application>crossrefConference</application>
 	<type>plugins.importexport</type>
 	<release>2.1.0.0</release>
 	<date>2016-06-28</date>

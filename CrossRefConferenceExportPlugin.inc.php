@@ -46,14 +46,14 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc Plugin::getDisplayName()
 	 */
 	function getDisplayName() {
-		return __('plugins.importexport.crossref.displayName');
+		return __('plugins.importexport.crossrefConference.displayName');
 	}
 
 	/**
 	 * @copydoc Plugin::getDescription()
 	 */
 	function getDescription() {
-		return __('plugins.importexport.crossref.description');
+		return __('plugins.importexport.crossrefConference.description');
 	}
 
 	/**
@@ -68,9 +68,9 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 */
 	function getStatusNames() {
 		return array_merge(parent::getStatusNames(), array(
-			EXPORT_STATUS_REGISTERED => __('plugins.importexport.crossref.status.registered'),
-			CROSSREF_STATUS_FAILED => __('plugins.importexport.crossref.status.failed'),
-			EXPORT_STATUS_MARKEDREGISTERED => __('plugins.importexport.crossref.status.markedRegistered'),
+			EXPORT_STATUS_REGISTERED => __('plugins.importexport.crossrefConference.status.registered'),
+			CROSSREF_STATUS_FAILED => __('plugins.importexport.crossrefConference.status.failed'),
+			EXPORT_STATUS_MARKEDREGISTERED => __('plugins.importexport.crossrefConference.status.markedRegistered'),
 		));
 	}
 
@@ -88,13 +88,13 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 						$dispatcher->url(
 							$request, ROUTE_COMPONENT, null,
 							'grid.settings.plugins.settingsPluginGridHandler',
-							'manage', null, array('plugin' => 'CrossRefExportPlugin', 'category' => 'importexport', 'verb' => 'statusMessage',
+							'manage', null, array('plugin' => 'CrossRefConferenceExportPlugin', 'category' => 'importexport', 'verb' => 'statusMessage',
 							'batchId' => $pubObject->getData($this->getDepositBatchIdSettingName()), 'articleId' => $pubObject->getId())
 						),
-						__('plugins.importexport.crossref.status.failed'),
+						__('plugins.importexport.crossrefConference.status.failed'),
 						'failureMessage'
 					),
-					__('plugins.importexport.crossref.status.failed')
+					__('plugins.importexport.crossrefConference.status.failed')
 				)
 		);
 	}
@@ -141,9 +141,9 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 */
 	function getExportActionNames() {
 		return array(
-			EXPORT_ACTION_DEPOSIT => __('plugins.importexport.crossref.action.register'),
-			EXPORT_ACTION_EXPORT => __('plugins.importexport.crossref.action.export'),
-			EXPORT_ACTION_MARKREGISTERED => __('plugins.importexport.crossref.action.markRegistered'),
+			EXPORT_ACTION_DEPOSIT => __('plugins.importexport.crossrefConference.action.register'),
+			EXPORT_ACTION_EXPORT => __('plugins.importexport.crossrefConference.action.export'),
+			EXPORT_ACTION_MARKREGISTERED => __('plugins.importexport.crossrefConference.action.markRegistered'),
 		);
 	}
 
@@ -162,7 +162,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc ImportExportPlugin::getPluginSettingsPrefix()
 	 */
 	function getPluginSettingsPrefix() {
-		return 'crossref';
+		return 'crossrefConference';
 	}
 
 	/**
@@ -176,7 +176,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc PubObjectsExportPlugin::getExportDeploymentClassName()
 	 */
 	function getExportDeploymentClassName() {
-		return 'CrossrefExportConferenceDeployment';
+		return 'CrossrefConferenceExportDeployment';
 	}
 
 	/**
@@ -227,7 +227,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 				if ($errorsOccured) {
 					$this->_sendNotification(
 						$request->getUser(),
-						'plugins.importexport.crossref.register.error.mdsError',
+						'plugins.importexport.crossrefConference.register.error.mdsError',
 						NOTIFICATION_TYPE_ERROR
 					);
 				} else {
@@ -319,10 +319,10 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 				$warningCountNode = $xmlDoc->getElementsByTagName('warning_count')->item(0);
 				$warningCount = (int) $warningCountNode->nodeValue;
 				if ($warningCount > 0) {
-					$result = array(array('plugins.importexport.crossref.register.success.warning', htmlspecialchars($response->getBody())));
+					$result = array(array('plugins.importexport.crossrefConference.register.success.warning', htmlspecialchars($response->getBody())));
 				}
 				// A possibility for other plugins (e.g. reference linking) to work with the response
-				HookRegistry::call('crossrefexportplugin::deposited', array($this, $response->getBody(), $objects));
+				HookRegistry::call('crossrefconferenceexportplugin::deposited', array($this, $response->getBody(), $objects));
 			}
 		}
 		// Update the status
@@ -440,7 +440,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 				// display deposit result status messages
 				if (empty($resultErrors)) {
 					if ($errorsOccured) {
-						echo __('plugins.importexport.crossref.register.error.mdsError') . "\n";
+						echo __('plugins.importexport.crossrefConference.register.error.mdsError') . "\n";
 					} else {
 						echo __('plugins.importexport.common.register.success') . "\n";
 					}

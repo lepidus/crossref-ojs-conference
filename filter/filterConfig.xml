@@ -15,15 +15,15 @@
 		<!-- Crossref XML issue output -->
 		<filterGroup
 			symbolic="issue=>crossref-xml"
-			displayName="plugins.importexport.crossref.displayName"
-			description="plugins.importexport.crossref.description"
+			displayName="plugins.importexport.crossrefConference.displayName"
+			description="plugins.importexport.crossrefConference.description"
 			inputType="class::classes.issue.Issue[]"
 			outputType="xml::schema(https://www.crossref.org/schemas/crossref4.3.6.xsd)" />
 		<!-- Crossref XML article output -->
 		<filterGroup
 			symbolic="article=>crossref-xml"
-			displayName="plugins.importexport.crossref.displayName"
-			description="plugins.importexport.crossref.description"
+			displayName="plugins.importexport.crossrefConference.displayName"
+			description="plugins.importexport.crossrefConference.description"
 			inputType="class::classes.submission.Submission[]"
 			outputType="xml::schema(https://www.crossref.org/schemas/crossref4.3.6.xsd)" />
 	</filterGroups>
@@ -31,12 +31,12 @@
 		<!-- Crossref XML issue output -->
 		<filter
 			inGroup="issue=>crossref-xml"
-			class="plugins.importexport.crossref.filter.IssueCrossrefXmlFilter"
+			class="plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter"
 			isTemplate="0" />
 		<!-- Crossref XML article output -->
 		<filter
 			inGroup="article=>crossref-xml"
-			class="plugins.importexport.crossref.filter.ArticleCrossrefXmlFilter"
+			class="plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter"
 			isTemplate="0" />
 	</filters>
 </filterConfig>

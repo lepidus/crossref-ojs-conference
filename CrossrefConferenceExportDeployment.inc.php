@@ -24,7 +24,7 @@ define('CROSSREF_XSI_SCHEMAVERSION' , '4.4.2');
 define('CROSSREF_XSI_SCHEMALOCATION' , 'http://www.crossref.org/schema/crossref4.4.2.xsd');
 
 
-class CrossrefExportConferenceDeployment {
+class CrossrefConferenceExportDeployment {
 	/** @var Context The current import/export context */
 	var $_context;
 

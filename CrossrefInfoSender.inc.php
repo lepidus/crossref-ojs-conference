@@ -26,10 +26,10 @@ class CrossrefInfoSender extends ScheduledTask {
 	 */
 	function __construct($args) {
 		PluginRegistry::loadCategory('importexport');
-		$plugin = PluginRegistry::getPlugin('importexport', 'CrossRefExportPlugin'); /* @var $plugin CrossRefExportPlugin */
+		$plugin = PluginRegistry::getPlugin('importexport', 'CrossRefConferenceExportPlugin'); /* @var $plugin CrossRefExportPlugin */
 		$this->_plugin = $plugin;
 
-		if (is_a($plugin, 'CrossRefExportPlugin')) {
+		if (is_a($plugin, 'CrossRefConferenceExportPlugin')) {
 			$plugin->addLocaleData();
 		}
 
@@ -40,7 +40,7 @@ class CrossrefInfoSender extends ScheduledTask {
 	 * @copydoc ScheduledTask::getName()
 	 */
 	function getName() {
-		return __('plugins.importexport.crossref.senderTask.name');
+		return __('plugins.importexport.crossrefConference.senderTask.name');
 	}
 
 	/**

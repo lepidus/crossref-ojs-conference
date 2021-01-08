@@ -32,7 +32,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @copydoc PersistableFilter::getClassName()
 	 */
 	function getClassName() {
-		return 'plugins.importexport.crossref.filter.IssueCrossrefConferenceXmlFilter';
+		return 'plugins.importexport.crossrefConference.filter.IssueCrossrefConferenceXmlFilter';
 	}
 
 	//

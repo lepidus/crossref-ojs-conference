@@ -7,7 +7,7 @@ import('lib.pkp.classes.user.User');
 import('plugins.importexport.native.NativeImportExportDeployment');
 import('plugins.importexport.crossrefConference.tests.ContextMock');
 import('plugins.importexport.crossrefConference.tests.PluginMock');
-import('plugins.importexport.crossrefConference.CrossrefExportConferenceDeployment');
+import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployment');
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 echo("");
@@ -23,7 +23,7 @@ $filterGroup = new FilterGroup();
 
 $context = new ContextMock();
 $user = new User();
-$deployment = new CrossrefExportConferenceDeployment($context,$user);
+$deployment = new CrossrefConferenceExportDeployment($context,$user);
 
 $doc = new DOMDocument('1.0', 'utf-8');
 $doc->preserveWhiteSpace = false;
@@ -78,7 +78,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 		$context = new ContextMock();
 		$user = new User();
-		$deployment = new CrossrefExportConferenceDeployment($context,$user);
+		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		
 		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
@@ -110,7 +110,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$context = new ContextMock();
 		$user = new User();
 		$plugin = new PluginMock();
-		$deployment = new CrossrefExportConferenceDeployment($context,$user);
+		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		$deployment->setPlugin($plugin);
 
 		$doc = $this->doc; 
@@ -141,7 +141,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$context = new ContextMock();
 		$user = new User();
 		$plugin = new PluginMock();
-		$deployment = new CrossrefExportConferenceDeployment($context,$user);
+		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		$deployment->setPlugin($plugin);
 
 		$doc = $this->doc; 
