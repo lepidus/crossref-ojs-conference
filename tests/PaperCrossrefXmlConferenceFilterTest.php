@@ -41,22 +41,6 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
-		$issue = new Issue();
-		$issue->setDatePublished(date("Y/m/d"));
-		/*
-		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
-		$publicationDao =& DAORegistry::getDAO('PublicationDAO');
-
-		$submission = new Submission();
-		$submissionId = $submission->getData('id');
-
-		$publication = new Publication();
-		$publication->setData('submissionId',$submissionId);
-		$publication->setData('locale', 'pt_BR');
-
-		$submissionDao->insertObject($submission);
-		$publicationDao->insertObject($publication);
-		*/
 		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
 		$submissions = $submissionDao->getByContextId(1);
 		$submission = $submissions->toArray();
@@ -92,18 +76,12 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$doc->formatOutput = true;
 		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
-
-		$issue = new Issue();
-		$issue->setDatePublished(date("Y/m/d"));
-		//$issues = array($issue);
 		
 		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
 		$submissions = $submissionDao->getByContextId(1);
 		$submission = $submissions->toArray();
-		
 
 		$conference = $crossRef->process($submission);
-
 		self::assertXmlStringEqualsXmlString(
 			$this->expectedFile->saveXML(),
 			$conference->saveXML(),
@@ -111,6 +89,34 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		);
 		
 	}
+
+	public function testGenerateXMLFile(){
+
+		$xml_file_name = './plugins/importexport/crossrefConference/tests/conferencia-teste.xml';
+
+		$filterGroup = new FilterGroup();
+
+		$context = new ContextMock();
+		$user = new User();
+		$plugin = new PluginMock();
+		$deployment = new CrossrefConferenceExportDeployment($context,$user);
+		$deployment->setPlugin($plugin);
+
+		$doc = $this->doc;
+		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef->setDeployment($deployment);
+
+		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
+		$submissions = $submissionDao->getByContextId(1);
+		$submission = $submissions->toArray();
+
+		$doc = $crossRef->process($submission);
+		
+		$doc->save($xml_file_name);
+
+		self::assertTrue(is_file($xml_file_name));
+	}
+
 
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
