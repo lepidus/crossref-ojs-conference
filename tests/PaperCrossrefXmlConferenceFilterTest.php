@@ -13,6 +13,35 @@ import("classes.submission.Submission");
 import("classes.publication.Publication");
 echo("");
 
+
+$filterGroup = new FilterGroup();
+
+$context = new ContextMock();
+$context->setId(1);
+$context->setName('Conferência Vitinho');
+$user = new User();
+$plugin = new PluginMock();
+
+echo("KKKKKKKKKKKKK");
+
+print_r($plugin->getSetting($context->setId(1), 'depositorName')); 
+
+
+$deployment = new CrossrefConferenceExportDeployment($context,$user);
+$deployment->setPlugin($plugin);
+
+$doc = new DOMDocument('1.0', 'utf-8');
+$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
+$crossRef->setDeployment($deployment);
+
+$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
+$submissions = $submissionDao->getByContextId(1);
+$submission = $submissions->toArray();
+
+$doc = $crossRef->process($submission);
+
+//echo $doc->saveXML();
+
 class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
@@ -97,8 +126,11 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$filterGroup = new FilterGroup();
 
 		$context = new ContextMock();
+		$context->setId(1);
+		$context->setName('Conferência Vitinho');
 		$user = new User();
 		$plugin = new PluginMock();
+
 		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		$deployment->setPlugin($plugin);
 

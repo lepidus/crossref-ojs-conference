@@ -40,7 +40,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	// Submission conversion functions
 	//
 	/**
-	 * @copydoc IssueCrossrefXmlFilter::createJournalNode()
+	 * @copydoc IssueCrossrefXmlFilter::createConferenceNode()
 	 */
 	function createConferenceNode($doc, $pubObject) {
 		$deployment = $this->getDeployment();
@@ -56,7 +56,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	 * @param $submission Submission
 	 * @return DOMElement
 	 */
-	function createJournalIssueNode($doc, $submission) {
+	function createProceedingsSeriesMetadataNode($doc, $submission) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 		$cache = $deployment->getCache();
@@ -69,8 +69,8 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 			$issue = $issueDao->getById($issueId, $context->getId());
 			if ($issue) $cache->add($issue, null);
 		}
-		$journalIssueNode = parent::createJournalIssueNode($doc, $issue);
-		return $journalIssueNode;
+		$proceedingsSeriesMetadataNode = parent::createProceedingsSeriesMetadataNode($doc, $issue);
+		return $proceedingsSeriesMetadataNode;
 	}
 
 	/**

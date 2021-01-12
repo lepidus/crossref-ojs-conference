@@ -62,10 +62,12 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$filterGroup = new FilterGroup();
 
 		$context = new ContextMock();
+		$context->setName("Vitor");
 		$user = new User();
 		$plugin = new PluginMock();
 		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		$deployment->setPlugin($plugin);
+
 
 		$doc = $this->doc; 
 		$doc->formatOutput = true;

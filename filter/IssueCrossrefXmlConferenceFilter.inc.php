@@ -43,6 +43,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $pubObjects array Array of Issues or Submissions
 	 * @return DOMDocument
 	 */
+
 	function &process(&$pubObjects) {
 		// Create the XML document
 		$doc = new DOMDocument('1.0', 'utf-8');
@@ -92,6 +93,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $doc DOMDocument
 	 * @return DOMElement
 	 */
+
 	function createHeadNode($doc) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
@@ -101,6 +103,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$headNode->appendChild($node = $doc->createElement('timestamp', time()));
 		$depositorNode = $doc->createElement('depositor');
 		$depositorName = $plugin->getSetting($context->getId(), 'depositorName');
+
 		if (empty($depositorName)) {
 			$depositorName = $context->getData('supportName');
 			$depositorEmail = $plugin->getSetting($context->getId(), 'depositorEmail');
@@ -109,7 +112,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		if (empty($depositorEmail)) {
 			$depositorEmail = $context->getData('supportEmail');
 		}
-		$depositorNode->appendChild($node = $doc->createElement('name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
+		$depositorNode->appendChild($node = $doc->createElement('depositor_name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
 		$depositorNode->appendChild($node = $doc->createElement('email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
 		$headNode->appendChild($depositorNode);
 		$publisherInstitution = $context->getData('publisherInstitution');
@@ -123,11 +126,11 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $pubObject object Issue or Submission
 	 * @return DOMElement
 	 */
+
 	function createConferenceNode($doc, $pubObject) {
 		$conferenceNode = $doc->createElement('conference');
 		$conferenceNode->appendChild($this->createEventMetadataNode($doc));
 		$conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc, $pubObject));
-		//$journalNode->appendChild($this->createJournalIssueNode($doc, $pubObject));
 		return $conferenceNode;
 	}
 
@@ -136,6 +139,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $doc DOMDocument
 	 * @return DOMElement
 	 */
+
 	function createEventMetadataNode($doc) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
@@ -171,8 +175,13 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 
 		$proceedingsSeriesMetadata = $doc->createElement('proceedings_series_metadata');
 		$seriesMetadata = $doc->createElement('series_metadata');
+		$proceedingsTitle = $context->getName($context->getPrimaryLocale());
+		// Attempt a fall back, in case the localized name is not set.
+		if ($proceedingsTitle == '') {
+			$proceedingsTitle = $context->getData('abbreviation', $context->getPrimaryLocale());
+		}
 		$titles = $seriesMetadata->appendChild($node = $doc->createElement('titles'));
-		$titles->appendChild($node = $doc->createElement('title'));
+		$titles->appendChild($node = $doc->createElement('title',htmlspecialchars($proceedingsTitle, ENT_COMPAT, 'UTF-8')));
 		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both)*/
 		if ($ISSN = $context->getData('onlineIssn') ) {
 			$proceedingsSeriesMetadataNode->appendChild($node = $doc->createElement('issn', $ISSN));
@@ -193,56 +202,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 			$proceedingsSeriesMetadata->appendChild($this->createPublicationDateNode($doc,$issue->getDatePublished()));
 		}
 
-		/*
-		if ($issue->getDatePublished()) {
-			$journalIssueNode->appendChild($this->createPublicationDateNode($doc, $issue->getDatePublished()));
-		}
-		if ($issue->getVolume() && $issue->getShowVolume()){
-			$journalVolumeNode = $doc->createElementNS($deployment->getNamespace(), 'journal_volume');
-			$journalVolumeNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'volume', htmlspecialchars($issue->getVolume(), ENT_COMPAT, 'UTF-8')));
-			$journalIssueNode->appendChild($journalVolumeNode);
-		}
-		if ($issue->getNumber() && $issue->getShowNumber()) {
-			$journalIssueNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issue', htmlspecialchars($issue->getNumber(), ENT_COMPAT, 'UTF-8')));
-		}
-		if ($issue->getDatePublished() && $issue->getStoredPubId('doi')) {
-			$request = Application::get()->getRequest();
-			$journalIssueNode->appendChild($this->createDOIDataNode($doc, $issue->getStoredPubId('doi'), $request->url($context->getPath(), 'issue', 'view', $issue->getBestIssueId($context), null, null, true)));
-		}
-		*/
 		return $proceedingsSeriesMetadata;
-	}
-
-
-
-	/**
-	 * Create and return the journal issue node 'journal_issue'.
-	 * @param $doc DOMDocument
-	 * @param $issue Issue
-	 * @return DOMElement
-	 */
-	function createJournalIssueNode($doc, $issue) {
-		$deployment = $this->getDeployment();
-		$context = $deployment->getContext();
-		$deployment->setIssue($issue);
-
-		$journalIssueNode = $doc->createElementNS($deployment->getNamespace(), 'journal_issue');
-		if ($issue->getDatePublished()) {
-			$journalIssueNode->appendChild($this->createPublicationDateNode($doc, $issue->getDatePublished()));
-		}
-		if ($issue->getVolume() && $issue->getShowVolume()){
-			$journalVolumeNode = $doc->createElementNS($deployment->getNamespace(), 'journal_volume');
-			$journalVolumeNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'volume', htmlspecialchars($issue->getVolume(), ENT_COMPAT, 'UTF-8')));
-			$journalIssueNode->appendChild($journalVolumeNode);
-		}
-		if ($issue->getNumber() && $issue->getShowNumber()) {
-			$journalIssueNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issue', htmlspecialchars($issue->getNumber(), ENT_COMPAT, 'UTF-8')));
-		}
-		if ($issue->getDatePublished() && $issue->getStoredPubId('doi')) {
-			$request = Application::get()->getRequest();
-			$journalIssueNode->appendChild($this->createDOIDataNode($doc, $issue->getStoredPubId('doi'), $request->url($context->getPath(), 'issue', 'view', $issue->getBestIssueId($context), null, null, true)));
-		}
-		return $journalIssueNode;
 	}
 
 	/**
@@ -251,6 +211,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $objectPublicationDate string
 	 * @return DOMElement
 	 */
+
 	function createPublicationDateNode($doc, $objectPublicationDate) {
 		$deployment = $this->getDeployment();
 		$publicationDate = strtotime($objectPublicationDate);

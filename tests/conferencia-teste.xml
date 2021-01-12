@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.4.2" xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 http://www.crossref.org/schema/crossref4.4.2.xsd">
   <head>
-    <doi_batch_id>_1610380624</doi_batch_id>
-    <timestamp>1610380624</timestamp>
+    <doi_batch_id>_1610475878</doi_batch_id>
+    <timestamp>1610475878</timestamp>
     <depositor>
-      <name/>
+      <depositor_name/>
       <email_address/>
     </depositor>
     <registrant/>
@@ -12,13 +12,13 @@
   <body>
     <conference>
       <event_metadata>
-        <conference_name/>
+        <conference_name>Conferência Vitinho</conference_name>
         <conference_acronym/>
       </event_metadata>
       <proceedings_series_metadata>
         <series_metadata>
           <titles>
-            <title/>
+            <title>Conferência Vitinho</title>
           </titles>
         </series_metadata>
         <publisher>

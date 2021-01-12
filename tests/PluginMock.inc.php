@@ -58,15 +58,32 @@ class PluginMock {
 	/** @var PKPRequest the current request object */
 	var $request;
 
+	/** @var PubObjectCache */
+	var $_cache;
+
+	
 	/**
 	 * Constructor
 	 */
 	function __construct() {
 	}
+	
+	/**
+	 * Get the plugin cache
+	 * @return PubObjectCache
+	 */
+	function getCache() {
+		if (!is_a($this->_cache, 'PubObjectCache')) {
+			// Instantiate the cache.
+			import('classes.plugins.PubObjectCache');
+			$this->_cache = new PubObjectCache();
+		}
+		return $this->_cache;
+	}
 
 	/*
-	 * Public Plugin API (Registration and Initialization)
-	 */
+	* Public Plugin API (Registration and Initialization)
+	*/
 	/**
 	 * Load and initialize the plug-in and register plugin hooks.
 	 *
