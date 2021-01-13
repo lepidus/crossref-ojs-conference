@@ -149,7 +149,7 @@ class PluginMock {
 	 * @return string name of plugin
 	 */
 	function getName(){
-        return;
+        return 'crossrefconferenceexportplugin';
     }
 
 	/**

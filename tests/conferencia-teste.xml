@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.4.2" xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 http://www.crossref.org/schema/crossref4.4.2.xsd">
   <head>
-    <doi_batch_id>_1610475878</doi_batch_id>
-    <timestamp>1610475878</timestamp>
+    <doi_batch_id>_1610562316</doi_batch_id>
+    <timestamp>1610562316</timestamp>
     <depositor>
-      <depositor_name/>
-      <email_address/>
+      <depositor_name>Vitor Hugo</depositor_name>
+      <email_address>vitor14_1999@hotmail.com</email_address>
     </depositor>
-    <registrant/>
+    <registrant>lepidus</registrant>
   </head>
   <body>
     <conference>
       <event_metadata>
-        <conference_name>Conferência Vitinho</conference_name>
-        <conference_acronym/>
+        <conference_name>teste</conference_name>
+        <conference_acronym>t</conference_acronym>
       </event_metadata>
       <proceedings_series_metadata>
         <series_metadata>
           <titles>
-            <title>Conferência Vitinho</title>
+            <title>teste</title>
           </titles>
+          <issn media_type="electronic">2359-0793</issn>
+          <issn media_type="print">2359-0793</issn>
         </series_metadata>
         <publisher>
           <publisher_name/>

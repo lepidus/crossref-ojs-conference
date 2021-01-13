@@ -10,7 +10,7 @@
  * @class PaperCrossrefXmlConferenceFilter
  * @ingroup plugins_importexport_crossref
  *
- * @brief Class that converts an Article to a Crossref XML document.
+ * @brief Class that converts an Paper to a Crossref XML document.
  */
 
 import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
@@ -40,7 +40,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	// Submission conversion functions
 	//
 	/**
-	 * @copydoc IssueCrossrefXmlFilter::createConferenceNode()
+	 * @copydoc IssueCrossrefXmlConferenceFilter::createConferenceNode()
 	 */
 	function createConferenceNode($doc, $pubObject) {
 		$deployment = $this->getDeployment();
@@ -51,7 +51,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	}
 
 	/**
-	 * Create and return the journal issue node 'journal_issue'.
+	 * Create and return the proceedings series metadata node 'proceedings_series_metadata'.
 	 * @param $doc DOMDocument
 	 * @param $submission Submission
 	 * @return DOMElement
@@ -74,7 +74,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 	}
 
 	/**
-	 * Create and return the journal article node 'journal_article'.
+	 * Create and return the conference paper node 'conference_paper'.
 	 * @param $doc DOMDocument
 	 * @param $submission Submission
 	 * @return DOMElement
@@ -219,40 +219,6 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 			$textMiningCollectionNode->appendChild($textMiningItemNode);
 		}
 		$doiDataNode->appendChild($textMiningCollectionNode);
-	}
-
-	/**
-	 * Create and return component list node 'component_list'.
-	 * @param $doc DOMDocument
-	 * @param $submission Submission
-	 * @param $componentGalleys array
-	 * @return DOMElement
-	 */
-	function createComponentListNode($doc, $submission, $componentGalleys) {
-		$deployment = $this->getDeployment();
-		$context = $deployment->getContext();
-		$request = Application::get()->getRequest();
-
-		// Create the base node
-		$componentListNode =$doc->createElementNS($deployment->getNamespace(), 'component_list');
-		// Run through supp files and add component nodes.
-		foreach($componentGalleys as $componentGalley) {
-			$componentFile = $componentGalley->getFile();
-			$componentNode = $doc->createElementNS($deployment->getNamespace(), 'component');
-			$componentNode->setAttribute('parent_relation', 'isPartOf');
-			/* Titles */
-			$componentFileTitle = $componentFile->getData('name', $componentGalley->getLocale());
-			if (!empty($componentFileTitle)) {
-				$titlesNode = $doc->createElementNS($deployment->getNamespace(), 'titles');
-				$titlesNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'title', htmlspecialchars($componentFileTitle, ENT_COMPAT, 'UTF-8')));
-				$componentNode->appendChild($titlesNode);
-			}
-			// DOI data node
-			$resourceURL = $request->url($context->getPath(), 'article', 'download', array($submission->getBestId(), $componentGalley->getBestGalleyId()), null, null, true);
-			$componentNode->appendChild($this->createDOIDataNode($doc, $componentGalley->getStoredPubId('doi'), $resourceURL));
-			$componentListNode->appendChild($componentNode);
-		}
-		return $componentListNode;
 	}
 }
 

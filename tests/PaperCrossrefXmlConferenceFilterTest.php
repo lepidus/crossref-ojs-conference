@@ -11,24 +11,22 @@ import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployme
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 import("classes.publication.Publication");
+import("classes.journal.JournalDAO");
 echo("");
 
+/*
 
 $filterGroup = new FilterGroup();
 
-$context = new ContextMock();
-$context->setId(1);
-$context->setName('Conferência Vitinho');
-$user = new User();
+$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
+$contexts = $JournalDAO->getAll();
+
 $plugin = new PluginMock();
-
 echo("KKKKKKKKKKKKK");
+print_r(($contexts->toArray())[0]);
 
-print_r($plugin->getSetting($context->setId(1), 'depositorName')); 
-
-
-$deployment = new CrossrefConferenceExportDeployment($context,$user);
-$deployment->setPlugin($plugin);
+ $deployment = new CrossrefConferenceExportDeployment($context,$plugin);
+$deployment->setPlugin($plugins);
 
 $doc = new DOMDocument('1.0', 'utf-8');
 $crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
@@ -38,9 +36,11 @@ $submissionDao =& DAORegistry::getDAO('SubmissionDAO');
 $submissions = $submissionDao->getByContextId(1);
 $submission = $submissions->toArray();
 
-$doc = $crossRef->process($submission);
+$doc = $crossRef->process($submission); */
 
 //echo $doc->saveXML();
+
+
 
 class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
@@ -125,14 +125,13 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$filterGroup = new FilterGroup();
 
-		$context = new ContextMock();
-		$context->setId(1);
-		$context->setName('Conferência Vitinho');
-		$user = new User();
+		$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
+		$contexts = $JournalDAO->getAll();
+		$context = ($contexts->toArray())[0]; 
+		
 		$plugin = new PluginMock();
 
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
-		$deployment->setPlugin($plugin);
+		$deployment = new CrossrefConferenceExportDeployment($context,$plugin);
 
 		$doc = $this->doc;
 		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);

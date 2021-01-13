@@ -103,10 +103,10 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$headNode->appendChild($node = $doc->createElement('timestamp', time()));
 		$depositorNode = $doc->createElement('depositor');
 		$depositorName = $plugin->getSetting($context->getId(), 'depositorName');
+		$depositorEmail = $plugin->getSetting($context->getId(), 'depositorEmail');
 
 		if (empty($depositorName)) {
 			$depositorName = $context->getData('supportName');
-			$depositorEmail = $plugin->getSetting($context->getId(), 'depositorEmail');
 		}
 		
 		if (empty($depositorEmail)) {
@@ -173,7 +173,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 
-		$proceedingsSeriesMetadata = $doc->createElement('proceedings_series_metadata');
+		$proceedingsSeriesMetadataNode = $doc->createElement('proceedings_series_metadata');
 		$seriesMetadata = $doc->createElement('series_metadata');
 		$proceedingsTitle = $context->getName($context->getPrimaryLocale());
 		// Attempt a fall back, in case the localized name is not set.
@@ -184,25 +184,25 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$titles->appendChild($node = $doc->createElement('title',htmlspecialchars($proceedingsTitle, ENT_COMPAT, 'UTF-8')));
 		/* Both ISSNs are permitted for CrossRef, so sending whichever one (or both)*/
 		if ($ISSN = $context->getData('onlineIssn') ) {
-			$proceedingsSeriesMetadataNode->appendChild($node = $doc->createElement('issn', $ISSN));
+			$seriesMetadata->appendChild($node = $doc->createElement('issn', $ISSN));
 			$node->setAttribute('media_type', 'electronic');
 		}
 		/*Both ISSNs are permitted for CrossRef so sending whichever one (or both)*/ 
 		if ($ISSN = $context->getData('printIssn') ) {
-			$proceedingsSeriesMetadataNode->appendChild($node = $doc->createElement('issn', $ISSN));
+			$seriesMetadata->appendChild($node = $doc->createElement('issn', $ISSN));
 			$node->setAttribute('media_type', 'print');
 		}
 		
-		$proceedingsSeriesMetadata->appendChild($seriesMetadata);
+		$proceedingsSeriesMetadataNode->appendChild($seriesMetadata);
 
 		$publisher = $doc->createElement('publisher');
 		$publisher->appendChild($node = $doc->createElement('publisher_name'));
-		$proceedingsSeriesMetadata->appendChild($publisher);
+		$proceedingsSeriesMetadataNode->appendChild($publisher);
 		if ($issue->getDatePublished()) {
-			$proceedingsSeriesMetadata->appendChild($this->createPublicationDateNode($doc,$issue->getDatePublished()));
+			$proceedingsSeriesMetadataNode->appendChild($this->createPublicationDateNode($doc,$issue->getDatePublished()));
 		}
 
-		return $proceedingsSeriesMetadata;
+		return $proceedingsSeriesMetadataNode;
 	}
 
 	/**
