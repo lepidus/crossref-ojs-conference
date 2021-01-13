@@ -92,7 +92,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 
 		$conferencePaperNode = $doc->createElement('conference_paper');
 		$conferencePaperNode->setAttribute('publication_type', 'full_text');
-		$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
+		//$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
 
 		//contributors
 		$contributorsNode = $doc->createElement('contributors');

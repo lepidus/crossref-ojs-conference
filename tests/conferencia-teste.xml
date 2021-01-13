@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.4.2" xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 http://www.crossref.org/schema/crossref4.4.2.xsd">
   <head>
-    <doi_batch_id>_1610562316</doi_batch_id>
-    <timestamp>1610562316</timestamp>
+    <doi_batch_id>_1610566310</doi_batch_id>
+    <timestamp>1610566310</timestamp>
     <depositor>
       <depositor_name>Vitor Hugo</depositor_name>
       <email_address>vitor14_1999@hotmail.com</email_address>
@@ -24,7 +24,7 @@
           <issn media_type="print">2359-0793</issn>
         </series_metadata>
         <publisher>
-          <publisher_name/>
+          <publisher_name>lepidus</publisher_name>
         </publisher>
         <publication_date media_type="online">
           <month>01</month>
@@ -32,7 +32,7 @@
           <year>2021</year>
         </publication_date>
       </proceedings_series_metadata>
-      <conference_paper publication_type="full_text" metadata_distribution_opts="any">
+      <conference_paper publication_type="full_text">
         <contributors>
           <person_name contributor_role="author" sequence="first" language="en">
             <given_name>Ojs</given_name>

@@ -196,7 +196,8 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$proceedingsSeriesMetadataNode->appendChild($seriesMetadata);
 
 		$publisher = $doc->createElement('publisher');
-		$publisher->appendChild($node = $doc->createElement('publisher_name'));
+		$publisherName = $context->getData('publisherInstitution');
+		$publisher->appendChild($node = $doc->createElement('publisher_name',$publisherName));
 		$proceedingsSeriesMetadataNode->appendChild($publisher);
 		if ($issue->getDatePublished()) {
 			$proceedingsSeriesMetadataNode->appendChild($this->createPublicationDateNode($doc,$issue->getDatePublished()));
