@@ -83,9 +83,13 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
 		$request = Application::get()->getRequest();
-
+		
 		$publication = $submission->getCurrentPublication();
 		$locale = $publication->getData('locale');
+		
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); 
+		$submissionTest = $submissionDao->getByPubId('doi','7',$context->getId());
+		print_r($submissionTest);
 
 		// Issue shoulld be set by now
 		$issue = $deployment->getIssue();

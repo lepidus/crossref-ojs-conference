@@ -7,7 +7,10 @@
  *
  * List of operations this plugin can perform
  *}
-{extends file="layouts/backend.tpl"}
+
+{strip}
+{include file="common/header.tpl" pageTitle="plugins.importexport.crossrefConference.displayName"}
+{/strip}
 
 {block name="page"}
 	<h1 class="app__pageHeading">
