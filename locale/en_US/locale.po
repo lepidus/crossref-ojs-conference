@@ -48,7 +48,7 @@ msgid "plugins.importexport.crossrefConference.settings.form.depositorEmailRequi
 msgstr "Please enter the depositor email."
 
 msgid "plugins.importexport.crossrefConference.registrationIntro"
-msgstr "If you would like to use this plugin to register Digital Object Identifiers (DOIs) directly with crossrefConference you will need a username and password (available from <a href=\"http://www.crossrefConference.org\" target=\"_blank\">crossrefConference</a>) in order to do so. If you do not have your own username and password you can still export into the crossrefConference XML format, but you cannot register your DOIs with crossrefConference from within OJS."
+msgstr "If you would like to use this plugin to register Digital Object Identifiers (DOIs) directly with crossrefConference you will need a username and password (available from <a href=\"http://www.crossref.org\" target=\"_blank\">crossref</a>) in order to do so. If you do not have your own username and password you can still export into the crossrefConference XML format, but you cannot register your DOIs with crossrefConference from within OJS."
 
 msgid "plugins.importexport.crossrefConference.settings.form.username"
 msgstr "Username"

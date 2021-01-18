@@ -16,8 +16,8 @@
  *
  */
 
-require_once('CrossRefConferenceExportPlugin.inc.php');
+require_once('CrossrefConferenceExportPlugin.inc.php');
 
-return new CrossRefConferenceExportPlugin();
+return new CrossrefConferenceExportPlugin();
 
 

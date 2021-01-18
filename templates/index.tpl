@@ -65,7 +65,7 @@
 				</div>
 			{/if}
 
-			{capture assign=crossrefSettingsGridUrl}{url router=$smarty.const.ROUTE_COMPONENT component="grid.settings.plugins.settingsPluginGridHandler" op="manage" plugin="CrossRefConferenceExportPlugin" category="importexport" verb="index" escape=false}{/capture}
+			{capture assign=crossrefSettingsGridUrl}{url router=$smarty.const.ROUTE_COMPONENT component="grid.settings.plugins.settingsPluginGridHandler" op="manage" plugin="CrossrefConferenceExportPlugin" category="importexport" verb="index" escape=false}{/capture}
 			{load_url_in_div id="crossrefSettingsGridContainer" url=$crossrefSettingsGridUrl}
 		</div>
 

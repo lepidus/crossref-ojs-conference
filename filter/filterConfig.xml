@@ -21,7 +21,7 @@
 			outputType="xml::schema(https://www.crossref.org/schemas/crossref4.3.6.xsd)" />
 		<!-- Crossref XML article output -->
 		<filterGroup
-			symbolic="article=>crossref-xml"
+			symbolic="paper=>crossref-xml"
 			displayName="plugins.importexport.crossrefConference.displayName"
 			description="plugins.importexport.crossrefConference.description"
 			inputType="class::classes.submission.Submission[]"
@@ -35,7 +35,7 @@
 			isTemplate="0" />
 		<!-- Crossref XML article output -->
 		<filter
-			inGroup="article=>crossref-xml"
+			inGroup="paper=>crossref-xml"
 			class="plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter"
 			isTemplate="0" />
 	</filters>

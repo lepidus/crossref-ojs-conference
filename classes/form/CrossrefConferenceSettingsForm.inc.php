@@ -16,7 +16,7 @@
 
 import('lib.pkp.classes.form.Form');
 
-class CrossRefSettingsForm extends Form {
+class CrossrefConferenceSettingsForm extends Form {
 
 	//
 	// Private properties

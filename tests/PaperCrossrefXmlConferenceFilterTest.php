@@ -32,6 +32,7 @@ $crossRef->setDeployment($deployment);
 $submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
 $submissions = $submissionDao->getByContextId(1);
 $submission = $submissions->toArray();
+//print_r($submission);
 
 $doc = $crossRef->process($submission);
 

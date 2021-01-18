@@ -16,7 +16,7 @@
 import('lib.pkp.classes.scheduledTask.ScheduledTask');
 
 
-class CrossrefInfoSender extends ScheduledTask {
+class CrossrefConferenceInfoSender extends ScheduledTask {
 	/** @var $_plugin CrossRefExportPlugin */
 	var $_plugin;
 
@@ -26,10 +26,10 @@ class CrossrefInfoSender extends ScheduledTask {
 	 */
 	function __construct($args) {
 		PluginRegistry::loadCategory('importexport');
-		$plugin = PluginRegistry::getPlugin('importexport', 'CrossRefConferenceExportPlugin'); /* @var $plugin CrossRefExportPlugin */
+		$plugin = PluginRegistry::getPlugin('importexport', 'CrossrefConferenceExportPlugin'); /* @var $plugin CrossRefExportPlugin */
 		$this->_plugin = $plugin;
 
-		if (is_a($plugin, 'CrossRefConferenceExportPlugin')) {
+		if (is_a($plugin, 'CrossrefConferenceExportPlugin')) {
 			$plugin->addLocaleData();
 		}
 
@@ -63,7 +63,7 @@ class CrossrefInfoSender extends ScheduledTask {
 				$unregisteredArticles = $plugin->getUnregisteredArticles($journal);
 				// If there are articles to be deposited
 				if (count($unregisteredArticles)) {
-					$this->_registerObjects($unregisteredArticles, 'article=>crossref-xml', $journal, 'articles');
+					$this->_registerObjects($unregisteredArticles, 'paper=>crossref-xml', $journal, 'articles');
 				}
 			}
 		}

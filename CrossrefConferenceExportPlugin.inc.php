@@ -33,13 +33,13 @@ define('CROSSREF_API_STATUS_URL_DEV', 'https://test.crossref.org/servlet/submiss
 define('CROSSREF_DEPOSIT_STATUS', 'depositStatus');
 
 
-class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
+class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin {
 
 	/**
 	 * @copydoc Plugin::getName()
 	 */
 	function getName() {
-		return 'CrossRefConferenceExportPlugin';
+		return 'CrossrefConferenceExportPlugin';
 	}
 
 	/**
@@ -60,7 +60,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc PubObjectsExportPlugin::getSubmissionFilter()
 	 */
 	function getSubmissionFilter() {
-		return 'article=>crossref-xml';
+		return 'paper=>crossref-xml';
 	}
 
 	/**
@@ -88,7 +88,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 						$dispatcher->url(
 							$request, ROUTE_COMPONENT, null,
 							'grid.settings.plugins.settingsPluginGridHandler',
-							'manage', null, array('plugin' => 'CrossRefConferenceExportPlugin', 'category' => 'importexport', 'verb' => 'statusMessage',
+							'manage', null, array('plugin' => 'CrossrefConferenceExportPlugin', 'category' => 'importexport', 'verb' => 'statusMessage',
 							'batchId' => $pubObject->getData($this->getDepositBatchIdSettingName()), 'articleId' => $pubObject->getId())
 						),
 						__('plugins.importexport.crossrefConference.status.failed'),
@@ -169,7 +169,7 @@ class CrossRefConferenceExportPlugin extends DOIPubIdExportPlugin {
 	 * @copydoc PubObjectsExportPlugin::getSettingsFormClassName()
 	 */
 	function getSettingsFormClassName() {
-		return 'CrossRefSettingsForm';
+		return 'CrossrefConferenceSettingsForm';
 	}
 
 	/**
