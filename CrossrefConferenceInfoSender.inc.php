@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @file plugins/importexport/crossref/CrossrefInfoSender.php
+ * @file plugins/importexport/crossrefConference/CrossrefConferenceInfoSender.php
  *
  * Copyright (c) 2013-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class CrossrefInfoSender
- * @ingroup plugins_importexport_crossref
+ * @class CrossrefConferenceInfoSender
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Scheduled task to send deposits to Crossref and update statuses.
+ * @brief Scheduled task to send deposits to CrossrefConference and update statuses.
  */
 
 import('lib.pkp.classes.scheduledTask.ScheduledTask');

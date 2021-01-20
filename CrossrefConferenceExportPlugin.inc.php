@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @file plugins/importexport/crossref/CrossRefExportPlugin.inc.php
+ * @file plugins/importexport/crossrefConference/CrossrefConferenceExportPlugin.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class CrossRefExportPlugin
- * @ingroup plugins_importexport_crossref
+ * @class CrossrefConferenceExportPlugin
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief CrossRef/MEDLINE XML metadata export plugin
+ * @brief CrossRefConference/MEDLINE XML metadata export plugin
  */
 
 import('classes.plugins.DOIPubIdExportPlugin');

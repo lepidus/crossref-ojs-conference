@@ -7,40 +7,16 @@
  */
 
 /**
- * @file classes/plugins/Plugin.inc.php
+ * @file plugins/importexport/crossrefConference/tests/PluginMock.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class Plugin
- * @ingroup plugins
+ * @class PluginMock
+ * @ingroup plugins_importexport_crossrefConference
  * @see PluginRegistry, PluginSettingsDAO
  *
- * @brief Abstract class for plugins
- *
- * For best performance, a plug-in should not be instantiated if it is
- * disabled or the current page/operation does not require the plug-in's
- * functionality.
- *
- * Newer plug-ins support enable/disable and request filter settings that
- * enable the PKP library plug-in framework to lazy-load plug-ins only
- * when their functionality is actually being required for a request.
- *
- * For backwards compatibility we need to assume that older plug-ins
- * do not support lazy-load because their register() method and hooks
- * may have side-effects required on all requests. We have no way of
- * knowing on which pages these side effects are important so we need
- * to load legacy plug-ins on all pages.
- *
- * In these cases the register() function will be called on every request
- * when the category the plug-in belongs to is being loaded. This was the
- * default behavior before plug-in lazy load was introduced.
- *
- * Plug-ins that want to enable lazy-load have to include a 'lazy-load'
- * setting in their version.xml:
- *
- *  <lazy-load>1</lazy-load>
  */
 
 

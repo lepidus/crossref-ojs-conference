@@ -1,5 +1,5 @@
 {**
- * plugins/importexport/crossref/templates/index.tpl
+ * plugins/importexport/crossrefConference/templates/index.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
@@ -13,9 +13,6 @@
 {/strip}
 
 {block name="page"}
-	<h1 class="app__pageHeading">
-		{$pageTitle}
-	</h1>
 
 	{if !empty($configurationErrors) ||
 		!$currentContext->getData('publisherInstitution')|escape ||

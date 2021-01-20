@@ -10,8 +10,7 @@ import('plugins.importexport.crossrefConference.tests.PluginMock');
 import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployment');
 import('classes.issue.Issue');
 import("classes.submission.Submission");
-echo("");
-echo("CROSSREFCONFERENCE\n");
+
 
 class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 

@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @file classes/context/Context.inc.php
+ * @file plugins/importexport/crossrefConference/tests/ContextMock.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class Context
- * @ingroup core
+ * @class ContextMock
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Basic class describing a context.
+ * @brief Basic class describing a contextMock.
  */
 
  // Constant used to distinguish whether metadata is enabled and whether it

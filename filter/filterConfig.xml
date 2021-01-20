@@ -2,7 +2,7 @@
 <!DOCTYPE filterConfig SYSTEM "../../../../lib/pkp/dtd/filterConfig.dtd">
 
 <!--
-  * plugins/importexport/crossref/filter/filterConfig.xml
+  * plugins/importexport/crossrefConference/filter/filterConfig.xml
   *
   * Copyright (c) 2014-2020 Simon Fraser University
   * Copyright (c) 2003-2020 John Willinsky
@@ -14,7 +14,7 @@
 	<filterGroups>
 		<!-- Crossref XML issue output -->
 		<filterGroup
-			symbolic="issue=>crossref-xml"
+			symbolic="series=>crossref-xml"
 			displayName="plugins.importexport.crossrefConference.displayName"
 			description="plugins.importexport.crossrefConference.description"
 			inputType="class::classes.issue.Issue[]"
@@ -30,7 +30,7 @@
 	<filters>
 		<!-- Crossref XML issue output -->
 		<filter
-			inGroup="issue=>crossref-xml"
+			inGroup="series=>crossref-xml"
 			class="plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter"
 			isTemplate="0" />
 		<!-- Crossref XML article output -->

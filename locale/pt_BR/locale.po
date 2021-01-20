@@ -14,70 +14,70 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 3.9.1\n"
 
-msgid "plugins.importexport.crossref.displayName"
-msgstr "Exportação CrossRef em XML"
+msgid "plugins.importexport.crossrefConference.displayName"
+msgstr "Exportação CrossRef em XML para o formato conferência"
 
-msgid "plugins.importexport.crossref.description"
-msgstr "Exporta metadados dos artigos no formato CrossRef XML."
+msgid "plugins.importexport.crossrefConference.description"
+msgstr "Exporta metadados da conferência no formato CrossRef XML."
 
-msgid "plugins.importexport.crossref.requirements"
+msgid "plugins.importexport.crossrefConference.requirements"
 msgstr "Requisitos"
 
-msgid "plugins.importexport.crossref.requirements.satisfied"
+msgid "plugins.importexport.crossrefConference.requirements.satisfied"
 msgstr "Todos os requisitos do plugin estão atendidos."
 
-msgid "plugins.importexport.crossref.error.publisherNotConfigured"
+msgid "plugins.importexport.crossrefConference.error.publisherNotConfigured"
 msgstr "A instituição editora da revista não foi configurado! Você deve adicionar uma instituição editora na <a href=\"{$journalSettingsUrl}\" target=\"_blank\"> Página de Configurações da Revista</a>."
 
-msgid "plugins.importexport.crossref.error.issnNotConfigured"
+msgid "plugins.importexport.crossrefConference.error.issnNotConfigured"
 msgstr "O ISSN da revista não foi configurado! Você deve adicionar um ISSN na <a href=\"{$journalSettingsUrl}\" target=\"_blank\"> Página de Configurações do Revista</a>."
 
-msgid "plugins.importexport.crossref.error.noDOIContentObjects"
+msgid "plugins.importexport.crossrefConference.error.noDOIContentObjects"
 msgstr "Os artigos não foram selecionados para a atribuição de DOI no plugin de identificador público do DOI, portanto não há possibilidade de depósito ou exportação neste plugin."
 
-msgid "plugins.importexport.crossref.settings.depositorIntro"
+msgid "plugins.importexport.crossrefConference.settings.depositorIntro"
 msgstr "Os seguintes items são exigidos para um depósito bem sucedido na Crossref."
 
-msgid "plugins.importexport.crossref.settings.form.depositorName"
+msgid "plugins.importexport.crossrefConference.settings.form.depositorName"
 msgstr "Nome do depositante"
 
-msgid "plugins.importexport.crossref.settings.form.depositorEmail"
+msgid "plugins.importexport.crossrefConference.settings.form.depositorEmail"
 msgstr "Email do depositante"
 
-msgid "plugins.importexport.crossref.settings.form.depositorNameRequired"
+msgid "plugins.importexport.crossrefConference.settings.form.depositorNameRequired"
 msgstr "Por favor digite o nome do depositante."
 
-msgid "plugins.importexport.crossref.settings.form.depositorEmailRequired"
+msgid "plugins.importexport.crossrefConference.settings.form.depositorEmailRequired"
 msgstr "Por favor digite o email do depositante."
 
-msgid "plugins.importexport.crossref.registrationIntro"
+msgid "plugins.importexport.crossrefConference.registrationIntro"
 msgstr "Se você quiser usar este plugin para registrar Digital Object Identifiers (DOIs) diretamente com o CrossRef, você precisará de um nome de usuário e senha (disponível em <a href=\"http://www.crossref.org\" target=\"_blank\"> CrossRef </a>). Se você não tiver seu próprio nome de usuário e senha, ainda poderá exportar para o formato CrossRef XML, mas não poderá registrar os nomes DOI com a CrossRef a partir do OJS."
 
-msgid "plugins.importexport.crossref.settings.form.username"
+msgid "plugins.importexport.crossrefConference.settings.form.username"
 msgstr "Nome de usuário"
 
-msgid "plugins.importexport.crossref.settings.form.usernameRequired"
-msgstr "Por favor, informe o nome de usuário que você revcebeu da CrossRef."
+msgid "plugins.importexport.crossrefConference.settings.form.usernameRequired"
+msgstr "Por favor, informe o nome de usuário que você recebeu da CrossRef."
 
-msgid "plugins.importexport.crossref.settings.form.automaticRegistration.description"
+msgid "plugins.importexport.crossrefConference.settings.form.automaticRegistration.description"
 msgstr "O OJS depositará automaticamente os metadados dos DOIs atribuídos na CrossRef. Observe que isso pode levar um curto período de tempo após a publicação do processo. Você pode verificar todas os DOIs não registrados."
 
-msgid "plugins.importexport.crossref.settings.form.testMode.description"
+msgid "plugins.importexport.crossrefConference.settings.form.testMode.description"
 msgstr "Use a API de teste CrossRef (ambiente de teste) para o depósito DOI. Não se esqueça de remover esta opção para a produção."
 
-msgid "plugins.importexport.crossref.issues.description"
+msgid "plugins.importexport.crossrefConference.issues.description"
 msgstr "Nota: Somente as edições (e não seus artigos) serão considerados para exportação/registro aqui."
 
-msgid "plugins.importexport.crossref.status.failed"
+msgid "plugins.importexport.crossrefConference.status.failed"
 msgstr "Falhou"
 
-msgid "plugins.importexport.crossref.status.registered"
+msgid "plugins.importexport.crossrefConference.status.registered"
 msgstr "Ativo"
 
-msgid "plugins.importexport.crossref.status.markedRegistered"
+msgid "plugins.importexport.crossrefConference.status.markedRegistered"
 msgstr "Marcar como Ativo"
 
-msgid "plugins.importexport.crossref.statusLegend"
+msgid "plugins.importexport.crossrefConference.statusLegend"
 msgstr ""
 "\n"
 "\t\t<p> Estado do depósito: </p>\n"
@@ -91,40 +91,43 @@ msgstr ""
 "\t\t<p> Se um depósito falhou, resolva o problema e tente registrar novamente o DOI.</p>"
 
 #, fuzzy
-msgid "plugins.importexport.crossref.action.export"
+msgid "plugins.importexport.crossrefConference.action.export"
 msgstr "Download XML"
 
-msgid "plugins.importexport.crossref.action.markRegistered"
+msgid "plugins.importexport.crossrefConference.action.markRegistered"
 msgstr "Marcar como Ativo"
 
-msgid "plugins.importexport.crossref.senderTask.name"
+msgid "plugins.importexport.crossrefConference.senderTask.name"
 msgstr "Dados CrossRef do remetente"
 
-msgid "plugins.importexport.crossref.cliUsage"
+msgid "plugins.importexport.crossrefConference.cliUsage"
 msgstr ""
 "Uso:\n"
 "{$scriptName} {$pluginName} export [xmlFileName] [journal_path] articles objectId1 [objectId2] ...\n"
 "{$scriptName} {$pluginName} register [journal_path] articles objectId1 [objectId2] ...\n"
 ""
 
-msgid "plugins.importexport.crossref.export.error.issueNotFound"
+msgid "plugins.importexport.crossrefConference.export.error.issueNotFound"
 msgstr "Nenhuma edição correspondeu ao ID de edição especificado \"{$issueId}\"."
 
-msgid "plugins.importexport.crossref.export.error.articleNotFound"
+msgid "plugins.importexport.crossrefConference.export.error.articleNotFound"
 msgstr "Nenhum artigo correspondeu ao ID do artigo especificado \"{$articleId}\"."
 
-msgid "plugins.importexport.crossref.register.success.warning"
+msgid "plugins.importexport.crossrefConference.register.success.warning"
 msgstr "O registro foi bem-sucedido, mas ocorreu o seguinte aviso: '{$param}'."
 
-msgid "plugins.importexport.crossref.register.error.mdsError"
+msgid "plugins.importexport.crossrefConference.register.error.mdsError"
 msgstr ""
 "O registro não foi totalmente bem-sucedido! O servidor de registro DOI "
 "retornou um erro."
 
-msgid "plugins.importexport.crossref.action.register"
+msgid "plugins.importexport.crossrefConference.action.register"
 msgstr "Depositar"
 
-msgid "plugins.importexport.crossref.settings.form.validation"
+msgid "plugins.importexport.crossrefConference.settings.form.validation"
 msgstr ""
 "Validar XML. Use esta opção para o download do XML para o registro manual do "
 "DOI."
+
+msgid "plugins.importexport.crossrefConference.settings.form.onlyValidateExport"
+msgstr "Validar apenas a exportação. Não baixar o arquivo."

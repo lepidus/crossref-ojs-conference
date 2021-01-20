@@ -8,9 +8,9 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class PaperCrossrefXmlConferenceFilter
- * @ingroup plugins_importexport_crossref
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Class that converts an Paper to a Crossref XML document.
+ * @brief Class that converts an Paper to a CrossrefConference XML document.
  */
 
 import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
@@ -119,7 +119,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 			$contributorsNode->appendChild($personNameNode);
 
 			if (isset($familyNames[$locale]) && isset($givenNames[$locale])) {
-				$personNameNode->setAttribute('language', PKPLocale::getIso1FromLocale($locale));
+				//$personNameNode->setAttribute('language', PKPLocale::getIso1FromLocale($locale));
 				$personNameNode->appendChild($node = $doc->createElement('given_name', htmlspecialchars(ucfirst($givenNames[$locale]), ENT_COMPAT, 'UTF-8')));
 				$personNameNode->appendChild($node = $doc->createElement('surname', htmlspecialchars(ucfirst($familyNames[$locale]), ENT_COMPAT, 'UTF-8')));
 			} else {

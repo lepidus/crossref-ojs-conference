@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @file plugins/importexport/crossref/classes/form/CrossRefSettingsForm.inc.php
+ * @file plugins/importexport/crossrefConference/classes/form/CrossrefConferenceSettingsForm.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class CrossRefSettingsForm
- * @ingroup plugins_importexport_crossref
+ * @class CrossrefConferenceSettingsForm
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Form for journal managers to setup CrossRef plugin
+ * @brief Form for conference managers to setup CrossrefConference plugin
  */
 
 

@@ -1,27 +1,27 @@
 <?php
 /**
- * @defgroup plugins_importexport_crossref Crossref export plugin
+ * @defgroup plugins_importexport_crossrefConference CrossrefConference export plugin
  */
 
 /**
- * @file plugins/importexport/crossref/CrossrefExportDeployment.inc.php
+ * @file plugins/importexport/crossref/CrossrefConferenceExportDeployment.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class CrossrefExportDeployment
- * @ingroup plugins_importexport_crossref
+ * @class CrossrefConferenceExportDeployment
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Base class configuring the crossref export process to an
+ * @brief Base class configuring the crossrefConference export process to an
  * application's specifics.
  */
 
 // XML attributes
-define('CROSSREF_XMLNS' , 'http://www.crossref.org/schema/4.4.2');
+define('CROSSREF_XMLNS' , 'http://www.crossref.org/schema/4.3.3');
 define('CROSSREF_XMLNS_XSI' , 'http://www.w3.org/2001/XMLSchema-instance');
-define('CROSSREF_XSI_SCHEMAVERSION' , '4.4.2');
-define('CROSSREF_XSI_SCHEMALOCATION' , 'http://www.crossref.org/schema/crossref4.4.2.xsd');
+define('CROSSREF_XSI_SCHEMAVERSION' , '4.3.3');
+define('CROSSREF_XSI_SCHEMALOCATION' , 'http://www.crossref.org/schema/crossref4.3.3.xsd');
 
 
 class CrossrefConferenceExportDeployment {

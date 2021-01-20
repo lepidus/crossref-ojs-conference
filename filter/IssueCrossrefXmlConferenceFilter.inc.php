@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @file plugins/importexport/crossref/filter/IssueCrossrefXmlFilter.inc.php
+ * @file plugins/importexport/crossrefConference/filter/IssueCrossrefXmlConferenceFilter.inc.php
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class IssueCrossrefXmlFilter
- * @ingroup plugins_importexport_crossref
+ * @class IssueCrossrefXmlConferenceFilter
+ * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Class that converts an Issue to a Crossref XML document.
+ * @brief Class that converts an Issue to a CrossrefConference XML document.
  */
 
 import('lib.pkp.plugins.importexport.native.filter.NativeExportFilter');
@@ -112,7 +112,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		if (empty($depositorEmail)) {
 			$depositorEmail = $context->getData('supportEmail');
 		}
-		$depositorNode->appendChild($node = $doc->createElement('depositor_name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
+		$depositorNode->appendChild($node = $doc->createElement('name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
 		$depositorNode->appendChild($node = $doc->createElement('email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
 		$headNode->appendChild($depositorNode);
 		$publisherInstitution = $context->getData('publisherInstitution');

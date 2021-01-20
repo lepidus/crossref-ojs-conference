@@ -12,33 +12,6 @@ import('classes.issue.Issue');
 import("classes.submission.Submission");
 import("classes.publication.Publication");
 import("classes.journal.JournalDAO");
-echo("");
-
-
-$filterGroup = new FilterGroup();
-
-$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
-$contexts = $JournalDAO->getAll();
-$context = ($contexts->toArray())[0]; 
-
-$plugin = new PluginMock();
-
-$deployment = new CrossrefConferenceExportDeployment($context,$plugin);
-
-$doc = new DOMDocument('1.0', 'utf-8');
-$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
-$crossRef->setDeployment($deployment);
-
-$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
-$submissions = $submissionDao->getByContextId(1);
-$submission = $submissions->toArray();
-//print_r($submission);
-
-$doc = $crossRef->process($submission);
-
-//echo $doc->saveXML();
-
-
 
 class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 

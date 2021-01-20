@@ -1,5 +1,5 @@
 {**
- * plugins/importexport/crossref/templates/settingsForm.tpl
+ * plugins/importexport/crossrefConference/templates/settingsForm.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
  * Copyright (c) 2003-2020 John Willinsky
