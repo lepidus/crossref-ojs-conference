@@ -3,10 +3,6 @@
 <!--
   * plugins/importexport/crossrefConference/scheduledTasks.xml
   *
-  * Copyright (c) 2013-2020 Simon Fraser University
-  * Copyright (c) 2003-2020 John Willinsky
-  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
-  *
   * CrossrefConference Plugin Deposit
   *
   * This file describes the schedule task that will send deposits to CrossrefConference and update statuses in the background.

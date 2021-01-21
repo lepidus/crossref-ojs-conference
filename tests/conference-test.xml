@@ -1,2 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<doi_batch xmlns="http://www.crossref.org/schema/4.4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.4.2"  xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 http://www.crossref.org/schema/crossref4.4.2.xsd"><head><doi_batch_id>_1608313640</doi_batch_id><timestamp>1608313640</timestamp><depositor><name></name><email_address></email_address></depositor><registrant></registrant></head><body><conference><event_metadata><conference_name></conference_name><conference_acronym></conference_acronym></event_metadata><proceedings_series_metadata><series_metadata><titles><title></title></titles></series_metadata></proceedings_series_metadata></conference></body></doi_batch>
+<doi_batch xmlns="http://www.crossref.org/schema/4.3.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.3" xsi:schemaLocation="http://www.crossref.org/schema/4.3.3 http://www.crossref.org/schema/deposit/crossref4.3.3.xsd">
+    <head>
+        <doi_batch_id>proceeding_1606846180</doi_batch_id>
+        <timestamp>1606846180</timestamp>
+        <depositor>
+            <name>Lepidus Tecnologia</name>
+            <email_address>doi@lepidus.com.br</email_address>
+        </depositor>
+        <registrant>SBMAC</registrant>
+    </head>
+    <body>
+        <conference>
+            <event_metadata>
+                <conference_name>CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional</conference_name>
+            </event_metadata>
+            <proceedings_series_metadata>
+                <series_metadata>
+                    <titles>
+                        <title>Proceeding Series of the Brazilian Society of Computational and Applied Mathematics</title>
+                    </titles>
+                    <issn media_type="electronic">2359-0793</issn>
+                </series_metadata>
+                <publisher>
+                    <publisher_name>SBMAC</publisher_name>
+                </publisher>
+                <publication_date media_type="online">
+                    <month>02</month>
+                    <day>20</day>
+                    <year>2020</year>
+                </publication_date>
+            </proceedings_series_metadata>
+            <conference_paper publication_type="full_text" metadata_distribution_opts="any">
+                <contributors>
+                    <person_name contributor_role="author" sequence="first">
+                        <given_name>Amanda</given_name>
+                        <surname>Aléssio</surname>
+                    </person_name>
+                    <person_name contributor_role="author" sequence="additional">
+                        <given_name>Cristiane</given_name>
+                        <surname>Nespoli</surname>
+                    </person_name>
+                </contributors>
+                <titles>
+                    <title>A importância do Cálculo Diferencial e Integral para a formação do professor de Matemática da Educação Básica</title>
+                </titles>
+                <publication_date media_type="online">
+                    <month>02</month>
+                    <day>20</day>
+                    <year>2020</year>
+                </publication_date>
+                <doi_data>
+                    <doi>10.5540/03.2020.007.01.0339</doi>
+                    <resource>https://proceedings.sbmac.org.br/sbmac/article/view/2680</resource>
+                    <collection property="text-mining">
+                        <item>
+                            <resource mime_type="application/pdf">https://proceedings.sbmac.org.br/sbmac/article/viewFile/2680/2700</resource>
+                        </item>
+                    </collection>
+                </doi_data>
+            </conference_paper>
+        </conference>
+    </body>
+</doi_batch>

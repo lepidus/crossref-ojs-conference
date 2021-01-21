@@ -1,21 +1,17 @@
 <?php
 
 /**
- * @file plugins/importexport/crossrefConference/filter/IssueCrossrefXmlConferenceFilter.inc.php
+ * @file plugins/importexport/crossrefConference/filter/ProceedingsCrossrefXmlConferenceFilter.inc.php
  *
- * Copyright (c) 2014-2020 Simon Fraser University
- * Copyright (c) 2000-2020 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- *
- * @class IssueCrossrefXmlConferenceFilter
+ * @class ProceedingsCrossrefXmlConferenceFilter
  * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Class that converts an Issue to a CrossrefConference XML document.
+ * @brief Class that converts an Proceedings to a Crossref Conference XML document.
  */
 
 import('lib.pkp.plugins.importexport.native.filter.NativeExportFilter');
 
-class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
+class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 	/**
 	 * Constructor
 	 * @param $filterGroup FilterGroup
@@ -32,7 +28,7 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @copydoc PersistableFilter::getClassName()
 	 */
 	function getClassName() {
-		return 'plugins.importexport.crossrefConference.filter.IssueCrossrefConferenceXmlFilter';
+		return 'plugins.importexport.crossrefConference.filter.ProceedingsCrossrefConferenceXmlFilter';
 	}
 
 	//
@@ -145,19 +141,8 @@ class IssueCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$context = $deployment->getContext();
 
 		$eventMetadataNode = $doc->createElement('event_metadata');
-		// Full title
-		$conferenceName = $context->getName($context->getPrimaryLocale());
-		// Attempt a fall back, in case the localized name is not set.
-		if ($conferenceName == '') {
-			$conferenceName = $context->getData('abbreviation', $context->getPrimaryLocale());
-		}
-		$eventMetadataNode->appendChild($node = $doc->createElement('conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
-		/* Abbreviated title - defaulting to initials if no abbreviation found */
-		$conferenceAbbrev = $context->getData('abbreviation', $context->getPrimaryLocale());
-		if ( $conferenceAbbrev == '' ) {
-			$conferenceAbbrev = $context->getData('acronym', $context->getPrimaryLocale());
-		}
-		$eventMetadataNode->appendChild($node = $doc->createElement('conference_acronym', htmlspecialchars($conferenceAbbrev, ENT_COMPAT, 'UTF-8')));
+	
+		$eventMetadataNode->appendChild($node = $doc->createElement('conference_name', 'CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional'));
 		
 		return $eventMetadataNode;
 	}

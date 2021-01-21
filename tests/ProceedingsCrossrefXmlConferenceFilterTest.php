@@ -1,7 +1,7 @@
 <?php 
 
 import('lib.pkp.tests.PKPTestCase');
-import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
+import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlConferenceFilter');
 import('plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter');
 import('lib.pkp.classes.user.User');
 import('plugins.importexport.native.NativeImportExportDeployment');
@@ -11,16 +11,52 @@ import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployme
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 
+$expectedFile = new DOMDocument('1.0', 'utf-8');
+$expectedFile->preserveWhiteSpace = true;
+$expectedFile->loadXML(getTestData());
+$doc = new DOMDocument('1.0', 'utf-8');
 
-class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
+
+$filterGroup = new FilterGroup();
+
+$context = new ContextMock();
+$user = new User();
+$plugin = new PluginMock();
+$deployment = new CrossrefConferenceExportDeployment($context,$user);
+$deployment->setPlugin($plugin);
+
+ 
+$doc->formatOutput = true;
+$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
+$crossRef->setDeployment($deployment);
+
+$head = $crossRef->createHeadNode($doc);
+$head = $doc->appendChild($head);
+
+$elements = $expectedFile->getElementsByTagName('doi_batch')->item(0);
+$expected = $elements->childNodes[1];
+
+$actual = $doc->getElementsByTagName("head")->item(0);
+
+echo ($expectedFile->saveXML($expected) . "ta nada");
+//echo($doc->saveXML($actual) . "\n" );
+
+function getTestData() {
+	$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
+	return file_get_contents($sampleFile);
+}
+
+
+
+class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
 	private $doc; 
 
 	protected function setUp() : void {
 		$this->expectedFile = new DOMDocument('1.0', 'utf-8');
+		$this->expectedFile->preserveWhiteSpace = true;
 		$this->expectedFile->loadXML($this->getTestData());
-		$this->expectedFile->preserveWhiteSpace = false;
 		$this->doc = new DOMDocument('1.0', 'utf-8');
 		parent::setUp();
 	}
@@ -33,7 +69,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$user = new User();
 		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
         $doiBatch = $crossRef->createRootNode($this->doc);
         $this->doc->appendChild($doiBatch);
@@ -69,14 +105,14 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$doc = $this->doc; 
 		$doc->formatOutput = true;
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$head = $crossRef->createHeadNode($doc);
 		$head = $doc->appendChild($head);
 
 		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
-		$expected = $elements->childNodes[0];
+		$expected = $elements->childNodes[1];
 		
 		$actual = $this->doc->getElementsByTagName("head")->item(0);
 
@@ -100,7 +136,7 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$doc = $this->doc; 
 		$doc->formatOutput = true;
-		$crossRef = new IssueCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$issue = new Issue();
@@ -126,19 +162,9 @@ class IssueCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 	}
 
-	
-
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
 		return file_get_contents($sampleFile);
-	}
-
-	function setDeployment($deployment) {
-		$this->_deployment = $deployment;
-	}
-
-	function getDeployment() {
-		return $this->_deployment;
 	}
     
 }

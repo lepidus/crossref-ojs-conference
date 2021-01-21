@@ -1,7 +1,7 @@
 <?php 
 
 import('lib.pkp.tests.PKPTestCase');
-import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
+import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlConferenceFilter');
 import('plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter');
 import('lib.pkp.classes.user.User');
 import('plugins.importexport.native.NativeImportExportDeployment');

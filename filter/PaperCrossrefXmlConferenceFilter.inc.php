@@ -3,19 +3,15 @@
 /**
  * @file plugins/importexport/crossref/filter/PaperCrossrefXmlConferenceFilter.inc.php
  *
- * Copyright (c) 2014-2020 Simon Fraser University
- * Copyright (c) 2000-2020 John Willinsky
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- *
  * @class PaperCrossrefXmlConferenceFilter
  * @ingroup plugins_importexport_crossrefConference
  *
- * @brief Class that converts an Paper to a CrossrefConference XML document.
+ * @brief Class that converts an Paper to a Crossref Conference XML document.
  */
 
-import('plugins.importexport.crossrefConference.filter.IssueCrossrefXmlConferenceFilter');
+import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlConferenceFilter');
 
-class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter {
+class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceFilter {
 	/**
 	 * Constructor
 	 * @param $filterGroup FilterGroup
@@ -155,6 +151,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 		// get immediatelly also supplementary files for component list
 		$componentGalleys = array();
 		$genreDao = DAORegistry::getDAO('GenreDAO'); /* @var $genreDao GenreDAO */
+		
 		foreach ($galleys as $galley) {
 			// filter supp files with DOI
 			if (!$galley->getRemoteURL()) {
@@ -180,7 +177,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 				$remoteGalleys[] = $galley;
 			}
 		}
-
+		
 		// as-crawled URLs
 		$asCrawledGalleys = array();
 		if ($pdfGalleyInArticleLocale) {
@@ -190,6 +187,7 @@ class PaperCrossrefXmlConferenceFilter extends IssueCrossrefXmlConferenceFilter 
 		} else {
 			$asCrawledGalleys = $submissionGalleys;
 		}
+		
 		// text-mining - collection nodes
 		$submissionGalleys = array_merge($submissionGalleys, $remoteGalleys);
 		$this->appendTextMiningCollectionNodes($doc, $doiDataNode, $submission, $submissionGalleys);
