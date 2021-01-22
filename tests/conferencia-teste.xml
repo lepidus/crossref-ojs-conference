@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.3.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.3" xsi:schemaLocation="http://www.crossref.org/schema/4.3.3 http://www.crossref.org/schema/deposit/crossref4.3.3.xsd">
   <head>
-    <doi_batch_id>_1611257409</doi_batch_id>
-    <timestamp>1611257409</timestamp>
+    <doi_batch_id>proceeding_1611344341</doi_batch_id>
+    <timestamp>1611344341</timestamp>
     <depositor>
-      <name>Aline</name>
-      <email_address>aline@lepidus.com.br</email_address>
+      <name>Vitor Hugo</name>
+      <email_address>vitor@lepidus.com.br</email_address>
     </depositor>
-    <registrant>lepidus</registrant>
+    <registrant>Lepidus</registrant>
   </head>
   <body>
     <conference>
@@ -17,17 +17,17 @@
       <proceedings_series_metadata>
         <series_metadata>
           <titles>
-            <title>vitinho</title>
+            <title>TesteConferencia</title>
           </titles>
           <issn media_type="electronic">2359-0793</issn>
           <issn media_type="print">2359-0793</issn>
         </series_metadata>
         <publisher>
-          <publisher_name>lepidus</publisher_name>
+          <publisher_name>Lepidus</publisher_name>
         </publisher>
         <publication_date media_type="online">
           <month>01</month>
-          <day>21</day>
+          <day>15</day>
           <year>2021</year>
         </publication_date>
       </proceedings_series_metadata>
@@ -39,21 +39,17 @@
           </person_name>
         </contributors>
         <titles>
-          <title>agora vai</title>
+          <title>PaperTeste</title>
         </titles>
         <publication_date media_type="online">
           <month>01</month>
-          <day>21</day>
+          <day>15</day>
           <year>2021</year>
         </publication_date>
         <doi_data>
           <doi/>
           <resource/>
-          <collection property="text-mining">
-            <item>
-              <resource mime_type="application/pdf"/>
-            </item>
-          </collection>
+          <collection property="text-mining"/>
         </doi_data>
       </conference_paper>
     </conference>

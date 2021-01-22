@@ -95,7 +95,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 		$context = $deployment->getContext();
 		$plugin = $deployment->getPlugin();
 		$headNode = $doc->createElement('head');
-		$headNode->appendChild($node = $doc->createElement('doi_batch_id', htmlspecialchars($context->getData('initials', $context->getPrimaryLocale()) . '_' . time(), ENT_COMPAT, 'UTF-8')));
+		$headNode->appendChild($node = $doc->createElement('doi_batch_id', htmlspecialchars($context->getData('initials', $context->getPrimaryLocale()) . 'proceeding' . '_' . time(), ENT_COMPAT, 'UTF-8')));
 		$headNode->appendChild($node = $doc->createElement('timestamp', time()));
 		$depositorNode = $doc->createElement('depositor');
 		$depositorName = $plugin->getSetting($context->getId(), 'depositorName');
