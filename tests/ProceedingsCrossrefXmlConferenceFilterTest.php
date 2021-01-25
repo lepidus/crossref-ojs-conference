@@ -11,40 +11,6 @@ import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployme
 import('classes.issue.Issue');
 import("classes.submission.Submission");
 
-// $expectedFile = new DOMDocument('1.0', 'utf-8');
-// $expectedFile->preserveWhiteSpace = true;
-// $doc = new DOMDocument('1.0', 'utf-8');
-
-// $expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/headConference-test.xml'));
-
-// $filterGroup = new FilterGroup();
-
-// $context = new ContextMock();
-// $user = new User();
-// $plugin = new PluginMock();
-// $deployment = new CrossrefConferenceExportDeployment($context,$user);
-// $deployment->setPlugin($plugin);
-
-
-// $doc->formatOutput = true;
-// $crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
-// $crossRef->setDeployment($deployment);
-
-// $head = $crossRef->createHeadNode($doc);
-// $head = $doc->appendChild($head);
-
-// $expected = $expectedFile->getElementsByTagName('head')->item(0);
-// $childDoiBatch = $expected->getElementsByTagName('doi_batch_id')->item(0);
-// $childDoiBatch->textContent = 'proceeding_' . time();
-
-// $actual = $doc->getElementsByTagName("head")->item(0);
-// $testActual = $actual->getElementsByTagName('doi_batch_id')->item(0);
-// $testActual->textContent = 'proceeding_' . time();
-
-// echo $expectedFile->saveXML($childDoiBatch) . '\n';
-// echo $doc->saveXML($testActual);
-
-
 class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
@@ -53,7 +19,6 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 	protected function setUp() : void {
 		$this->expectedFile = new DOMDocument('1.0', 'utf-8');
 		$this->expectedFile->preserveWhiteSpace = true;
-		//$this->expectedFile->loadXML($this->getTestData());
 		$this->doc = new DOMDocument('1.0', 'utf-8');
 		parent::setUp();
 	}
@@ -87,7 +52,7 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 	
 	public function testCreateHeadNode(){
 
-		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/headConference-test.xml'));
+		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/conference-test.xml'));
 
 		$filterGroup = new FilterGroup();
 
@@ -138,56 +103,74 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 
 		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expectedDoiBatch),
-			$this->doc->saveXML($actualDoiBatch)	
-		);
-
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expectedTimeStamp),
-			$this->doc->saveXML($actualTimeStamp)	
-		);
-
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expectedDepositor),
-			$this->doc->saveXML($actualDepositor)	
-		);
-
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML($expectedRegistrant),
-			$this->doc->saveXML($actualRegistrant)	
+			$this->expectedFile->saveXML($expected),
+			$this->doc->saveXML($actual)	
 		);
 		
 	}
 	
 	public function testCreateConferenceNode(){
 
+		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/conference-test.xml'));
+
 		$filterGroup = new FilterGroup();
 
-		$context = new ContextMock();
-		$user = new User();
+		$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
+		$contexts = $JournalDAO->getAll();
+		$context = ($contexts->toArray())[0]; 
+				
+
 		$plugin = new PluginMock();
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
+		$deployment = new CrossrefConferenceExportDeployment($context,$plugin);
 		$deployment->setPlugin($plugin);
 
-		$doc = $this->doc; 
-		$doc->formatOutput = true;
+		$this->doc->formatOutput = true;
 		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$issue = new Issue();
 		$issue->setDatePublished(date("Y/m/d"));
 
-		$submission = new Submission();
-
-		$bodyNode = $doc->createElement('body');
-		$conference = $crossRef->createConferenceNode($doc, $issue);
+		$bodyNode = $this->doc->createElement('body');
+		$conference = $crossRef->createConferenceNode($this->doc, $issue);
 		$bodyNode->appendChild($conference);
-		$doc->appendChild($bodyNode);
+		$this->doc->appendChild($bodyNode);
 
-		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
-		$expected = $elements->childNodes[1];
-		
+		$expected = $this->expectedFile->getElementsByTagName('body')->item(0);
+		$conference = $expected->getElementsByTagName('conference')->item(0);
+		$paper = $conference->getElementsByTagName('conference_paper')->item(0);
+		$removePaper = $conference->removeChild($paper);
+
+
 		$actual = $this->doc->getElementsByTagName("body")->item(0);
+		$actualConference = $actual->getElementsByTagName('conference')->item(0);
+
+		$actualEventMetada = $actualConference->getElementsByTagName('event_metadata')->item(0);
+		$actualConferenceName = $actualEventMetada->getElementsByTagName('conference_name')->item(0);
+		$actualConferenceName->textContent = 'CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional';
+
+		$actualProceedingsSeriesMetada = $actualConference->getElementsByTagName('proceedings_series_metadata')->item(0);
+
+		$actualSeriesMetadata = $actualProceedingsSeriesMetada->getElementsByTagName('series_metadata')->item(0);
+
+		$actualTitles = $actualSeriesMetadata->getElementsByTagName('titles')->item(0);
+		$actualTitle = $actualTitles->getElementsByTagName('title')->item(0);
+		$actualTitle->textContent = 'Proceeding Series of the Brazilian Society of Computational and Applied Mathematics';
+
+		$actualISSN = $actualSeriesMetadata->getElementsByTagName('issn')->item(0);
+		$actualISSN->textContent = '2359-0793';
+
+		$actualPublisher = $actualProceedingsSeriesMetada->getElementsByTagName('publisher')->item(0);
+		$actualPublisherName = $actualPublisher->getElementsByTagName('publisher_name')->item(0);
+		$actualPublisherName->textContent = 'SBMAC';
+
+		$actualPublicationDate = $actualProceedingsSeriesMetada->getElementsByTagName('publication_date')->item(0);
+		$actualMonth = $actualPublicationDate->getElementsByTagName('month')->item(0);
+		$actualMonth->textContent = '02';
+		$actualDay = $actualPublicationDate->getElementsByTagName('day')->item(0);
+		$actualDay->textContent = '20';
+		$actualYear = $actualPublicationDate->getElementsByTagName('year')->item(0);
+		$actualYear->textContent = '2020';
 
 		self::assertXmlStringEqualsXmlString(
 			$this->expectedFile->saveXML($expected),
@@ -195,11 +178,6 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 			"actual xml is equal to expected xml"
 		);
 		
-	}
-
-	private function getRootTestData() {
-		$sampleFile = './plugins/importexport/crossrefConference/tests/rootConference-test.xml';
-		return file_get_contents($sampleFile);
 	}
     
 }

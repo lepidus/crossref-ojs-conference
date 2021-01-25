@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.3.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.3" xsi:schemaLocation="http://www.crossref.org/schema/4.3.3 http://www.crossref.org/schema/deposit/crossref4.3.3.xsd">
   <head>
-    <doi_batch_id>proceeding_1611344341</doi_batch_id>
-    <timestamp>1611344341</timestamp>
+    <doi_batch_id>proceeding_1611594697</doi_batch_id>
+    <timestamp>1611594697</timestamp>
     <depositor>
       <name>Vitor Hugo</name>
       <email_address>vitor@lepidus.com.br</email_address>
@@ -20,7 +20,6 @@
             <title>TesteConferencia</title>
           </titles>
           <issn media_type="electronic">2359-0793</issn>
-          <issn media_type="print">2359-0793</issn>
         </series_metadata>
         <publisher>
           <publisher_name>Lepidus</publisher_name>
