@@ -17,7 +17,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 	 * @param $filterGroup FilterGroup
 	 */
 	function __construct($filterGroup) {
-		$this->setDisplayName('Crossref XML issue export');
+		$this->setDisplayName('Crossref XML proceedings export');
 		parent::__construct($filterGroup);
 	}
 

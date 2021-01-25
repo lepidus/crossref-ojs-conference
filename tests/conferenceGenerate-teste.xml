@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doi_batch xmlns="http://www.crossref.org/schema/4.3.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.3" xsi:schemaLocation="http://www.crossref.org/schema/4.3.3 http://www.crossref.org/schema/deposit/crossref4.3.3.xsd">
   <head>
-    <doi_batch_id>proceeding_1611594697</doi_batch_id>
-    <timestamp>1611594697</timestamp>
+    <doi_batch_id>proceeding_1611600302</doi_batch_id>
+    <timestamp>1611600302</timestamp>
     <depositor>
       <name>Vitor Hugo</name>
       <email_address>vitor@lepidus.com.br</email_address>
@@ -30,11 +30,15 @@
           <year>2021</year>
         </publication_date>
       </proceedings_series_metadata>
-      <conference_paper publication_type="full_text">
+      <conference_paper publication_type="full_text" metadata_distribution_opts="any">
         <contributors>
           <person_name contributor_role="author" sequence="first">
             <given_name>DesenvLepidus</given_name>
             <surname>DesenvLepidus</surname>
+          </person_name>
+          <person_name contributor_role="author" sequence="additional">
+            <given_name>Vitor</given_name>
+            <surname>Hugo</surname>
           </person_name>
         </contributors>
         <titles>
@@ -48,7 +52,11 @@
         <doi_data>
           <doi/>
           <resource/>
-          <collection property="text-mining"/>
+          <collection property="text-mining">
+            <item>
+              <resource mime_type="application/pdf"/>
+            </item>
+          </collection>
         </doi_data>
       </conference_paper>
     </conference>

@@ -26,7 +26,7 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		parent::setUp();
 	}
 
-	public function testCreateConferenceNode(){
+	public function testCreateConferencePaperNode(){
 
 		$filterGroup = new FilterGroup();
 
@@ -36,24 +36,61 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$deployment = new CrossrefConferenceExportDeployment($context,$user);
 		$deployment->setPlugin($plugin);
 
-		$doc = $this->doc; 
-		$doc->formatOutput = true;
+		$this->doc->formatOutput = true;
 		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
 		$submissions = $submissionDao->getByContextId(1);
 		$submission = $submissions->toArray();
-		
-		$bodyNode = $doc->createElement('body');
-		$conference = $crossRef->createConferenceNode($doc, $submission[0]);
-		$bodyNode->appendChild($conference);
-		$doc->appendChild($bodyNode);
 
-		$elements = $this->expectedFile->getElementsByTagName('doi_batch')->item(0);
-		$expected = $elements->childNodes[1];
-		
-		$actual = $this->doc->getElementsByTagName("body")->item(0);
+		$conferencePaper = $crossRef->createConferencePaperNode($this->doc, $submission[0]);
+		$this->doc->appendChild($conferencePaper);
+
+		$body = $this->expectedFile->getElementsByTagName('body')->item(0);
+		$conference = $body->getElementsByTagName('conference')->item(0);
+		$expected = $conference->getElementsByTagName('conference_paper')->item(0);
+
+		$actual = $this->doc->getElementsByTagName("conference_paper")->item(0);
+
+		$actualContributors = $actual->getElementsByTagName("contributors")->item(0);
+		$actualPersonName = $actualContributors->getElementsByTagName("person_name")->item(0);
+		$actualGivenName = $actualPersonName->getElementsByTagName("given_name")->item(0);
+		$actualGivenName->textContent = 'Amanda';
+		$actualSurname = $actualPersonName->getElementsByTagName("surname")->item(0);
+		$actualSurname->textContent = 'Aléssio';
+
+		$actualPersonNameAdditional = $actualContributors->getElementsByTagName("person_name")->item(1);
+		$actualGivenName = $actualPersonNameAdditional->getElementsByTagName("given_name")->item(0);
+		$actualGivenName->textContent = 'Cristiane';
+		$actualSurname = $actualPersonNameAdditional->getElementsByTagName("surname")->item(0);
+		$actualSurname->textContent = 'Nespoli';
+
+		$actualTitles = $actual->getElementsByTagName('titles')->item(0);
+		$actualTitle = $actualTitles->getElementsByTagName('title')->item(0);
+		$actualTitle->textContent = 'A importância do Cálculo Diferencial e Integral para a formação do professor de Matemática da Educação Básica';
+
+		$actualPublicationDate = $actual->getElementsByTagName('publication_date')->item(0);
+		$actualMonth = $actualPublicationDate->getElementsByTagName('month')->item(0);
+		$actualMonth->textContent = '02';
+		$actualDay = $actualPublicationDate->getElementsByTagName('day')->item(0);
+		$actualDay->textContent = '20';
+		$actualYear = $actualPublicationDate->getElementsByTagName('year')->item(0);
+		$actualYear->textContent = '2020';
+
+
+		$actualDoiData = $actual->getElementsByTagName("doi_data")->item(0);
+
+		$actualDoi = $actualDoiData->getElementsByTagName("doi")->item(0);
+		$actualDoi->textContent = '10.5540/03.2020.007.01.0339';
+
+		$actualResource = $actualDoiData->getElementsByTagName("resource")->item(0);
+		$actualResource->textContent = 'https://proceedings.sbmac.org.br/sbmac/article/view/2680';
+
+		$actualCollection = $actualDoiData->getElementsByTagName("collection")->item(0);
+		$actualItem = $actualCollection->getElementsByTagName("item")->item(0);
+		$actualResource = $actualItem->getElementsByTagName("resource")->item(0);
+		$actualResource->textContent = 'https://proceedings.sbmac.org.br/sbmac/article/viewFile/2680/2700';
 
 		self::assertXmlStringEqualsXmlString(
 			$this->expectedFile->saveXML($expected),
@@ -63,36 +100,9 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		
 	}
 
-	public function testCreateXML(){
-		$filterGroup = new FilterGroup();
-
-		$context = new ContextMock();
-		$user = new User();
-		$plugin = new PluginMock();
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
-		$deployment->setPlugin($plugin);
-
-		$doc = $this->doc; 
-		$doc->formatOutput = true;
-		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
-		
-		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
-		$submissions = $submissionDao->getByContextId(1);
-		$submission = $submissions->toArray();
-
-		$conference = $crossRef->process($submission);
-		self::assertXmlStringEqualsXmlString(
-			$this->expectedFile->saveXML(),
-			$conference->saveXML(),
-			"actual xml is equal to expected xml"
-		);
-		
-	}
-
 	public function testGenerateXMLFile(){
 
-		$xml_file_name = './plugins/importexport/crossrefConference/tests/conferencia-teste.xml';
+		$xml_file_name = './plugins/importexport/crossrefConference/tests/conferenceGenerate-teste.xml';
 
 		$filterGroup = new FilterGroup();
 
@@ -118,7 +128,6 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		self::assertTrue(is_file($xml_file_name));
 	}
-
 
 	private function getTestData() {
 		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';

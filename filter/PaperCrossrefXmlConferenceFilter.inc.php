@@ -17,7 +17,7 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 	 * @param $filterGroup FilterGroup
 	 */
 	function __construct($filterGroup) {
-		$this->setDisplayName('Crossref XML article export');
+		$this->setDisplayName('Crossref XML paper export');
 		parent::__construct($filterGroup);
 	}
 
@@ -36,7 +36,7 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 	// Submission conversion functions
 	//
 	/**
-	 * @copydoc IssueCrossrefXmlConferenceFilter::createConferenceNode()
+	 * @copydoc ProceedingsCrossrefXmlConferenceFilter::createConferenceNode()
 	 */
 	function createConferenceNode($doc, $pubObject) {
 		$deployment = $this->getDeployment();
@@ -85,15 +85,13 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 		$locale = $publication->getData('locale');
 		
 		$publicationTest = Services::get('publication')->get($publication->getId());
-		//print_r($publicationTest);
-
 
 		// Issue shoulld be set by now
 		$issue = $deployment->getIssue();
 
 		$conferencePaperNode = $doc->createElement('conference_paper');
 		$conferencePaperNode->setAttribute('publication_type', 'full_text');
-		//$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
+		$conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
 
 		//contributors
 		$contributorsNode = $doc->createElement('contributors');
@@ -115,7 +113,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 			$contributorsNode->appendChild($personNameNode);
 
 			if (isset($familyNames[$locale]) && isset($givenNames[$locale])) {
-				//$personNameNode->setAttribute('language', PKPLocale::getIso1FromLocale($locale));
 				$personNameNode->appendChild($node = $doc->createElement('given_name', htmlspecialchars(ucfirst($givenNames[$locale]), ENT_COMPAT, 'UTF-8')));
 				$personNameNode->appendChild($node = $doc->createElement('surname', htmlspecialchars(ucfirst($familyNames[$locale]), ENT_COMPAT, 'UTF-8')));
 			} else {
