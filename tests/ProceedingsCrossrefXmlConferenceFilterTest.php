@@ -15,26 +15,36 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
 	private $doc; 
+	private $filterGroup;
+	private $context;
+	private $plugin;
+	private $deployment;
+	
 
 	protected function setUp() : void {
+		
 		$this->expectedFile = new DOMDocument('1.0', 'utf-8');
+		$this->expectedFile->loadXML($this->getTestData());
 		$this->expectedFile->preserveWhiteSpace = true;
 		$this->doc = new DOMDocument('1.0', 'utf-8');
+		$this->doc->formatOutput = true;
+
+
+		$this->filterGroup = new FilterGroup();
+		
+		$this->context = new ContextMock();
+		$this->plugin = new PluginMock();
+		$this->deployment = new CrossrefConferenceExportDeployment($this->context,$this->plugin);
+		
 		parent::setUp();
 	}
 
 	public function testCreateRootNode(){
 
 		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/rootConference-test.xml'));
-
-		$filterGroup = new FilterGroup();
 		
-		$context = new ContextMock();
-		$user = new User();
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
-		
-		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
+		$crossRef->setDeployment($this->deployment);
 		$doiBatch = $crossRef->createRootNode($this->doc);
         $this->doc->appendChild($doiBatch);
 	
@@ -49,27 +59,13 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		);
 	}
 	
-	
 	public function testCreateHeadNode(){
+ 
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
+		$crossRef->setDeployment($this->deployment);
 
-		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/conference-test.xml'));
-
-		$filterGroup = new FilterGroup();
-
-		$context = new ContextMock();
-		$user = new User();
-		$plugin = new PluginMock();
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
-		$deployment->setPlugin($plugin);
-
-
-		$doc = $this->doc; 
-		$doc->formatOutput = true;
-		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
-
-		$head = $crossRef->createHeadNode($doc);
-		$head = $doc->appendChild($head);
+		$head = $crossRef->createHeadNode($this->doc);
+		$head = $this->doc->appendChild($head);
 
 		$expected = $this->expectedFile->getElementsByTagName('head')->item(0);
 
@@ -90,7 +86,6 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 		$actualRegistrant =  $actual->getElementsByTagName('registrant')->item(0);
 		$actualRegistrant->textContent = 'SBMAC';
 
-
 		self::assertXmlStringEqualsXmlString(
 			$this->expectedFile->saveXML($expected),
 			$this->doc->saveXML($actual)	
@@ -100,21 +95,13 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 	
 	public function testCreateConferenceNode(){
 
-		$this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/conference-test.xml'));
-
-		$filterGroup = new FilterGroup();
-
 		$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
 		$contexts = $JournalDAO->getAll();
 		$context = ($contexts->toArray())[0]; 
-				
 
-		$plugin = new PluginMock();
-		$deployment = new CrossrefConferenceExportDeployment($context,$plugin);
-		$deployment->setPlugin($plugin);
+		$deployment = new CrossrefConferenceExportDeployment($context,$this->plugin);
 
-		$this->doc->formatOutput = true;
-		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$issue = new Issue();
@@ -167,6 +154,11 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 			"actual xml is equal to expected xml"
 		);
 		
+	}
+
+	private function getTestData() {
+		$sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
+		return file_get_contents($sampleFile);
 	}
     
 }

@@ -17,28 +17,33 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 	private $expectedFile;
 	private $doc; 
+	private $filterGroup;
+	private $context;
+	private $plugin;
+	private $deployment;
 
 	protected function setUp() : void {
+
 		$this->expectedFile = new DOMDocument('1.0', 'utf-8');
 		$this->expectedFile->loadXML($this->getTestData());
 		$this->expectedFile->preserveWhiteSpace = false;
+
 		$this->doc = new DOMDocument('1.0', 'utf-8');
+		$this->doc->formatOutput = true;
+
+		$this->filterGroup = new FilterGroup();
+
+		$this->context = new ContextMock();
+		$this->plugin = new PluginMock();
+		$this->deployment = new CrossrefConferenceExportDeployment($this->context,$this->plugin);
+
 		parent::setUp();
 	}
 
 	public function testCreateConferencePaperNode(){
 
-		$filterGroup = new FilterGroup();
-
-		$context = new ContextMock();
-		$user = new User();
-		$plugin = new PluginMock();
-		$deployment = new CrossrefConferenceExportDeployment($context,$user);
-		$deployment->setPlugin($plugin);
-
-		$this->doc->formatOutput = true;
-		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
-		$crossRef->setDeployment($deployment);
+		$crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
+		$crossRef->setDeployment($this->deployment);
 
 		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
 		$submissions = $submissionDao->getByContextId(1);
@@ -104,18 +109,14 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$xml_file_name = './plugins/importexport/crossrefConference/tests/conferenceGenerate-teste.xml';
 
-		$filterGroup = new FilterGroup();
-
 		$JournalDAO =& DAORegistry::getDAO('JournalDAO'); 
 		$contexts = $JournalDAO->getAll();
 		$context = ($contexts->toArray())[0]; 
+
+		$deployment = new CrossrefConferenceExportDeployment($context,$this->plugin);
 		
-		$plugin = new PluginMock();
-
-		$deployment = new CrossrefConferenceExportDeployment($context,$plugin);
-
 		$doc = $this->doc;
-		$crossRef = new PaperCrossrefXmlConferenceFilter($filterGroup);
+		$crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
 		$crossRef->setDeployment($deployment);
 
 		$submissionDao =& DAORegistry::getDAO('SubmissionDAO'); 
