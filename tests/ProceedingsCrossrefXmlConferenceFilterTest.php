@@ -73,24 +73,13 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase {
 
 		$expected = $this->expectedFile->getElementsByTagName('head')->item(0);
 
-		$expectedDoiBatch = $expected->getElementsByTagName('doi_batch_id')->item(0);
-		$expectedDoiBatch->textContent = 'proceeding_' . time();
-
-		$expectedTimeStamp =  $expected->getElementsByTagName('timestamp')->item(0);
-		$expectedTimeStamp->textContent = time();
-
-		$expectedDepositor =  $expected->getElementsByTagName('depositor')->item(0);
-
-		$expectedRegistrant =  $expected->getElementsByTagName('registrant')->item(0);
-
-
 		$actual = $this->doc->getElementsByTagName("head")->item(0);
 
 		$actualDoiBatch = $actual->getElementsByTagName('doi_batch_id')->item(0);
-		$actualDoiBatch->textContent = 'proceeding_' . time();
+		$actualDoiBatch->textContent = 'proceeding_1606846180';
 
 		$actualTimeStamp =  $actual->getElementsByTagName('timestamp')->item(0);
-		$actualTimeStamp->textContent = time();
+		$actualTimeStamp->textContent = '1606846180';
 
 		$actualDepositor =  $actual->getElementsByTagName('depositor')->item(0);
 		$actualDepositorName = $actualDepositor->getElementsByTagName('name')->item(0);
