@@ -62,6 +62,9 @@ msgstr "Enter the conference name"
 msgid "plugins.importexport.crossrefConference.settings.form.conferenceName"
 msgstr "Conference name"
 
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameRequired"
+msgstr "Please enter the conference name."
+
 msgid "plugins.importexport.crossrefConference.settings.form.automaticRegistration.description"
 msgstr "OJS will deposit assigned DOIs automatically to crossrefConference. Please note that this may take a short amount of time after publication to process  (e.g. depending on your cronjob configuration). You can check for all unregistered DOIs."
 
