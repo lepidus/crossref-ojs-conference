@@ -55,6 +55,12 @@ msgstr "Introduzca el nombre del depositario."
 msgid "plugins.importexport.crossref.settings.form.depositorEmailRequired"
 msgstr "Introduzca el email del depositario."
 
+msgid "plugins.importexport.crossrefConference.settings.conferenceName"
+msgstr "Introduzca el nombre de la conferencia"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceName"
+msgstr "Nombre de la conferencia"
+
 msgid "plugins.importexport.crossref.registrationIntro"
 msgstr "Si quiere usar este módulo para registrar Identificadores Digitales de Objeto (Digital Object Identifiers - DOI, en inglés) directamente con CrossRef, necesita un usuario y contraseña (disponible en <a href=\"http://www.crossref.org\" target=\"_blank\">CrossRef</a>). Si no dispone de su propio usuario y contraseña, todavía puede exportar en formato XML de CrossRef, pero no podrá registrar sus DOIs en CrossRef directamente desde OJS."
 

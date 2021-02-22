@@ -129,7 +129,8 @@ class CrossrefConferenceSettingsForm extends Form {
 			'username' => 'string',
 			'password' => 'string',
 			'automaticRegistration' => 'bool',
-			'testMode' => 'bool'
+			'testMode' => 'bool', 
+			'conferenceName' => 'string'
 		);
 	}
 

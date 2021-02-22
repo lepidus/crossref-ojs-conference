@@ -139,11 +139,11 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 	function createEventMetadataNode($doc) {
 		$deployment = $this->getDeployment();
 		$context = $deployment->getContext();
+		$plugin = $deployment->getPlugin();
 
+		$conferenceName = $plugin->getSetting($context->getId(), 'conferenceName');
 		$eventMetadataNode = $doc->createElement('event_metadata');
-	
-		$eventMetadataNode->appendChild($node = $doc->createElement('conference_name', 'CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional'));
-		
+		$eventMetadataNode->appendChild($node = $doc->createElement('conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
 		return $eventMetadataNode;
 	}
 
