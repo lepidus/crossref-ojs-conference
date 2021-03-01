@@ -31,6 +31,10 @@
 			{fbvElement type="text" password="true" id="password" value=$password label="plugins.importexport.common.settings.form.password" maxLength="50" size=$fbvStyles.size.MEDIUM}
 			<span class="instruct">{translate key="plugins.importexport.common.settings.form.password.description"}</span><br/>
 		{/fbvFormSection}
+		<p class="pkp_help">{translate key="plugins.importexport.crossrefConference.settings.conferenceName"}</p>
+		{fbvFormSection}
+			{fbvElement type="text" id="conferenceName" value=$conferenceName required="true" label="plugins.importexport.crossrefConference.settings.form.conferenceName" maxlength="60" size=$fbvStyles.size.MEDIUM}
+		{/fbvFormSection}
 		{fbvFormSection list="true"}
 			{fbvElement type="checkbox" id="automaticRegistration" label="plugins.importexport.crossrefConference.settings.form.automaticRegistration.description" checked=$automaticRegistration|compare:true}
 		{/fbvFormSection}

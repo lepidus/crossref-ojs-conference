@@ -59,6 +59,15 @@ msgstr "Nome de usuário"
 msgid "plugins.importexport.crossrefConference.settings.form.usernameRequired"
 msgstr "Por favor, informe o nome de usuário que você recebeu da CrossRef."
 
+msgid "plugins.importexport.crossrefConference.settings.conferenceName"
+msgstr "Digite o nome da conferência"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceName"
+msgstr "Nome da conferência"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameRequired"
+msgstr "Por favor digite o nome da conferência"
+
 msgid "plugins.importexport.crossrefConference.settings.form.automaticRegistration.description"
 msgstr "O OJS depositará automaticamente os metadados dos DOIs atribuídos na CrossRef. Observe que isso pode levar um curto período de tempo após a publicação do processo. Você pode verificar todas os DOIs não registrados."
 
