@@ -168,6 +168,52 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin {
 		return 'CrossrefConferenceSettingsForm';
 	}
 
+	function getConfereceDataFormClassName() {
+		return 'CrossrefConferenceDataForm';
+	}
+
+	public function getActions($request, $verb) {
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		return array_merge(
+			$this->getEnabled()?array(
+				new LinkAction(
+					'settings',
+					new AjaxModal(
+						$router->url($request, null, null, 'manage', null, array('verb' => 'settings', 'plugin' => 'CrossrefConferenceExportPlugin', 'category' => 'importexport')),
+						$this->getDisplayName()
+					),
+					__('manager.plugins.settings'),
+					null
+				),
+			):array(),
+			parent::getActions($request, $verb)
+		);
+	}
+
+	public function manage($args, $request) {
+		switch ($request->getUserVar('verb')) {
+			case 'settings':
+				AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON,  LOCALE_COMPONENT_PKP_MANAGER);
+				$this->import('classes.form.CrossrefConferenceDataForm');
+				$form = new CrossrefConferenceDataForm($this, $request->getContext()->getId());
+				if ($request->getUserVar('save')) {
+					$form->readInputData();
+					if ($form->validate()) {
+						$form->execute();
+						$notificationManager = new NotificationManager();
+						$notificationManager->createTrivialNotification($request->getUser()->getId());
+						return new JSONMessage(true);
+					}
+				} else {
+					$form->initData();
+				}
+				return new JSONMessage(true, $form->fetch($request));
+		}
+		return parent::manage($args, $request);
+	}
+
+
 	/**
 	 * @copydoc PubObjectsExportPlugin::getExportDeploymentClassName()
 	 */

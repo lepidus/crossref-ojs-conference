@@ -12,7 +12,7 @@
 
 import('lib.pkp.classes.form.Form');
 
-class CrossrefConferenceSettingsForm extends Form {
+class CrossrefConferenceDataForm extends Form {
 
 	//
 	// Private properties
@@ -52,31 +52,10 @@ class CrossrefConferenceSettingsForm extends Form {
 		$this->_contextId = $contextId;
 		$this->_plugin = $plugin;
 
-		parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
-
-		// DOI plugin settings action link
-		$pubIdPlugins = PluginRegistry::loadCategory('pubIds', true);
-		if (isset($pubIdPlugins['doipubidplugin'])) {
-			$application = Application::get();
-			$request = $application->getRequest();
-			$dispatcher = $application->getDispatcher();
-			import('lib.pkp.classes.linkAction.request.AjaxModal');
-			$doiPluginSettingsLinkAction = new LinkAction(
-				'settings',
-				new AjaxModal(
-					$dispatcher->url($request, ROUTE_COMPONENT, null, 'grid.settings.plugins.SettingsPluginGridHandler', 'manage', null, array('plugin' => 'doipubidplugin', 'category' => 'pubIds')),
-					__('plugins.importexport.common.settings.DOIPluginSettings')
-				),
-				__('plugins.importexport.common.settings.DOIPluginSettings'),
-				null
-			);
-			$this->setData('doiPluginSettingsLinkAction', $doiPluginSettingsLinkAction);
-		}
+		parent::__construct($plugin->getTemplateResource('conferenceDataForm.tpl'));
 
 		// Add form validation checks.
-		$this->addCheck(new FormValidator($this, 'depositorName', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorNameRequired'));
-		$this->addCheck(new FormValidatorEmail($this, 'depositorEmail', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorEmailRequired'));
-		// $this->addCheck(new FormValidator($this, 'conferenceName', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
+		$this->addCheck(new FormValidator($this, 'conferenceName', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCSRF($this));
 	}
@@ -115,8 +94,6 @@ class CrossrefConferenceSettingsForm extends Form {
 		parent::execute(...$functionArgs);
 	}
 
-
-	//
 	// Public helper methods
 	//
 	/**
@@ -125,25 +102,9 @@ class CrossrefConferenceSettingsForm extends Form {
 	 */
 	function getFormFields() {
 		return array(
-			'depositorName' => 'string',
-			'depositorEmail' => 'string',
-			'username' => 'string',
-			'password' => 'string',
-			'automaticRegistration' => 'bool',
-			'testMode' => 'bool'
-			// 'conferenceName' => 'string'
+			'conferenceName' => 'string'
 		);
 	}
-
-	/**
-	 * Is the form field optional
-	 * @param $settingName string
-	 * @return boolean
-	 */
-	function isOptional($settingName) {
-		return in_array($settingName, array('username', 'password', 'automaticRegistration', 'testMode'));
-	}
-
 }
 
 

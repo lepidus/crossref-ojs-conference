@@ -29,6 +29,7 @@
 		<ul>
 			<li><a href="#settings-tab">{translate key="plugins.importexport.common.settings"}</a></li>
 			{if $allowExport}
+				<li><a href="#conferenceData-tab">Dados da Conferência</a></li>
 				<li><a href="#exportSubmissions-tab">{translate key="plugins.importexport.common.export.articles"}</a></li>
 			{/if}
 		</ul>
@@ -61,8 +62,11 @@
 			{capture assign=crossrefSettingsGridUrl}{url router=$smarty.const.ROUTE_COMPONENT component="grid.settings.plugins.settingsPluginGridHandler" op="manage" plugin="CrossrefConferenceExportPlugin" category="importexport" verb="index" escape=false}{/capture}
 			{load_url_in_div id="crossrefSettingsGridContainer" url=$crossrefSettingsGridUrl}
 		</div>
-
+		
+	
+	
 		{if $allowExport}
+		
 			<div id="exportSubmissions-tab">
 				<script type="text/javascript">
 					$(function() {ldelim}
@@ -95,6 +99,10 @@
 				</form>
 				<p>{translate key="plugins.importexport.crossrefConference.statusLegend"}</p>
 			</div>
+
+			<div id="conferenceData-tab">
+				{include file="../../../plugins/importexport/crossrefConference/templates/conferenceDataForm.tpl"}
+			<div>
 		{/if}
 	</div>
 {/block}
