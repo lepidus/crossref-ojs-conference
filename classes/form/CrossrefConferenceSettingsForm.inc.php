@@ -76,7 +76,6 @@ class CrossrefConferenceSettingsForm extends Form {
 		// Add form validation checks.
 		$this->addCheck(new FormValidator($this, 'depositorName', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorNameRequired'));
 		$this->addCheck(new FormValidatorEmail($this, 'depositorEmail', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorEmailRequired'));
-		// $this->addCheck(new FormValidator($this, 'conferenceName', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCSRF($this));
 	}
@@ -131,7 +130,6 @@ class CrossrefConferenceSettingsForm extends Form {
 			'password' => 'string',
 			'automaticRegistration' => 'bool',
 			'testMode' => 'bool'
-			// 'conferenceName' => 'string'
 		);
 	}
 
