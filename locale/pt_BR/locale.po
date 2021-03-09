@@ -59,6 +59,9 @@ msgstr "Nome de usuário"
 msgid "plugins.importexport.crossrefConference.settings.form.usernameRequired"
 msgstr "Por favor, informe o nome de usuário que você recebeu da CrossRef."
 
+msgid "plugins.importexport.crossrefConference.settings.conferenceData"
+msgstr "Dados da Conferência"
+
 msgid "plugins.importexport.crossrefConference.settings.conferenceName"
 msgstr "Digite o nome da conferência"
 

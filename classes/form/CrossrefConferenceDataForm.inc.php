@@ -82,12 +82,6 @@ class CrossrefConferenceDataForm extends Form {
 		$this->readUserVars(array_keys($this->getFormFields()));
 	}
 
-	function fetch($request, $template = NULL, $display = false) {
-		$templateMgr = TemplateManager::getManager($request);
-		$templateMgr->assign('pluginName', $this->_plugin->getName());
-		return parent::fetch($request);
-	}
-
 	/**
 	 * @copydoc Form::execute()
 	 */

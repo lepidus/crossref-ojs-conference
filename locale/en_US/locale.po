@@ -53,6 +53,9 @@ msgstr "If you would like to use this plugin to register Digital Object Identifi
 msgid "plugins.importexport.crossrefConference.settings.form.username"
 msgstr "Username"
 
+msgid "plugins.importexport.crossrefConference.settings.conferenceData"
+msgstr "Conference Data"
+
 msgid "plugins.importexport.crossrefConference.settings.form.usernameRequired"
 msgstr "Please enter the username you got from crossrefConference."
 

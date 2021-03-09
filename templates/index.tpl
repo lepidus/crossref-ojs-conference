@@ -29,7 +29,7 @@
 		<ul>
 			<li><a href="#settings-tab">{translate key="plugins.importexport.common.settings"}</a></li>
 			{if $allowExport}
-				<li><a href="#conferenceData-tab">Dados da Conferência</a></li>
+				<li><a href="#conferenceData-tab">{translate key="plugins.importexport.crossrefConference.settings.conferenceData"}</a></li>
 				<li><a href="#exportSubmissions-tab">{translate key="plugins.importexport.common.export.articles"}</a></li>
 			{/if}
 		</ul>
@@ -63,10 +63,7 @@
 			{load_url_in_div id="crossrefSettingsGridContainer" url=$crossrefSettingsGridUrl}
 		</div>
 		
-	
-	
 		{if $allowExport}
-		
 			<div id="exportSubmissions-tab">
 				<script type="text/javascript">
 					$(function() {ldelim}
