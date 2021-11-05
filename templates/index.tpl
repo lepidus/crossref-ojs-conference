@@ -4,9 +4,9 @@
  * List of operations this plugin can perform
  *}
 
-{strip}
-{include file="common/header.tpl" pageTitle="plugins.importexport.crossrefConference.displayName"}
-{/strip}
+
+{extends file="layouts/backend.tpl"}
+
 
 {block name="page"}
 
