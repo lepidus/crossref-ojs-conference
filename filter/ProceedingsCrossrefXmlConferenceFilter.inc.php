@@ -108,7 +108,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 		if (empty($depositorEmail)) {
 			$depositorEmail = $context->getData('supportEmail');
 		}
-		$depositorNode->appendChild($node = $doc->createElement('name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
+		$depositorNode->appendChild($node = $doc->createElement('depositor_name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
 		$depositorNode->appendChild($node = $doc->createElement('email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
 		$headNode->appendChild($depositorNode);
 		$publisherInstitution = $context->getData('publisherInstitution');
