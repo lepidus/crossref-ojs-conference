@@ -78,7 +78,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter {
 	
 	function createRootNode($doc) {
 		$rootNode = $doc->createElementNS(CrossrefConferenceExportDeployment::getNamespace(), CrossrefConferenceExportDeployment::getRootElementName());
-		error_log(CrossrefConferenceExportDeployment::getNamespace());
 		$rootNode->setAttribute('xmlns:xsi', CrossrefConferenceExportDeployment::getXmlSchemaInstance());
 		$rootNode->setAttribute('xsi:schemaLocation', CrossrefConferenceExportDeployment::getNamespace() . ' ' . CrossrefConferenceExportDeployment::getSchemaFilename());
 		$rootNode->setAttribute('version', CrossrefConferenceExportDeployment::getXmlSchemaVersion());
