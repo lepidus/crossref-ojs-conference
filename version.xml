@@ -9,7 +9,7 @@
 <version>
 	<application>crossrefConference</application>
 	<type>plugins.importexport</type>
-	<release>1.0</release>
-	<date>2021-01-25</date>
+	<release>1.1.0</release>
+	<date>2023-07-18</date>
   <class>CrossrefConferenceExportPlugin</class>
 </version>

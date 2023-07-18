@@ -3,7 +3,7 @@
 /**
  * @defgroup plugins_importexport_crossrefConference CrossRefConference Plugin
  */
- 
+
 /**
  * @file plugins/importexport/crossrefConference/index.php
  *
@@ -15,5 +15,3 @@
 require_once('CrossrefConferenceExportPlugin.inc.php');
 
 return new CrossrefConferenceExportPlugin();
-
-
