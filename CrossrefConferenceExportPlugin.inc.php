@@ -13,20 +13,20 @@ import('classes.plugins.DOIPubIdExportPlugin');
 
 // The status of the Crossref DOI.
 // any, notDeposited, and markedRegistered are reserved
-define('CROSSREF_STATUS_FAILED', 'failed');
+define('CROSSREF_CONFERENCE_STATUS_FAILED', 'failed');
 
-define('CROSSREF_API_DEPOSIT_OK', 200);
+define('CROSSREF_CONFERENCE_API_DEPOSIT_OK', 200);
 
-define('CROSSREF_API_URL', 'https://api.crossref.org/v2/deposits');
+define('CROSSREF_CONFERENCE_API_URL', 'https://api.crossref.org/v2/deposits');
 //TESTING
-define('CROSSREF_API_URL_DEV', 'https://test.crossref.org/v2/deposits');
+define('CROSSREF_CONFERENCE_API_URL_DEV', 'https://test.crossref.org/v2/deposits');
 
-define('CROSSREF_API_STATUS_URL', 'https://api.crossref.org/servlet/submissionDownload');
+define('CROSSREF_CONFERENCE_API_STATUS_URL', 'https://api.crossref.org/servlet/submissionDownload');
 //TESTING
-define('CROSSREF_API_STATUS_URL_DEV', 'https://test.crossref.org/servlet/submissionDownload');
+define('CROSSREF_CONFERENCE_API_STATUS_URL_DEV', 'https://test.crossref.org/servlet/submissionDownload');
 
 // The name of the setting used to save the registered DOI and the URL with the deposit status.
-define('CROSSREF_DEPOSIT_STATUS', 'depositStatus');
+define('CROSSREF_CONFERENCE_DEPOSIT_STATUS', 'depositStatus');
 
 
 class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
@@ -70,7 +70,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
     {
         return array_merge(parent::getStatusNames(), array(
             EXPORT_STATUS_REGISTERED => __('plugins.importexport.crossrefConference.status.registered'),
-            CROSSREF_STATUS_FAILED => __('plugins.importexport.crossrefConference.status.failed'),
+            CROSSREF_CONFERENCE_STATUS_FAILED => __('plugins.importexport.crossrefConference.status.failed'),
             EXPORT_STATUS_MARKEDREGISTERED => __('plugins.importexport.crossrefConference.status.markedRegistered'),
         ));
     }
@@ -83,7 +83,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         $request = Application::get()->getRequest();
         $dispatcher = $request->getDispatcher();
         return array(
-            CROSSREF_STATUS_FAILED =>
+            CROSSREF_CONFERENCE_STATUS_FAILED =>
                 new LinkAction(
                     'failureMessage',
                     new AjaxModal(
@@ -125,7 +125,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         $httpClient = Application::get()->getHttpClient();
         $response = $httpClient->request(
             'POST',
-            $this->isTestMode($context) ? CROSSREF_API_STATUS_URL_DEV : CROSSREF_API_STATUS_URL,
+            $this->isTestMode($context) ? CROSSREF_CONFERENCE_API_STATUS_URL_DEV : CROSSREF_CONFERENCE_API_STATUS_URL,
             [
                 'form_params' => [
                     'doi_batch_id' => $request->getUserVar('batchId'),
@@ -310,7 +310,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         try {
             $response = $httpClient->request(
                 'POST',
-                $this->isTestMode($context) ? CROSSREF_API_URL_DEV : CROSSREF_API_URL,
+                $this->isTestMode($context) ? CROSSREF_CONFERENCE_API_URL_DEV : CROSSREF_CONFERENCE_API_URL,
                 [
                     'form_params' => [
                         'operation' => 'doMDUpload',
@@ -320,10 +320,12 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                     ]
                 ]
             );
+
         } catch (GuzzleHttp\Exception\RequestException $e) {
             return [['plugins.importexport.common.register.error.mdsError', 'No response from server.']];
         }
-        if ($response->getStatusCode() != CROSSREF_API_DEPOSIT_OK) {
+
+        if ($response->getStatusCode() != CROSSREF_CONFERENCE_API_DEPOSIT_OK) {
             // These are the failures that occur immediately on request
             // and can not be accessed later, so we save the falure message in the DB
             $xmlDoc = new DOMDocument();
@@ -332,7 +334,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
             $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
             // Get re message
             $msg = $response;
-            $status = CROSSREF_STATUS_FAILED;
+            $status = CROSSREF_CONFERENCE_STATUS_FAILED;
             $result = false;
         } else {
             // Get DOMDocument from the response XML string
@@ -345,7 +347,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
             $failureCountNode = $xmlDoc->getElementsByTagName('failure_count')->item(0);
             $failureCount = (int) $failureCountNode->nodeValue;
             if ($failureCount > 0) {
-                $status = CROSSREF_STATUS_FAILED;
+                $status = CROSSREF_CONFERENCE_STATUS_FAILED;
                 $result = false;
             } else {
                 // Deposit was received
