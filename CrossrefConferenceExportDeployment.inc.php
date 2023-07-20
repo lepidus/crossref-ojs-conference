@@ -18,6 +18,8 @@ define('CROSSREF_CONFERENCE_XMLNS', 'http://www.crossref.org/schema/4.3.6');
 define('CROSSREF_CONFERENCE_XMLNS_XSI', 'http://www.w3.org/2001/XMLSchema-instance');
 define('CROSSREF_CONFERENCE_XSI_SCHEMAVERSION', '4.3.6');
 define('CROSSREF_CONFERENCE_XSI_SCHEMALOCATION', 'http://www.crossref.org/schema/crossref4.3.6.xsd');
+define('CROSSREF_CONFERENCE_XMLNS_JATS', 'http://www.ncbi.nlm.nih.gov/JATS1');
+define('CROSSREF_CONFERENCE_XMLNS_AI', 'http://www.crossref.org/AccessIndicators.xsd');
 define('CROSSREF_CONFERENCE_XSI_DEPOSIT', 'http://www.crossref.org/schema/deposit/crossref4.3.6.xsd');
 
 
@@ -94,6 +96,24 @@ class CrossrefConferenceExportDeployment
     public function getXmlSchemaLocation()
     {
         return CROSSREF_CONFERENCE_XSI_SCHEMALOCATION;
+    }
+
+    /**
+     * Get the JATS namespace URN
+     * @return string
+     */
+    public function getJATSNamespace()
+    {
+        return CROSSREF_CONFERENCE_XMLNS_JATS;
+    }
+
+    /**
+     * Get the access indicators namespace URN
+     * @return string
+     */
+    public function getAINamespace()
+    {
+        return CROSSREF_CONFERENCE_XMLNS_AI;
     }
 
     /**

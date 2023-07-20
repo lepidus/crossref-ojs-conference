@@ -16,6 +16,7 @@ import('classes.plugins.DOIPubIdExportPlugin');
 define('CROSSREF_CONFERENCE_STATUS_FAILED', 'failed');
 
 define('CROSSREF_CONFERENCE_API_DEPOSIT_OK', 200);
+define('CROSSREF_CONFERENCE_API_DEPOSIT_ERROR_FROM_CROSSREF', 403);
 
 define('CROSSREF_CONFERENCE_API_URL', 'https://api.crossref.org/v2/deposits');
 //TESTING
@@ -123,22 +124,27 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         $context = $request->getContext();
 
         $httpClient = Application::get()->getHttpClient();
-        $response = $httpClient->request(
-            'POST',
-            $this->isTestMode($context) ? CROSSREF_CONFERENCE_API_STATUS_URL_DEV : CROSSREF_CONFERENCE_API_STATUS_URL,
-            [
-                'form_params' => [
-                    'doi_batch_id' => $request->getUserVar('batchId'),
-                    'type' => 'result',
-                    'usr' => $this->getSetting($context->getId(), 'username'),
-                    'pwd' => $this->getSetting($context->getId(), 'password'),
+        try {
+            $response = $httpClient->request(
+                'POST',
+                $this->isTestMode($context) ? CROSSREF_CONFERENCE_API_STATUS_URL_DEV : CROSSREF_CONFERENCE_API_STATUS_URL,
+                [
+                    'form_params' => [
+                        'doi_batch_id' => $request->getUserVar('batchId'),
+                        'type' => 'result',
+                        'usr' => $this->getSetting($context->getId(), 'username'),
+                        'pwd' => $this->getSetting($context->getId(), 'password'),
+                    ]
                 ]
-            ]
-        );
-
-        if ($response->getStatusCode() != 200) {
-            return __('plugins.importexport.common.register.error.mdsError', array('param' => 'No response from server.'));
+            );
+        } catch (GuzzleHttp\Exception\RequestException $e) {
+            $returnMessage = $e->getMessage();
+            if ($e->hasResponse()) {
+                $returnMessage = $e->getResponse()->getBody(true) . ' (' .$e->getResponse()->getStatusCode() . ' ' . $e->getResponse()->getReasonPhrase() . ')';
+            }
+            return __('plugins.importexport.common.register.error.mdsError', array('param' => $returnMessage));
         }
+
         return (string) $response->getBody();
     }
 
@@ -312,61 +318,78 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                 'POST',
                 $this->isTestMode($context) ? CROSSREF_CONFERENCE_API_URL_DEV : CROSSREF_CONFERENCE_API_URL,
                 [
-                    'form_params' => [
-                        'operation' => 'doMDUpload',
-                        'usr' => $this->getSetting($context->getId(), 'username'),
-                        'pwd' => $this->getSetting($context->getId(), 'password'),
-                        'mdFile' => fopen($filename, 'r'),
+                    'multipart' => [
+                        [
+                            'name'     => 'usr',
+                            'contents' => $this->getSetting($context->getId(), 'username'),
+                        ],
+                        [
+                            'name'     => 'pwd',
+                            'contents' => $this->getSetting($context->getId(), 'password'),
+                        ],
+                        [
+                            'name'     => 'operation',
+                            'contents' => 'doMDUpload',
+                        ],
+                        [
+                            'name'     => 'mdFile',
+                            'contents' => fopen($filename, 'r'),
+                        ],
                     ]
                 ]
             );
 
         } catch (GuzzleHttp\Exception\RequestException $e) {
-            return [['plugins.importexport.common.register.error.mdsError', 'No response from server.']];
+            $returnMessage = $e->getMessage();
+            if ($e->hasResponse()) {
+                $eResponseBody = $e->getResponse()->getBody(true);
+                $eStatusCode = $e->getResponse()->getStatusCode();
+                if ($eStatusCode == CROSSREF_CONFERENCE_API_DEPOSIT_ERROR_FROM_CROSSREF) {
+                    $xmlDoc = new DOMDocument();
+                    $xmlDoc->loadXML($eResponseBody);
+                    $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
+                    $msg = $xmlDoc->getElementsByTagName('msg')->item(0)->nodeValue;
+                    $msgSave = $msg . PHP_EOL . $eResponseBody;
+                    $status = CROSSREF_CONFERENCE_STATUS_FAILED;
+                    $this->updateDepositStatus($context, $objects, $status, $batchIdNode->nodeValue, $msgSave);
+                    $this->updateObject($objects);
+                    $returnMessage = $msg . ' (' .$eStatusCode . ' ' . $e->getResponse()->getReasonPhrase() . ')';
+                } else {
+                    $returnMessage = $eResponseBody . ' (' .$eStatusCode . ' ' . $e->getResponse()->getReasonPhrase() . ')';
+                }
+            }
+            return [['plugins.importexport.common.register.error.mdsError', $returnMessage]];
         }
 
-        if ($response->getStatusCode() != CROSSREF_CONFERENCE_API_DEPOSIT_OK) {
-            // These are the failures that occur immediately on request
-            // and can not be accessed later, so we save the falure message in the DB
-            $xmlDoc = new DOMDocument();
-            $xmlDoc->loadXML($response->getBody());
-            // Get batch ID
-            $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
-            // Get re message
-            $msg = $response;
+        $xmlDoc = new DOMDocument();
+        $xmlDoc->loadXML($response->getBody());
+        $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
+
+        // Get the DOI deposit status
+        // If the deposit failed
+        $failureCountNode = $xmlDoc->getElementsByTagName('failure_count')->item(0);
+        $failureCount = (int) $failureCountNode->nodeValue;
+        if ($failureCount > 0) {
             $status = CROSSREF_CONFERENCE_STATUS_FAILED;
             $result = false;
         } else {
-            // Get DOMDocument from the response XML string
-            $xmlDoc = new DOMDocument();
-            $xmlDoc->loadXML($response->getBody());
-            $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
+            // Deposit was received
+            $status = EXPORT_STATUS_REGISTERED;
+            $result = true;
 
-            // Get the DOI deposit status
-            // If the deposit failed
-            $failureCountNode = $xmlDoc->getElementsByTagName('failure_count')->item(0);
-            $failureCount = (int) $failureCountNode->nodeValue;
-            if ($failureCount > 0) {
-                $status = CROSSREF_CONFERENCE_STATUS_FAILED;
-                $result = false;
-            } else {
-                // Deposit was received
-                $status = EXPORT_STATUS_REGISTERED;
-                $result = true;
-
-                // If there were some warnings, display them
-                $warningCountNode = $xmlDoc->getElementsByTagName('warning_count')->item(0);
-                $warningCount = (int) $warningCountNode->nodeValue;
-                if ($warningCount > 0) {
-                    $result = array(array('plugins.importexport.crossrefConference.register.success.warning', htmlspecialchars($response->getBody())));
-                }
-                // A possibility for other plugins (e.g. reference linking) to work with the response
-                HookRegistry::call('crossrefconferenceexportplugin::deposited', array($this, $response->getBody(), $objects));
+            // If there were some warnings, display them
+            $warningCountNode = $xmlDoc->getElementsByTagName('warning_count')->item(0);
+            $warningCount = (int) $warningCountNode->nodeValue;
+            if ($warningCount > 0) {
+                $result = array(array('plugins.importexport.crossrefConference.register.success.warning', htmlspecialchars($response->getBody())));
             }
+            // A possibility for other plugins (e.g. reference linking) to work with the response
+            HookRegistry::call('crossrefconferenceexportplugin::deposited', array($this, $response->getBody(), $objects));
         }
+
         // Update the status
         if ($status) {
-            $this->updateDepositStatus($context, $objects, $status, $batchIdNode->nodeValue, $msg);
+            $this->updateDepositStatus($context, $objects, $status, $batchIdNode->nodeValue, $msgSave);
             $this->updateObject($objects);
         }
 
