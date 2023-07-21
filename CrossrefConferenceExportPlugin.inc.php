@@ -155,13 +155,18 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                 AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_MANAGER);
                 $this->import('classes.form.CrossrefConferenceDataForm');
                 $form = new CrossrefConferenceDataForm($this, $request->getContext()->getId());
-                $form->readInputData();
-                if ($form->validate()) {
-                    $form->execute();
-                    $notificationManager = new NotificationManager();
-                    $notificationManager->createTrivialNotification($request->getUser()->getId());
-                    return new JSONMessage(true);
+                if ($request->getUserVar('save')) {
+                    $form->readInputData();
+                    if ($form->validate()) {
+                        $form->execute();
+                        $notificationManager = new NotificationManager();
+                        $notificationManager->createTrivialNotification($request->getUser()->getId());
+                        return new JSONMessage(true);
+                    }
+                } else {
+                    $form->initData();
                 }
+                return new JSONMessage(true, $form->fetch($request));
         }
 
         return parent::manage($args, $request);
@@ -402,7 +407,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
      * @param $object The object getting deposited
      * @param $status CROSSREF_STATUS_...
      * @param $batchId string
-     * @param $failedMsg string (opitonal)
+     * @param $failedMsg string (optional)
      */
     public function updateDepositStatus($context, $object, $status, $batchId, $failedMsg = null)
     {
