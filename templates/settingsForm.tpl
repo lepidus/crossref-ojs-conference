@@ -6,7 +6,6 @@
  *}
 <script type="text/javascript">
 	$(function() {ldelim}
-		// Attach the form handler.
 		$('#crossrefSettingsForm').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
 	{rdelim});
 </script>

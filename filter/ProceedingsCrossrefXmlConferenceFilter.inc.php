@@ -13,72 +13,38 @@ import('lib.pkp.plugins.importexport.native.filter.NativeExportFilter');
 
 class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
 {
-    /**
-     * Constructor
-     * @param $filterGroup FilterGroup
-     */
     public function __construct($filterGroup)
     {
         $this->setDisplayName('Crossref XML proceedings export');
         parent::__construct($filterGroup);
     }
 
-    //
-    // Implement template methods from PersistableFilter
-    //
-    /**
-     * @copydoc PersistableFilter::getClassName()
-     */
     public function getClassName()
     {
         return 'plugins.importexport.crossrefConference.filter.ProceedingsCrossrefConferenceXmlFilter';
     }
 
-    //
-    // Implement template methods from Filter
-    //
-    /**
-     * @see Filter::process()
-     * @param $pubObjects array Array of Issues or Submissions
-     * @return DOMDocument
-     */
-
     public function &process(&$pubObjects)
     {
-        // Create the XML document
         $doc = new DOMDocument('1.0', 'utf-8');
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
         $deployment = $this->getDeployment();
         $context = $deployment->getContext();
 
-        // Create the root node
         $rootNode = $this->createRootNode($doc);
         $doc->appendChild($rootNode);
 
-        // Create and appet the 'head' node and all parts inside it
         $rootNode->appendChild($this->createHeadNode($doc));
-
-        // Create and append the 'body' node, that contains everything
         $bodyNode = $doc->createElementNS($deployment->getNamespace(), 'body');
         $rootNode->appendChild($bodyNode);
 
         foreach($pubObjects as $pubObject) {
-            // pubObject is either Issue or Submission
             $conferenceNode = $this->createConferenceNode($doc, $pubObject);
             $bodyNode->appendChild($conferenceNode);
         }
         return $doc;
     }
-
-    //
-    // Issue conversion functions
-    //
-    /**
-     * Create and return the root node 'doi_batch'.
-     * @param $doc DOMDocument
-     * @return DOMElement
-     */
 
     public function createRootNode($doc)
     {
@@ -89,12 +55,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $rootNode->setAttribute('xsi:schemaLocation', $deployment->getNamespace() . ' ' . $deployment->getSchemaFilename());
         return $rootNode;
     }
-
-    /**
-     * Create and return the head node 'head'.
-     * @param $doc DOMDocument
-     * @return DOMElement
-     */
 
     public function createHeadNode($doc)
     {
@@ -126,13 +86,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         return $headNode;
     }
 
-    /**
-     * Create and return the conference node 'conference'.
-     * @param $doc DOMDocument
-     * @param $pubObject object Issue or Submission
-     * @return DOMElement
-     */
-
     public function createConferenceNode($doc, $pubObject)
     {
         $deployment = $this->getDeployment();
@@ -141,12 +94,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc, $pubObject));
         return $conferenceNode;
     }
-
-    /**
-     * Create and return the event metadata node 'event_metadata'.
-     * @param $doc DOMDocument
-     * @return DOMElement
-     */
 
     public function createEventMetadataNode($doc)
     {
@@ -161,13 +108,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         return $eventMetadataNode;
     }
 
-    /**
-     * Create and return the proceedings series metadata node 'proceedings_series_metadata'.
-     * @param $doc DOMDocument
-     * @param $issue Issue
-     * @return DOMElement
-     */
-
     public function createProceedingsSeriesMetadataNode($doc, $issue)
     {
         $deployment = $this->getDeployment();
@@ -178,18 +118,15 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $proceedingsSeriesMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'proceedings_series_metadata');
         $seriesMetadata = $doc->createElementNS($deployment->getNamespace(), 'series_metadata');
         $proceedingsTitle = $context->getName($context->getPrimaryLocale());
-        // Attempt a fall back, in case the localized name is not set.
         if ($proceedingsTitle == '') {
             $proceedingsTitle = $context->getData('abbreviation', $context->getPrimaryLocale());
         }
         $titles = $seriesMetadata->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'titles'));
         $titles->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'title', htmlspecialchars($proceedingsTitle, ENT_COMPAT, 'UTF-8')));
-        /* Both ISSNs are permitted for CrossRef, so sending whichever one (or both)*/
         if ($ISSN = $context->getData('onlineIssn')) {
             $seriesMetadata->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
             $node->setAttribute('media_type', 'electronic');
         }
-        /*Both ISSNs are permitted for CrossRef so sending whichever one (or both)*/
         if ($ISSN = $context->getData('printIssn')) {
             $seriesMetadata->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
             $node->setAttribute('media_type', 'print');
@@ -208,13 +145,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         return $proceedingsSeriesMetadataNode;
     }
 
-    /**
-     * Create and return the publication date node 'publication_date'.
-     * @param $doc DOMDocument
-     * @param $objectPublicationDate string
-     * @return DOMElement
-     */
-
     public function createPublicationDateNode($doc, $objectPublicationDate)
     {
         $deployment = $this->getDeployment();
@@ -231,13 +161,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         return $publicationDateNode;
     }
 
-    /**
-     * Create and return the DOI date node 'doi_data'.
-     * @param $doc DOMDocument
-     * @param $doi string
-     * @param $url string
-     * @return DOMElement
-     */
     public function createDOIDataNode($doc, $doi, $url)
     {
         $deployment = $this->getDeployment();
@@ -246,5 +169,4 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $doiDataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'resource', $url));
         return $doiDataNode;
     }
-
 }

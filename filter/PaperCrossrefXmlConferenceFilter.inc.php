@@ -13,34 +13,17 @@ import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlCon
 
 class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceFilter
 {
-    /**
-     * Constructor
-     * @param $filterGroup FilterGroup
-     */
     public function __construct($filterGroup)
     {
         $this->setDisplayName('Crossref XML paper export');
         parent::__construct($filterGroup);
     }
 
-    //
-    // Implement template methods from PersistableFilter
-    //
-    /**
-     * @copydoc PersistableFilter::getClassName()
-     */
     public function getClassName()
     {
         return 'plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter';
     }
 
-
-    //
-    // Submission conversion functions
-    //
-    /**
-     * @copydoc ProceedingsCrossrefXmlConferenceFilter::createConferenceNode()
-     */
     public function createConferenceNode($doc, $pubObject)
     {
         $deployment = $this->getDeployment();
@@ -50,12 +33,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         return $conferenceNode;
     }
 
-    /**
-     * Create and return the proceedings series metadata node 'proceedings_series_metadata'.
-     * @param $doc DOMDocument
-     * @param $submission Submission
-     * @return DOMElement
-     */
     public function createProceedingsSeriesMetadataNode($doc, $submission)
     {
         $deployment = $this->getDeployment();
@@ -76,12 +53,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         return $proceedingsSeriesMetadataNode;
     }
 
-    /**
-     * Create and return the conference paper node 'conference_paper'.
-     * @param $doc DOMDocument
-     * @param $submission Submission
-     * @return DOMElement
-     */
     public function createConferencePaperNode($doc, $submission)
     {
         $deployment = $this->getDeployment();
@@ -92,14 +63,12 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 
         $locale = $publication->getData('locale');
 
-        // Issue shoulld be set by now
         $issue = $deployment->getIssue();
 
         $conferencePaperNode = $doc->createElementNS($deployment->getNamespace(), 'conference_paper');
         $conferencePaperNode->setAttribute('publication_type', 'full_text');
         $conferencePaperNode->setAttribute('metadata_distribution_opts', 'any');
 
-        // title
         $titlesNode = $doc->createElementNS($deployment->getNamespace(), 'titles');
         $titlesNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'title', htmlspecialchars($publication->getData('title', $locale), ENT_COMPAT, 'UTF-8')));
         if ($subtitle = $publication->getData('subtitle', $locale)) {
@@ -107,14 +76,13 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         }
         $conferencePaperNode->appendChild($titlesNode);
 
-        //contributors
         $authors = $publication->getData('authors');
 
         if(!empty($author)) {
             $contributorsNode = $doc->createElementNS($deployment->getNamespace(), 'contributors');
             $isFirst = true;
 
-            foreach ($authors as $author) { /** @var $author Author */
+            foreach ($authors as $author) {
                 $personNameNode = $doc->createElementNS($deployment->getNamespace(), 'person_name');
                 $personNameNode->setAttribute('contributor_role', 'author');
 
@@ -127,7 +95,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
                 $familyNames = $author->getFamilyName(null);
                 $givenNames = $author->getGivenName(null);
 
-                // Check if both givenName and familyName is set for the submission language.
                 if (!empty($familyNames[$locale]) && !empty($givenNames[$locale])) {
                     $personNameNode->setAttribute('language', PKPLocale::getIso1FromLocale($locale));
                     $personNameNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'given_name', htmlspecialchars(ucfirst($givenNames[$locale]), ENT_COMPAT, 'UTF-8')));
@@ -169,32 +136,28 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
             $conferencePaperNode->appendChild($contributorsNode);
         }
 
-        // publication date
         if ($datePublished = $publication->getData('datePublished')) {
             $conferencePaperNode->appendChild($this->createPublicationDateNode($doc, $datePublished));
         }
 
-        // DOI data
         $doiDataNode = $this->createDOIDataNode($doc, $publication->getStoredPubId('doi'), $request->url($context->getPath(), 'article', 'view', $submission->getBestId(), null, null, true));
-        // append galleys files and collection nodes to the DOI data node
+
         $galleys = $publication->getData('galleys');
-        // All full-texts, PDF full-texts and remote galleys for text-mining and as-crawled URL
+
         $submissionGalleys = $pdfGalleys = $remoteGalleys = array();
-        // preferred PDF full-text for the as-crawled URL
+
         $pdfGalleyInArticleLocale = null;
-        // get immediatelly also supplementary files for component list
+
         $componentGalleys = array();
-        $genreDao = DAORegistry::getDAO('GenreDAO'); /* @var $genreDao GenreDAO */
+        $genreDao = DAORegistry::getDAO('GenreDAO');
 
         foreach ($galleys as $galley) {
-            // filter supp files with DOI
             if (!$galley->getRemoteURL()) {
                 $galleyFile = $galley->getFile();
                 if ($galleyFile) {
                     $genre = $genreDao->getById($galleyFile->getGenreId());
                     if ($genre->getSupplementary()) {
                         if ($galley->getStoredPubid('doi')) {
-                            // construct the array key with galley best ID and locale needed for the component node
                             $componentGalleys[] = $galley;
                         }
                     } else {
@@ -212,7 +175,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
             }
         }
 
-        // as-crawled URLs
         $asCrawledGalleys = array();
         if ($pdfGalleyInArticleLocale) {
             $asCrawledGalleys = array($pdfGalleyInArticleLocale);
@@ -222,10 +184,8 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
             $asCrawledGalleys = $submissionGalleys;
         }
 
-        // as-crawled URL - collection nodes
         $this->appendAsCrawledCollectionNodes($doc, $doiDataNode, $submission, $asCrawledGalleys);
 
-        // text-mining - collection nodes
         $submissionGalleys = array_merge($submissionGalleys, $remoteGalleys);
         $this->appendTextMiningCollectionNodes($doc, $doiDataNode, $submission, $submissionGalleys);
         $conferencePaperNode->appendChild($doiDataNode);
@@ -234,13 +194,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
 
     }
 
-    /**
-     * Append the collection node 'collection property="crawler-based"' to the doi data node.
-     * @param $doc DOMDocument
-     * @param $doiDataNode DOMElement
-     * @param $submission Submission
-     * @param $galleys array of galleys
-     */
     public function appendAsCrawledCollectionNodes($doc, $doiDataNode, $submission, $galleys)
     {
         $deployment = $this->getDeployment();
@@ -254,7 +207,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         }
         foreach ($galleys as $galley) {
             $resourceURL = $request->url($context->getPath(), 'article', 'download', array($submission->getBestId(), $galley->getBestGalleyId()), null, null, true);
-            // iParadigms crawler based collection element
             $crawlerBasedCollectionNode = $doc->createElementNS($deployment->getNamespace(), 'collection');
             $crawlerBasedCollectionNode->setAttribute('property', 'crawler-based');
             $iParadigmsItemNode = $doc->createElementNS($deployment->getNamespace(), 'item');
@@ -265,13 +217,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         }
     }
 
-    /**
-     * Append the collection node 'collection property="text-mining"' to the doi data node.
-     * @param $doc DOMDocument
-     * @param $doiDataNode DOMElement
-     * @param $submission Submission
-     * @param $galleys array of galleys
-     */
     public function appendTextMiningCollectionNodes($doc, $doiDataNode, $submission, $galleys)
     {
         $deployment = $this->getDeployment();
@@ -282,7 +227,6 @@ class PaperCrossrefXmlConferenceFilter extends ProceedingsCrossrefXmlConferenceF
         $textMiningCollectionNode->setAttribute('property', 'text-mining');
         foreach ($galleys as $galley) {
             $resourceURL = $request->url($context->getPath(), 'article', 'download', array($submission->getBestId(), $galley->getBestGalleyId()), null, null, true);
-            // text-mining collection item
             $textMiningItemNode = $doc->createElementNS($deployment->getNamespace(), 'item');
             $resourceNode = $doc->createElementNS($deployment->getNamespace(), 'resource', $resourceURL);
             if (!$galley->getRemoteURL()) {

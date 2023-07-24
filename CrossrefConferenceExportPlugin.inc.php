@@ -11,62 +11,37 @@
 
 import('classes.plugins.DOIPubIdExportPlugin');
 
-// The status of the Crossref DOI.
-// any, notDeposited, and markedRegistered are reserved
 define('CROSSREF_CONFERENCE_STATUS_FAILED', 'failed');
-
 define('CROSSREF_CONFERENCE_API_DEPOSIT_OK', 200);
 define('CROSSREF_CONFERENCE_API_DEPOSIT_ERROR_FROM_CROSSREF', 403);
-
 define('CROSSREF_CONFERENCE_API_URL', 'https://api.crossref.org/v2/deposits');
-//TESTING
 define('CROSSREF_CONFERENCE_API_URL_DEV', 'https://test.crossref.org/v2/deposits');
-
 define('CROSSREF_CONFERENCE_API_STATUS_URL', 'https://api.crossref.org/servlet/submissionDownload');
-//TESTING
 define('CROSSREF_CONFERENCE_API_STATUS_URL_DEV', 'https://test.crossref.org/servlet/submissionDownload');
-
-// The name of the setting used to save the registered DOI and the URL with the deposit status.
 define('CROSSREF_CONFERENCE_DEPOSIT_STATUS', 'depositStatus');
-
 
 class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
 {
-    /**
-     * @copydoc Plugin::getName()
-     */
     public function getName()
     {
         return 'CrossrefConferenceExportPlugin';
     }
 
-    /**
-     * @copydoc Plugin::getDisplayName()
-     */
     public function getDisplayName()
     {
         return __('plugins.importexport.crossrefConference.displayName');
     }
 
-    /**
-     * @copydoc Plugin::getDescription()
-     */
     public function getDescription()
     {
         return __('plugins.importexport.crossrefConference.description');
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getSubmissionFilter()
-     */
     public function getSubmissionFilter()
     {
         return 'paper=>crossref-xml';
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getStatusNames()
-     */
     public function getStatusNames()
     {
         return array_merge(parent::getStatusNames(), array(
@@ -76,9 +51,6 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         ));
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getStatusActions()
-     */
     public function getStatusActions($pubObject)
     {
         $request = Application::get()->getRequest();
@@ -106,13 +78,8 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         );
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getStatusMessage()
-     */
     public function getStatusMessage($request)
     {
-        // if the failure occured on request and the message was saved
-        // return that message
         $articleId = $request->getUserVar('articleId');
         $submissionDao = DAORegistry::getDAO('SubmissionDAO'); /* @var $submissionDao SubmissionDAO */
         $article = $submissionDao->getByid($articleId);
@@ -172,9 +139,6 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         return parent::manage($args, $request);
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getExportActionNames()
-     */
     public function getExportActionNames()
     {
         return array(
@@ -184,10 +148,6 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         );
     }
 
-    /**
-     * Get a list of additional setting names that should be stored with the objects.
-     * @return array
-     */
     protected function _getObjectAdditionalSettings()
     {
         return array_merge(parent::_getObjectAdditionalSettings(), array(
@@ -196,17 +156,11 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         ));
     }
 
-    /**
-     * @copydoc ImportExportPlugin::getPluginSettingsPrefix()
-     */
     public function getPluginSettingsPrefix()
     {
         return 'crossrefConference';
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getSettingsFormClassName()
-     */
     public function getSettingsFormClassName()
     {
         return 'CrossrefConferenceSettingsForm';
@@ -217,17 +171,11 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         return 'CrossrefConferenceDataForm';
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getExportDeploymentClassName()
-     */
     public function getExportDeploymentClassName()
     {
         return 'CrossrefConferenceExportDeployment';
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::executeExportAction()
-     */
     public function executeExportAction($request, $objects, $filter, $tab, $objectsFileNamePart, $noValidation = null)
     {
         $context = $request->getContext();
@@ -239,26 +187,12 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
 
         if ($request->getUserVar(EXPORT_ACTION_DEPOSIT)) {
             assert($filter != null);
-            // Errors occured will be accessible via the status link
-            // thus do not display all errors notifications (for every article),
-            // just one general.
-            // Warnings occured when the registration was successfull will however be
-            // displayed for each article.
             $errorsOccured = false;
-            // The new Crossref deposit API expects one request per object.
-            // On contrary the export supports bulk/batch object export, thus
-            // also the filter expects an array of objects.
-            // Thus the foreach loop, but every object will be in an one item array for
-            // the export and filter to work.
             foreach ($objects as $object) {
-                // Get the XML
                 $exportXml = $this->exportXML(array($object), $filter, $context, $noValidation);
-                // Write the XML to a file.
-                // export file name example: crossref-20160723-160036-articles-1-1.xml
                 $objectsFileNamePart = $objectsFileNamePart . '-' . $object->getId();
                 $exportFileName = $this->getExportFileName($this->getExportPath(), $objectsFileNamePart, $context, '.xml');
                 $fileManager->writeFile($exportFileName, $exportXml);
-                // Deposit the XML file.
                 $result = $this->depositXML($object, $context, $exportFileName);
                 if (!$result) {
                     $errorsOccured = true;
@@ -266,10 +200,8 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                 if (is_array($result)) {
                     $resultErrors[] = $result;
                 }
-                // Remove all temporary files.
                 $fileManager->deleteByPath($exportFileName);
             }
-            // send notifications
             if (empty($resultErrors)) {
                 if ($errorsOccured) {
                     $this->_sendNotification(
@@ -297,20 +229,12 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                     }
                 }
             }
-            // redirect back to the right tab
             $request->redirect(null, null, null, $path, null, $tab);
         } else {
             parent::executeExportAction($request, $objects, $filter, $tab, $objectsFileNamePart, $noValidation);
         }
     }
 
-    /**
-     * @see PubObjectsExportPlugin::depositXML()
-     *
-     * @param $objects Submission
-     * @param $context Context
-     * @param $filename string Export XML filename
-     */
     public function depositXML($objects, $context, $filename)
     {
         $status = null;
@@ -370,29 +294,22 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         $xmlDoc->loadXML($response->getBody());
         $batchIdNode = $xmlDoc->getElementsByTagName('batch_id')->item(0);
 
-        // Get the DOI deposit status
-        // If the deposit failed
         $failureCountNode = $xmlDoc->getElementsByTagName('failure_count')->item(0);
         $failureCount = (int) $failureCountNode->nodeValue;
         if ($failureCount > 0) {
             $status = CROSSREF_CONFERENCE_STATUS_FAILED;
             $result = false;
         } else {
-            // Deposit was received
             $status = EXPORT_STATUS_REGISTERED;
             $result = true;
-
-            // If there were some warnings, display them
             $warningCountNode = $xmlDoc->getElementsByTagName('warning_count')->item(0);
             $warningCount = (int) $warningCountNode->nodeValue;
             if ($warningCount > 0) {
                 $result = array(array('plugins.importexport.crossrefConference.register.success.warning', htmlspecialchars($response->getBody())));
             }
-            // A possibility for other plugins (e.g. reference linking) to work with the response
             HookRegistry::call('crossrefconferenceexportplugin::deposited', array($this, $response->getBody(), $objects));
         }
 
-        // Update the status
         if ($status) {
             $this->updateDepositStatus($context, $objects, $status, $batchIdNode->nodeValue, $msgSave);
             $this->updateObject($objects);
@@ -401,18 +318,9 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
         return $result;
     }
 
-    /**
-     * Check the CrossRef APIs, if deposits and registration have been successful
-     * @param $context Context
-     * @param $object The object getting deposited
-     * @param $status CROSSREF_STATUS_...
-     * @param $batchId string
-     * @param $failedMsg string (optional)
-     */
     public function updateDepositStatus($context, $object, $status, $batchId, $failedMsg = null)
     {
         assert(is_a($object, 'Submission') or is_a($object, 'Issue'));
-        // remove the old failure message, if exists
         $object->setData($this->getFailedMsgSettingName(), null);
         $object->setData($this->getDepositStatusSettingName(), $status);
         $object->setData($this->getDepositBatchIdSettingName(), $batchId);
@@ -420,53 +328,34 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
             $object->setData($this->getFailedMsgSettingName(), $failedMsg);
         }
         if ($status == EXPORT_STATUS_REGISTERED) {
-            // Save the DOI -- the object will be updated
             $this->saveRegisteredDoi($context, $object);
         }
     }
 
-    /**
-     * @copydoc DOIPubIdExportPlugin::markRegistered()
-     */
     public function markRegistered($context, $objects)
     {
         foreach ($objects as $object) {
-            // remove the old failure message, if exists
             $object->setData($this->getFailedMsgSettingName(), null);
             $object->setData($this->getDepositStatusSettingName(), EXPORT_STATUS_MARKEDREGISTERED);
             $this->saveRegisteredDoi($context, $object);
         }
     }
 
-    /**
-     * Get request failed message setting name.
-     * @return string
-     */
     public function getFailedMsgSettingName()
     {
         return $this->getPluginSettingsPrefix().'::failedMsg';
     }
 
-    /**
-     * Get deposit batch ID setting name.
-     * @return string
-     */
     public function getDepositBatchIdSettingName()
     {
         return $this->getPluginSettingsPrefix().'::batchId';
     }
 
-    /**
-     * @copydoc PubObjectsExportPlugin::getDepositSuccessNotificationMessageKey()
-     */
     public function getDepositSuccessNotificationMessageKey()
     {
         return 'plugins.importexport.common.register.success';
     }
 
-    /**
-     * @copydoc PKPImportExportPlugin::executeCLI()
-     */
     public function executeCLICommand($scriptName, $command, $context, $outputFile, $objects, $filter, $objectsFileNamePart)
     {
         switch ($command) {
@@ -482,26 +371,12 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                 import('lib.pkp.classes.file.FileManager');
                 $fileManager = new FileManager();
                 $resultErrors = array();
-                // Errors occured will be accessible via the status link
-                // thus do not display all errors notifications (for every article),
-                // just one general.
-                // Warnings occured when the registration was successfull will however be
-                // displayed for each article.
                 $errorsOccured = false;
-                // The new Crossref deposit API expects one request per object.
-                // On contrary the export supports bulk/batch object export, thus
-                // also the filter expects an array of objects.
-                // Thus the foreach loop, but every object will be in an one item array for
-                // the export and filter to work.
                 foreach ($objects as $object) {
-                    // Get the XML
                     $exportXml = $this->exportXML(array($object), $filter, $context);
-                    // Write the XML to a file.
-                    // export file name example: crossref-20160723-160036-articles-1-1.xml
                     $objectsFileNamePartId = $objectsFileNamePart . '-' . $object->getId();
                     $exportFileName = $this->getExportFileName($this->getExportPath(), $objectsFileNamePartId, $context, '.xml');
                     $fileManager->writeFile($exportFileName, $exportXml);
-                    // Deposit the XML file.
                     $result = $this->depositXML($object, $context, $exportFileName);
                     if (!$result) {
                         $errorsOccured = true;
@@ -509,10 +384,8 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                     if (is_array($result)) {
                         $resultErrors[] = $result;
                     }
-                    // Remove all temporary files.
                     $fileManager->deleteByPath($exportFileName);
                 }
-                // display deposit result status messages
                 if (empty($resultErrors)) {
                     if ($errorsOccured) {
                         echo __('plugins.importexport.crossrefConference.register.error.mdsError') . "\n";

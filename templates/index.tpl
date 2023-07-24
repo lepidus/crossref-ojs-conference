@@ -18,7 +18,6 @@
 	{/if}
 
 	<script type="text/javascript">
-		// Attach the JS file tab handler.
 		$(function() {ldelim}
 			$('#importExportTabs').pkpHandler('$.pkp.controllers.TabHandler');
 		{rdelim});
