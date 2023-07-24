@@ -12,136 +12,92 @@
 
 import('lib.pkp.classes.form.Form');
 
-class CrossrefConferenceSettingsForm extends Form {
+class CrossrefConferenceSettingsForm extends Form
+{
+    public $_contextId;
 
-	//
-	// Private properties
-	//
-	/** @var integer */
-	var $_contextId;
+    public function _getContextId()
+    {
+        return $this->_contextId;
+    }
 
-	/**
-	 * Get the context ID.
-	 * @return integer
-	 */
-	function _getContextId() {
-		return $this->_contextId;
-	}
+    public $_plugin;
 
-	/** @var CrossRefExportPlugin */
-	var $_plugin;
+    public function _getPlugin()
+    {
+        return $this->_plugin;
+    }
 
-	/**
-	 * Get the plugin.
-	 * @return CrossRefExportPlugin
-	 */
-	function _getPlugin() {
-		return $this->_plugin;
-	}
+    public function __construct($plugin, $contextId)
+    {
+        $this->_contextId = $contextId;
+        $this->_plugin = $plugin;
 
+        parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
 
-	//
-	// Constructor
-	//
-	/**
-	 * Constructor
-	 * @param $plugin CrossRefExportPlugin
-	 * @param $contextId integer
-	 */
-	function __construct($plugin, $contextId) {
-		$this->_contextId = $contextId;
-		$this->_plugin = $plugin;
+        $pubIdPlugins = PluginRegistry::loadCategory('pubIds', true);
+        if (isset($pubIdPlugins['doipubidplugin'])) {
+            $application = Application::get();
+            $request = $application->getRequest();
+            $dispatcher = $application->getDispatcher();
+            import('lib.pkp.classes.linkAction.request.AjaxModal');
+            $doiPluginSettingsLinkAction = new LinkAction(
+                'settings',
+                new AjaxModal(
+                    $dispatcher->url($request, ROUTE_COMPONENT, null, 'grid.settings.plugins.SettingsPluginGridHandler', 'manage', null, array('plugin' => 'doipubidplugin', 'category' => 'pubIds')),
+                    __('plugins.importexport.common.settings.DOIPluginSettings')
+                ),
+                __('plugins.importexport.common.settings.DOIPluginSettings'),
+                null
+            );
+            $this->setData('doiPluginSettingsLinkAction', $doiPluginSettingsLinkAction);
+        }
 
-		parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
+        $this->addCheck(new FormValidator($this, 'depositorName', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorNameRequired'));
+        $this->addCheck(new FormValidatorEmail($this, 'depositorEmail', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorEmailRequired'));
+        $this->addCheck(new FormValidatorPost($this));
+        $this->addCheck(new FormValidatorCSRF($this));
+    }
 
-		// DOI plugin settings action link
-		$pubIdPlugins = PluginRegistry::loadCategory('pubIds', true);
-		if (isset($pubIdPlugins['doipubidplugin'])) {
-			$application = Application::get();
-			$request = $application->getRequest();
-			$dispatcher = $application->getDispatcher();
-			import('lib.pkp.classes.linkAction.request.AjaxModal');
-			$doiPluginSettingsLinkAction = new LinkAction(
-				'settings',
-				new AjaxModal(
-					$dispatcher->url($request, ROUTE_COMPONENT, null, 'grid.settings.plugins.SettingsPluginGridHandler', 'manage', null, array('plugin' => 'doipubidplugin', 'category' => 'pubIds')),
-					__('plugins.importexport.common.settings.DOIPluginSettings')
-				),
-				__('plugins.importexport.common.settings.DOIPluginSettings'),
-				null
-			);
-			$this->setData('doiPluginSettingsLinkAction', $doiPluginSettingsLinkAction);
-		}
+    public function initData()
+    {
+        $contextId = $this->_getContextId();
+        $plugin = $this->_getPlugin();
+        foreach($this->getFormFields() as $fieldName => $fieldType) {
+            $this->setData($fieldName, $plugin->getSetting($contextId, $fieldName));
+        }
+    }
 
-		// Add form validation checks.
-		$this->addCheck(new FormValidator($this, 'depositorName', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorNameRequired'));
-		$this->addCheck(new FormValidatorEmail($this, 'depositorEmail', 'required', 'plugins.importexport.crossrefConference.settings.form.depositorEmailRequired'));
-		$this->addCheck(new FormValidatorPost($this));
-		$this->addCheck(new FormValidatorCSRF($this));
-	}
+    public function readInputData()
+    {
+        $this->readUserVars(array_keys($this->getFormFields()));
+    }
 
+    public function execute(...$functionArgs)
+    {
+        $plugin = $this->_getPlugin();
+        $contextId = $this->_getContextId();
+        foreach($this->getFormFields() as $fieldName => $fieldType) {
+            $plugin->updateSetting($contextId, $fieldName, $this->getData($fieldName), $fieldType);
+        }
+        parent::execute(...$functionArgs);
+    }
 
-	//
-	// Implement template methods from Form
-	//
-	/**
-	 * @copydoc Form::initData()
-	 */
-	function initData() {
-		$contextId = $this->_getContextId();
-		$plugin = $this->_getPlugin();
-		foreach($this->getFormFields() as $fieldName => $fieldType) {
-			$this->setData($fieldName, $plugin->getSetting($contextId, $fieldName));
-		}
-	}
+    public function getFormFields()
+    {
+        return array(
+            'depositorName' => 'string',
+            'depositorEmail' => 'string',
+            'username' => 'string',
+            'password' => 'string',
+            'automaticRegistration' => 'bool',
+            'testMode' => 'bool'
+        );
+    }
 
-	/**
-	 * @copydoc Form::readInputData()
-	 */
-	function readInputData() {
-		$this->readUserVars(array_keys($this->getFormFields()));
-	}
-
-	/**
-	 * @copydoc Form::execute()
-	 */
-	function execute(...$functionArgs) {
-		$plugin = $this->_getPlugin();
-		$contextId = $this->_getContextId();
-		foreach($this->getFormFields() as $fieldName => $fieldType) {
-			$plugin->updateSetting($contextId, $fieldName, $this->getData($fieldName), $fieldType);
-		}
-		parent::execute(...$functionArgs);
-	}
-
-
-	//
-	// Public helper methods
-	//
-	/**
-	 * Get form fields
-	 * @return array (field name => field type)
-	 */
-	function getFormFields() {
-		return array(
-			'depositorName' => 'string',
-			'depositorEmail' => 'string',
-			'username' => 'string',
-			'password' => 'string',
-			'automaticRegistration' => 'bool',
-			'testMode' => 'bool'
-		);
-	}
-
-	/**
-	 * Is the form field optional
-	 * @param $settingName string
-	 * @return boolean
-	 */
-	function isOptional($settingName) {
-		return in_array($settingName, array('username', 'password', 'automaticRegistration', 'testMode'));
-	}
+    public function isOptional($settingName)
+    {
+        return in_array($settingName, array('username', 'password', 'automaticRegistration', 'testMode'));
+    }
 
 }
-
-

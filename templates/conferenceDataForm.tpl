@@ -1,10 +1,9 @@
 <script type="text/javascript">
     $(function() {ldelim}
-        // Attach the form handler.
         $('#conferenceDataForm').pkpHandler('$.pkp.controllers.form.AjaxFormHandler');
     {rdelim});
 </script>
-<form class="pkp_form" id="conferenceDataForm"  method="post" action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" component='grid.settings.plugins.settingsPluginGridHandler'  plugin="CrossrefConferenceExportPlugin" category="importexport" verb="settings"}">
+<form class="pkp_form" id="conferenceDataForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" component='grid.settings.plugins.settingsPluginGridHandler' plugin="CrossrefConferenceExportPlugin" category="importexport" verb="settings" save=true}">
     {csrf}
     {fbvFormArea id="conferenceDataFormArea"}
         <h4 class="pkp_help">{translate key="plugins.importexport.crossrefConference.settings.conferenceName"}</h4>

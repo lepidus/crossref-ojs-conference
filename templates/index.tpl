@@ -4,12 +4,10 @@
  * List of operations this plugin can perform
  *}
 
-{strip}
-{include file="common/header.tpl" pageTitle="plugins.importexport.crossrefConference.displayName"}
-{/strip}
+
+{extends file="layouts/backend.tpl"}
 
 {block name="page"}
-
 	{if !empty($configurationErrors) ||
 		!$currentContext->getData('publisherInstitution')|escape ||
 		!$exportArticles ||
@@ -20,7 +18,6 @@
 	{/if}
 
 	<script type="text/javascript">
-		// Attach the JS file tab handler.
 		$(function() {ldelim}
 			$('#importExportTabs').pkpHandler('$.pkp.controllers.TabHandler');
 		{rdelim});
@@ -62,7 +59,7 @@
 			{capture assign=crossrefSettingsGridUrl}{url router=$smarty.const.ROUTE_COMPONENT component="grid.settings.plugins.settingsPluginGridHandler" op="manage" plugin="CrossrefConferenceExportPlugin" category="importexport" verb="index" escape=false}{/capture}
 			{load_url_in_div id="crossrefSettingsGridContainer" url=$crossrefSettingsGridUrl}
 		</div>
-		
+
 		{if $allowExport}
 			<div id="exportSubmissions-tab">
 				<script type="text/javascript">
