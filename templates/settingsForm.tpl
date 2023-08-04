@@ -21,13 +21,13 @@
 	{fbvFormArea id="crossrefSettingsFormArea"}
 		<p class="pkp_help">{translate key="plugins.importexport.crossrefConference.settings.depositorIntro"}</p>
 		{fbvFormSection}
-			{fbvElement type="text" id="depositorName" value=$depositorName required="true" label="plugins.importexport.crossrefConference.settings.form.depositorName" maxlength="60" size=$fbvStyles.size.MEDIUM}
-			{fbvElement type="text" id="depositorEmail" value=$depositorEmail required="true" label="plugins.importexport.crossrefConference.settings.form.depositorEmail" maxlength="90" size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" id="depositorName" value=$depositorName|escape required="true" label="plugins.importexport.crossrefConference.settings.form.depositorName" maxlength="60" size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" id="depositorEmail" value=$depositorEmail|escape required="true" label="plugins.importexport.crossrefConference.settings.form.depositorEmail" maxlength="90" size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
 		{fbvFormSection}
 			<p class="pkp_help">{translate key="plugins.importexport.crossrefConference.registrationIntro"}</p>
-			{fbvElement type="text" id="username" value=$username label="plugins.importexport.crossrefConference.settings.form.username" maxlength="50" size=$fbvStyles.size.MEDIUM}
-			{fbvElement type="text" password="true" id="password" value=$password label="plugins.importexport.common.settings.form.password" maxLength="50" size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" id="username" value=$username|escape label="plugins.importexport.crossrefConference.settings.form.username" maxlength="50" size=$fbvStyles.size.MEDIUM}
+			{fbvElement type="text" password="true" id="password" value=$password|escape label="plugins.importexport.common.settings.form.password" maxLength="50" size=$fbvStyles.size.MEDIUM}
 			<span class="instruct">{translate key="plugins.importexport.common.settings.form.password.description"}</span><br/>
 		{/fbvFormSection}
 		{fbvFormSection list="true"}
