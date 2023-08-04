@@ -8,7 +8,7 @@
     {fbvFormArea id="conferenceDataFormArea"}
         <h4 class="pkp_help">{translate key="plugins.importexport.crossrefConference.settings.conferenceName"}</h4>
         {fbvFormSection}
-            {fbvElement type="text" id="conferenceName" value=$conferenceName required="true" label="plugins.importexport.crossrefConference.settings.form.conferenceName" maxlength="60" size=$fbvStyles.size.MEDIUM}
+            {fbvElement type="text" id="conferenceName" value=$conferenceName required="true" label="plugins.importexport.crossrefConference.settings.form.conferenceName" maxlength="255" size=$fbvStyles.size.MEDIUM}
         {/fbvFormSection}
     {/fbvFormArea}
     {fbvFormButtons submitText="common.save"}
