@@ -100,7 +100,7 @@ class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase
     public function testCreateConferenceNode()
     {
 
-        $JournalDAO =& DAORegistry::getDAO('JournalDAO');
+        $JournalDAO = &DAORegistry::getDAO('JournalDAO');
         $contexts = $JournalDAO->getAll();
         $context = ($contexts->toArray())[0];
 

@@ -235,11 +235,11 @@ class ContextMock extends DataObject
      */
     public function getSupportedFormLocaleNames()
     {
-        $supportedLocales =& $this->getData('supportedFormLocaleNames');
+        $supportedLocales = &$this->getData('supportedFormLocaleNames');
 
         if (!isset($supportedLocales)) {
             $supportedLocales = array();
-            $localeNames =& AppLocale::getAllLocales();
+            $localeNames = &AppLocale::getAllLocales();
 
             $locales = $this->getSupportedFormLocales();
             if (!isset($locales) || !is_array($locales)) {
@@ -271,11 +271,11 @@ class ContextMock extends DataObject
      */
     public function getSupportedSubmissionLocaleNames()
     {
-        $supportedLocales =& $this->getData('supportedSubmissionLocaleNames');
+        $supportedLocales = &$this->getData('supportedSubmissionLocaleNames');
 
         if (!isset($supportedLocales)) {
             $supportedLocales = array();
-            $localeNames =& AppLocale::getAllLocales();
+            $localeNames = &AppLocale::getAllLocales();
 
             $locales = $this->getSupportedSubmissionLocales();
             if (!isset($locales) || !is_array($locales)) {
@@ -306,11 +306,11 @@ class ContextMock extends DataObject
      */
     public function getSupportedLocaleNames()
     {
-        $supportedLocales =& $this->getData('supportedLocaleNames');
+        $supportedLocales = &$this->getData('supportedLocaleNames');
 
         if (!isset($supportedLocales)) {
             $supportedLocales = array();
-            $localeNames =& AppLocale::getAllLocales();
+            $localeNames = &AppLocale::getAllLocales();
 
             $locales = $this->getSupportedLocales();
             if (!isset($locales) || !is_array($locales)) {

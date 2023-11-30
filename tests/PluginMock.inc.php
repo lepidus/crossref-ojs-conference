@@ -360,7 +360,7 @@ class PluginMock
 
         // Slash characters (/) are not allowed in resource names, so use dashes (-) instead.
         $resourceName = strtr(join('/', array(PLUGIN_TEMPLATE_RESOURCE_PREFIX, $contextId, $pluginPath, $category, $plugin)), '/', '-');
-        return $resourceName . ($template!==null ? ":$template" : '');
+        return $resourceName . ($template !== null ? ":$template" : '');
     }
 
     /**
@@ -406,7 +406,7 @@ class PluginMock
      */
     public function _overridePluginTemplates($hookName, $args)
     {
-        $filePath =& $args[0];
+        $filePath = &$args[0];
         $template = $args[1];
         $checkFilePath = $filePath;
 
@@ -574,7 +574,7 @@ class PluginMock
         // All contexts are set to zero for site-wide plug-in settings
         $application = Application::get();
         $contextDepth = $application->getContextDepth();
-        if ($contextDepth >0) {
+        if ($contextDepth > 0) {
             $arguments = array_fill(0, $contextDepth, 0);
         } else {
             $arguments = array();
@@ -627,8 +627,8 @@ class PluginMock
      */
     public function installEmailTemplates($hookName, $args)
     {
-        $installer =& $args[0]; /* @var $installer Installer */
-        $result =& $args[1];
+        $installer = &$args[0]; /* @var $installer Installer */
+        $result = &$args[1];
 
         // Load email template data as required from the locale files.
         $emailTemplateDao = DAORegistry::getDAO('EmailTemplateDAO'); /* @var $emailTemplateDao EmailTemplateDAO */
@@ -668,8 +668,8 @@ class PluginMock
      */
     public function installEmailTemplateData($hookName, $args)
     {
-        $installer =& $args[0];
-        $result =& $args[1];
+        $installer = &$args[0];
+        $result = &$args[1];
 
         $emailTemplateDao = DAORegistry::getDAO('EmailTemplateDAO'); /* @var $emailTemplateDao EmailTemplateDAO */
         foreach ($installer->installedLocales as $locale) {
@@ -697,7 +697,7 @@ class PluginMock
      */
     public function installLocale($hookName, $args)
     {
-        $locale =& $args[0];
+        $locale = &$args[0];
         $filename = str_replace('{$installedLocale}', $locale, $this->getInstallEmailTemplateDataFile());
         $emailTemplateDao = DAORegistry::getDAO('EmailTemplateDAO'); /* @var $emailTemplateDao EmailTemplateDAO */
 
@@ -722,8 +722,8 @@ class PluginMock
      */
     public function installFilters($hookName, $args)
     {
-        $installer =& $args[0]; /* @var $installer Installer */
-        $result =& $args[1]; /* @var $result boolean */
+        $installer = &$args[0]; /* @var $installer Installer */
+        $result = &$args[1]; /* @var $result boolean */
 
         // Get the filter configuration file name(s).
         $filterConfigFiles = $this->getInstallFilterConfigFiles();
@@ -761,8 +761,8 @@ class PluginMock
      */
     public function updateSchema($hookName, $args)
     {
-        $installer =& $args[0];
-        $result =& $args[1];
+        $installer = &$args[0];
+        $result = &$args[1];
 
         if ($migration = $this->getInstallMigration()) {
             try {
@@ -822,7 +822,7 @@ class PluginMock
     public function &getRequest()
     {
         if (!$this->request) {
-            $this->request =& Registry::get('request');
+            $this->request = &Registry::get('request');
         }
         return $this->request;
     }

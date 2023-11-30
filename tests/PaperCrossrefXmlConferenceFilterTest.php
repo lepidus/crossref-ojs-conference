@@ -48,7 +48,7 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase
         $crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
         $crossRef->setDeployment($this->deployment);
 
-        $submissionDao =& DAORegistry::getDAO('SubmissionDAO');
+        $submissionDao = &DAORegistry::getDAO('SubmissionDAO');
         $submissions = $submissionDao->getByContextId(1);
         $submission = $submissions->toArray();
 
@@ -113,7 +113,7 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase
 
         $xml_file_name = './plugins/importexport/crossrefConference/tests/conferenceGenerate-teste.xml';
 
-        $JournalDAO =& DAORegistry::getDAO('JournalDAO');
+        $JournalDAO = &DAORegistry::getDAO('JournalDAO');
         $contexts = $JournalDAO->getAll();
         $context = ($contexts->toArray())[0];
 
@@ -123,7 +123,7 @@ class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase
         $crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
         $crossRef->setDeployment($deployment);
 
-        $submissionDao =& DAORegistry::getDAO('SubmissionDAO');
+        $submissionDao = &DAORegistry::getDAO('SubmissionDAO');
         $submissions = $submissionDao->getByContextId(1);
         $submission = $submissions->toArray();
 
