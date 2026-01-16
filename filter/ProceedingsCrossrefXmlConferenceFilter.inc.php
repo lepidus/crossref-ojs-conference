@@ -39,7 +39,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $bodyNode = $doc->createElementNS($deployment->getNamespace(), 'body');
         $rootNode->appendChild($bodyNode);
 
-        foreach($pubObjects as $pubObject) {
+        foreach ($pubObjects as $pubObject) {
             $conferenceNode = $this->createConferenceNode($doc, $pubObject);
             $bodyNode->appendChild($conferenceNode);
         }
@@ -90,20 +90,43 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
     {
         $deployment = $this->getDeployment();
         $conferenceNode = $doc->createElementNS($deployment->getNamespace(), 'conference');
-        $conferenceNode->appendChild($this->createEventMetadataNode($doc));
+        $conferenceNode->appendChild($this->createEventMetadataNode($doc, $pubObject));
         $conferenceNode->appendChild($this->createProceedingsSeriesMetadataNode($doc, $pubObject));
         return $conferenceNode;
     }
 
-    public function createEventMetadataNode($doc)
+    public function createEventMetadataNode($doc, $pubObject)
     {
         $deployment = $this->getDeployment();
         $context = $deployment->getContext();
         $plugin = $deployment->getPlugin();
+        $cache = $deployment->getCache();
+
+        if (is_a($pubObject, 'Issue')) {
+            $issue = $pubObject;
+        } elseif (is_a($pubObject, 'Submission')) {
+            $issueId = $pubObject->getCurrentPublication()->getData('issueId');
+            if ($cache->isCached('issues', $issueId)) {
+                $issue = $cache->get('issues', $issueId);
+            } else {
+                $issueDao = DAORegistry::getDAO('IssueDAO'); /* @var $issueDao IssueDAO */
+                $issue = $issueDao->getById($issueId, $context->getId());
+                if ($issue) {
+                    $cache->add($issue, null);
+                }
+            }
+        } else {
+            return;
+        }
 
         $conferenceName = $plugin->getSetting($context->getId(), 'conferenceName');
         $eventMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'event_metadata');
         $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
+
+        $conferenceLocation = sprintf('%s, %s', $issue->getData('conferencePlaceCity'), $issue->getData('conferencePlaceCountry'));
+        if (!empty($conferenceLocation)) {
+            $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_location', htmlspecialchars($conferenceLocation, ENT_COMPAT, 'UTF-8')));
+        }
 
         return $eventMetadataNode;
     }
