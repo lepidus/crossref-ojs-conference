@@ -128,6 +128,26 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
             $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_location', htmlspecialchars($conferenceLocation, ENT_COMPAT, 'UTF-8')));
         }
 
+        $conferenceDateBegin = $issue->getData('conferenceDateBegin');
+        $conferenceDateEnd = $issue->getData('conferenceDateEnd');
+
+        if (!empty($conferenceDateBegin) || !empty($conferenceDateEnd)) {
+            $start_day = date('d', strtotime($conferenceDateBegin));
+            $start_month = date('m', strtotime($conferenceDateBegin));
+            $start_year = date('Y', strtotime($conferenceDateBegin));
+            $end_day = date('d', strtotime($conferenceDateEnd));
+            $end_month = date('m', strtotime($conferenceDateEnd));
+            $end_year = date('Y', strtotime($conferenceDateEnd));
+            $conferenceDateNode = $doc->createElementNS($deployment->getNamespace(), 'conference_date');
+            $conferenceDateNode->setAttribute('start_month', $start_month);
+            $conferenceDateNode->setAttribute('start_year', $start_year);
+            $conferenceDateNode->setAttribute('start_day', $start_day);
+            $conferenceDateNode->setAttribute('end_month', $end_month);
+            $conferenceDateNode->setAttribute('end_year', $end_year);
+            $conferenceDateNode->setAttribute('end_day', $end_day);
+            $eventMetadataNode->appendChild($conferenceDateNode);
+        }
+
         return $eventMetadataNode;
     }
 
