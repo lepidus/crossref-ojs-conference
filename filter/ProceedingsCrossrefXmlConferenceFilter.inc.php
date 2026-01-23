@@ -128,14 +128,20 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $eventMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'event_metadata');
         $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
 
-        $conferenceLocation = sprintf('%s, %s', $issue->getData('conferencePlaceCity'), $issue->getData('conferencePlaceCountry'));
+        $conferencePlaceCity = $issue->getData('conferencePlaceCity');
+        $conferencePlaceCountry = $issue->getData('conferencePlaceCountry');
+        $locationParts = array_filter([$conferencePlaceCity, $conferencePlaceCountry]);
+        $conferenceLocation = implode(', ', $locationParts);
         if (!empty($conferenceLocation)) {
-            $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_location', htmlspecialchars($conferenceLocation, ENT_COMPAT, 'UTF-8')));
+            $eventMetadataNode->appendChild($node = $doc->createElementNS(
+                $deployment->getNamespace(),
+                'conference_location',
+                htmlspecialchars($conferenceLocation, ENT_COMPAT, 'UTF-8')
+            ));
         }
 
         $conferenceDateBegin = $issue->getData('conferenceDateBegin');
         $conferenceDateEnd = $issue->getData('conferenceDateEnd');
-
         if (!empty($conferenceDateBegin) || !empty($conferenceDateEnd)) {
             $start_day = date('d', strtotime($conferenceDateBegin));
             $start_month = date('m', strtotime($conferenceDateBegin));
