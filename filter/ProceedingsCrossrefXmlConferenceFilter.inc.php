@@ -119,7 +119,12 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
             return;
         }
 
-        $conferenceName = $plugin->getSetting($context->getId(), 'conferenceName');
+        $conferenceNameOption = $plugin->getSetting($context->getId(), 'conferenceNameOption');
+        if ($conferenceNameOption === 'issueTitle' && $issue->getLocalizedTitle() != '') {
+            $conferenceName = $issue->getLocalizedTitle();
+        } else {
+            $conferenceName = $plugin->getSetting($context->getId(), 'conferenceName');
+        }
         $eventMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'event_metadata');
         $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
 

@@ -35,7 +35,6 @@ class CrossrefConferenceDataForm extends Form
 
         parent::__construct($plugin->getTemplateResource('conferenceDataForm.tpl'));
 
-        $this->addCheck(new FormValidator($this, 'conferenceName', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
         $this->addCheck(new FormValidatorPost($this));
         $this->addCheck(new FormValidatorCSRF($this));
     }
@@ -44,7 +43,7 @@ class CrossrefConferenceDataForm extends Form
     {
         $contextId = $this->_getContextId();
         $plugin = $this->_getPlugin();
-        foreach($this->getFormFields() as $fieldName => $fieldType) {
+        foreach ($this->getFormFields() as $fieldName => $fieldType) {
             $this->setData($fieldName, $plugin->getSetting($contextId, $fieldName));
         }
     }
@@ -52,13 +51,17 @@ class CrossrefConferenceDataForm extends Form
     public function readInputData()
     {
         $this->readUserVars(array_keys($this->getFormFields()));
+        $this->addCheck(new FormValidator($this, 'conferenceNameOption', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
+        if ($this->getData('conferenceNameOption') === 'custom') {
+            $this->addCheck(new FormValidator($this, 'conferenceName', 'required', 'plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
+        }
     }
 
     public function execute(...$functionArgs)
     {
         $plugin = $this->_getPlugin();
         $contextId = $this->_getContextId();
-        foreach($this->getFormFields() as $fieldName => $fieldType) {
+        foreach ($this->getFormFields() as $fieldName => $fieldType) {
             $plugin->updateSetting($contextId, $fieldName, $this->getData($fieldName), $fieldType);
         }
         parent::execute(...$functionArgs);
@@ -67,7 +70,8 @@ class CrossrefConferenceDataForm extends Form
     public function getFormFields()
     {
         return array(
-            'conferenceName' => 'string'
+            'conferenceName' => 'string',
+            'conferenceNameOption' => 'string'
         );
     }
 }

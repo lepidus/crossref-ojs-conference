@@ -143,3 +143,9 @@ msgstr ""
 
 msgid "plugins.importexport.crossrefConference.settings.form.onlyValidateExport"
 msgstr "Validar apenas a exportação. Não baixar o arquivo."
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionIssueTitle"
+msgstr "Usar título da edição"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
+msgstr "Inserir nome da conferência"

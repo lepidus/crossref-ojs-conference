@@ -95,7 +95,19 @@
 			</div>
 
 			<div id="conferenceData-tab">
-				{include file="../../../plugins/importexport/crossrefConference/templates/conferenceDataForm.tpl"}
+				{capture assign=crossrefConferenceDataGridUrl}
+					{url 
+						router=$smarty.const.ROUTE_COMPONENT 
+						component="grid.settings.plugins.settingsPluginGridHandler" 
+						op="manage" 
+						plugin="CrossrefConferenceExportPlugin" 
+						category="importexport" 
+						verb="conferenceData"
+						action="index"
+						escape=false
+					}
+				{/capture}
+				{load_url_in_div id="crossrefConferenceDataGridContainer" url=$crossrefConferenceDataGridUrl}
 			<div>
 		{/if}
 	</div>

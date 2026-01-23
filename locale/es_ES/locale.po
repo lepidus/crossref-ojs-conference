@@ -135,3 +135,9 @@ msgstr "El registro no pudo realizarse! El servidor de registro de DOI retornó 
 
 msgid "plugins.importexport.crossref.register.success.warning"
 msgstr "El registro se realizó satisfactoriamente. Sin embargo, ocurrieron las siguientes advertencias: '{$param}'."
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionIssueTitle"
+msgstr "Utilizar el título del número"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
+msgstr "Introducir el nombre de la conferencia"

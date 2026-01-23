@@ -135,3 +135,9 @@ msgstr "No issue matched the specified issue ID \"{$issueId}\"."
 
 msgid "plugins.importexport.crossrefConference.export.error.articleNotFound"
 msgstr "No article matched the specified article ID \"{$articleId}\"."
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionIssueTitle"
+msgstr "Use issue title"
+
+msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
+msgstr "Enter conference name"
