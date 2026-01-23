@@ -117,25 +117,24 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
 
     public function manage($args, $request)
     {
-        switch ($request->getUserVar('verb')) {
-            case 'settings':
-                AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_MANAGER);
-                $this->import('classes.form.CrossrefConferenceDataForm');
-                $form = new CrossrefConferenceDataForm($this, $request->getContext()->getId());
-                if ($request->getUserVar('save')) {
+        AppLocale::requireComponents(LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_MANAGER);
+        $this->import('classes.form.CrossrefConferenceDataForm');
+        $form = new CrossrefConferenceDataForm($this, $request->getContext()->getId());
+        if ($request->getUserVar('verb') == 'conferenceData') {
+            switch ($request->getUserVar('action')) {
+                case 'save':
                     $form->readInputData();
                     if ($form->validate()) {
                         $form->execute();
                         $notificationManager = new NotificationManager();
-                        $notificationManager->createTrivialNotification($request->getUser()->getId());
-                        return new JSONMessage(true);
+                        $notificationManager->createTrivialNotification($request->getUser()->getId(), NOTIFICATION_TYPE_SUCCESS);
                     }
-                } else {
+                    return new JSONMessage(true);
+                case 'index':
                     $form->initData();
-                }
-                return new JSONMessage(true, $form->fetch($request));
+                    return new JSONMessage(true, $form->fetch($request));
+            }
         }
-
         return parent::manage($args, $request);
     }
 
@@ -164,11 +163,6 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
     public function getSettingsFormClassName()
     {
         return 'CrossrefConferenceSettingsForm';
-    }
-
-    public function getConfereceDataFormClassName()
-    {
-        return 'CrossrefConferenceDataForm';
     }
 
     public function getExportDeploymentClassName()
