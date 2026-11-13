@@ -16,6 +16,7 @@ Releases 1.x of this plugin are for OJS 3.3.
 
 * DOIs enabled for articles, with a DOI prefix, in `Settings` > `Distribution` > `DOIs`.
 * The journal publisher and an ISSN (online or print), in `Settings` > `Journal`.
+* `api_key_secret` set under `[security]` in `config.inc.php`, to deposit directly from OJS. The Crossref password is stored encrypted with this secret, so the plugin does not save the password while it is missing. Changing the secret later makes the stored password unreadable: it then has to be typed again in the plugin settings.
 * To export the conference location and dates, the issues must carry the conference data (`conferencePlaceCity`, `conferencePlaceCountry`, `conferenceDateBegin`, `conferenceDateEnd`), such as the data kept by the Conference plugin. Without them, only the conference name is exported.
 
 ## Installation
@@ -34,7 +35,7 @@ Update the database to complete the plugin installation with the following comma
 
 Version 1.x was an import/export plugin, under `Tools`. Version 2.x is a generic plugin and a DOI registration agency. When version 2.x is installed:
 
-* The settings of the old plugin (depositor, Crossref account, test mode and conference name) are carried over.
+* The settings of the old plugin (depositor, Crossref account, test mode and conference name) are carried over. The Crossref password is encrypted on the way; if `api_key_secret` is not set when the upgrade runs, the password is not carried over and has to be typed again.
 * Journals that had the old plugin configured get the new plugin enabled and selected as their registration agency, unless another agency was already selected. The old automatic registration option becomes the automatic deposit option of OJS.
 * The deposit status of each paper (registered, marked registered or failed, with the batch ID and the failure message) is carried over to its DOI.
 
@@ -45,7 +46,7 @@ After the upgrade, remove the old `Crossref Conference XML Export Plugin` from t
 1. Enable the plugin in `Settings` > `Website` > `Plugins` > `Generic Plugins`.
 2. In `Settings` > `Distribution` > `DOIs` > `Registration`, choose **Crossref (Conference)** as the registration agency and fill in:
    * **Depositor name** and **Depositor email**.
-   * The **username** and **password** of the Crossref account, to deposit directly from OJS. Without them, the XML can still be exported.
+   * The **username** and **password** of the Crossref account, to deposit directly from OJS. Without them, the XML can still be exported. The password is never shown again after it is saved: leave the field empty to keep the stored one.
    * The **conference name**: either the title of the paper's issue, or a fixed name.
    * **Testing API**, to deposit to the Crossref test service.
 
