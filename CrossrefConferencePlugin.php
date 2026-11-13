@@ -5,6 +5,7 @@ namespace APP\plugins\generic\crossrefConference;
 use APP\core\Application;
 use APP\facades\Repo;
 use APP\plugins\generic\crossrefConference\classes\CrossrefConferenceSettings;
+use APP\plugins\generic\crossrefConference\classes\migration\CrossrefConferenceUpgradeMigration;
 use APP\plugins\IDoiRegistrationAgency;
 use Illuminate\Support\Collection;
 use PKP\config\Config;
@@ -52,6 +53,11 @@ class CrossrefConferencePlugin extends GenericPlugin implements IDoiRegistration
         }
 
         return $success;
+    }
+
+    public function getInstallMigration()
+    {
+        return new CrossrefConferenceUpgradeMigration($this);
     }
 
     public function setEnabled($enabled)
