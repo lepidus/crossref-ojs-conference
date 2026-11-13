@@ -7,7 +7,7 @@
 <version>
 	<application>crossrefConference</application>
 	<type>plugins.generic</type>
-	<release>1.0.6.0</release>
-	<date>2026-01-23</date>
+	<release>2.0.0.0</release>
+	<date>2026-11-13</date>
 	<class>CrossrefConferencePlugin</class>
 </version>
