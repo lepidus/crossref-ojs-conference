@@ -1,143 +1,117 @@
 <?php
 
+require_once __DIR__ . '/CrossrefConferenceTestCase.php';
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlConferenceFilter');
-import('plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter');
-import('lib.pkp.classes.user.User');
-import('plugins.importexport.native.NativeImportExportDeployment');
-import('plugins.importexport.crossrefConference.tests.ContextMock');
-import('plugins.importexport.crossrefConference.tests.PluginMock');
-import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployment');
-import('classes.issue.Issue');
-import("classes.submission.Submission");
-import("classes.publication.Publication");
-import("classes.journal.JournalDAO");
+use APP\plugins\generic\crossrefConference\filter\PaperCrossrefXmlConferenceFilter;
+use PKP\galley\Galley;
 
-class PaperCrossrefXmlConferenceFilterTest extends PKPTestCase
+class PaperCrossrefXmlConferenceFilterTest extends CrossrefConferenceTestCase
 {
-    private $expectedFile;
-    private $doc;
-    private $filterGroup;
-    private $context;
-    private $plugin;
-    private $deployment;
+    private DOMDocument $doc;
+    private PaperCrossrefXmlConferenceFilter $filter;
 
     protected function setUp(): void
     {
-
-        $this->expectedFile = new DOMDocument('1.0', 'utf-8');
-        $this->expectedFile->loadXML($this->getTestData());
-        $this->expectedFile->preserveWhiteSpace = false;
-
-        $this->doc = new DOMDocument('1.0', 'utf-8');
-        $this->doc->formatOutput = true;
-
-        $this->filterGroup = new FilterGroup();
-
-        $this->context = new ContextMock();
-        $this->plugin = new PluginMock();
-        $this->deployment = new CrossrefConferenceExportDeployment($this->context, $this->plugin);
-
         parent::setUp();
+        $this->doc = new DOMDocument('1.0', 'utf-8');
+        $this->filter = $this->createFilter(PaperCrossrefXmlConferenceFilter::class);
     }
 
-    public function testCreateConferencePaperNode()
+    public function testContributorsAreListedInAuthorOrder(): void
     {
+        $submission = $this->createSubmission([
+            $this->createAuthor(['pt_BR' => 'amanda', 'en' => 'Amanda'], ['pt_BR' => 'aléssio', 'en' => 'Alessio'], 'https://orcid.org/0000-0001-2345-6789'),
+            $this->createAuthor(['pt_BR' => 'Cristiane'], ['pt_BR' => 'Nespoli']),
+        ]);
 
-        $crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
-        $crossRef->setDeployment($this->deployment);
+        $paperNode = $this->filter->createConferencePaperNode($this->doc, $submission);
+        $firstAuthorNode = $this->child($paperNode, 'person_name', 0);
+        $secondAuthorNode = $this->child($paperNode, 'person_name', 1);
+        $alternativeNameNode = $this->child($firstAuthorNode, 'name');
 
-        $submissionDao = &DAORegistry::getDAO('SubmissionDAO');
-        $submissions = $submissionDao->getByContextId(1);
-        $submission = $submissions->toArray();
+        $this->assertSame(['author', 'first', 'pt'], [
+            $firstAuthorNode->getAttribute('contributor_role'),
+            $firstAuthorNode->getAttribute('sequence'),
+            $firstAuthorNode->getAttribute('language'),
+        ]);
+        $this->assertSame('Amanda', $this->childText($firstAuthorNode, 'given_name'));
+        $this->assertSame('Aléssio', $this->childText($firstAuthorNode, 'surname'));
+        $this->assertSame('https://orcid.org/0000-0001-2345-6789', $this->childText($firstAuthorNode, 'ORCID'));
+        $this->assertSame('en', $alternativeNameNode->getAttribute('language'));
+        $this->assertSame('Alessio', $this->childText($alternativeNameNode, 'surname'));
+        $this->assertSame('additional', $secondAuthorNode->getAttribute('sequence'));
+        $this->assertSame('Cristiane', $this->childText($secondAuthorNode, 'given_name'));
+        $this->assertSame('Nespoli', $this->childText($secondAuthorNode, 'surname'));
+    }
 
-        $conferencePaper = $crossRef->createConferencePaperNode($this->doc, $submission[0]);
-        $this->doc->appendChild($conferencePaper);
+    public function testPaperWithoutAuthorsHasNoContributors(): void
+    {
+        $paperNode = $this->filter->createConferencePaperNode($this->doc, $this->createSubmission());
 
-        $body = $this->expectedFile->getElementsByTagName('body')->item(0);
-        $conference = $body->getElementsByTagName('conference')->item(0);
-        $expected = $conference->getElementsByTagName('conference_paper')->item(0);
+        $this->assertNull($this->child($paperNode, 'contributors'));
+    }
 
-        $actual = $this->doc->getElementsByTagName("conference_paper")->item(0);
+    public function testPaperHasTitleSubtitleAndPublicationDate(): void
+    {
+        $paperNode = $this->filter->createConferencePaperNode($this->doc, $this->createSubmission());
+        $publicationDateNode = $this->child($paperNode, 'publication_date');
 
-        $actualContributors = $actual->getElementsByTagName("contributors")->item(0);
-        $actualPersonName = $actualContributors->getElementsByTagName("person_name")->item(0);
-        $actualGivenName = $actualPersonName->getElementsByTagName("given_name")->item(0);
-        $actualGivenName->textContent = 'Amanda';
-        $actualSurname = $actualPersonName->getElementsByTagName("surname")->item(0);
-        $actualSurname->textContent = 'Aléssio';
+        $this->assertSame(['full_text', 'any'], [$paperNode->getAttribute('publication_type'), $paperNode->getAttribute('metadata_distribution_opts')]);
+        $this->assertSame('A importância do Cálculo Diferencial e Integral', $this->childText($paperNode, 'title'));
+        $this->assertSame('para a formação do professor de Matemática', $this->childText($paperNode, 'subtitle'));
+        $this->assertSame(['02', '20', '2020'], [
+            $this->childText($publicationDateNode, 'month'),
+            $this->childText($publicationDateNode, 'day'),
+            $this->childText($publicationDateNode, 'year'),
+        ]);
+    }
 
-        $actualPersonNameAdditional = $actualContributors->getElementsByTagName("person_name")->item(1);
-        $actualGivenName = $actualPersonNameAdditional->getElementsByTagName("given_name")->item(0);
-        $actualGivenName->textContent = 'Cristiane';
-        $actualSurname = $actualPersonNameAdditional->getElementsByTagName("surname")->item(0);
-        $actualSurname->textContent = 'Nespoli';
+    public function testDoiDataPointsToTheArticlePage(): void
+    {
+        $doiDataNode = $this->child($this->filter->createConferencePaperNode($this->doc, $this->createSubmission()), 'doi_data');
 
-        $actualTitles = $actual->getElementsByTagName('titles')->item(0);
-        $actualTitle = $actualTitles->getElementsByTagName('title')->item(0);
-        $actualTitle->textContent = 'A importância do Cálculo Diferencial e Integral para a formação do professor de Matemática da Educação Básica';
+        $this->assertSame('10.5540/03.2020.007.01.0339', $this->childText($doiDataNode, 'doi'));
+        $this->assertStringEndsWith('/sbmac/article/view/2680', $this->childText($doiDataNode, 'resource'));
+    }
 
-        $actualPublicationDate = $actual->getElementsByTagName('publication_date')->item(0);
-        $actualMonth = $actualPublicationDate->getElementsByTagName('month')->item(0);
-        $actualMonth->textContent = '02';
-        $actualDay = $actualPublicationDate->getElementsByTagName('day')->item(0);
-        $actualDay->textContent = '20';
-        $actualYear = $actualPublicationDate->getElementsByTagName('year')->item(0);
-        $actualYear->textContent = '2020';
+    public function testPaperWithoutGalleysHasEmptyCollections(): void
+    {
+        $doiDataNode = $this->child($this->filter->createConferencePaperNode($this->doc, $this->createSubmission()), 'doi_data');
 
+        $this->assertSame('crawler-based', $this->child($doiDataNode, 'collection', 0)->getAttribute('property'));
+        $this->assertSame('text-mining', $this->child($doiDataNode, 'collection', 1)->getAttribute('property'));
+        $this->assertNull($this->child($doiDataNode, 'item'));
+    }
 
-        $actualDoiData = $actual->getElementsByTagName("doi_data")->item(0);
+    public function testRemoteGalleyIsOfferedForTextMining(): void
+    {
+        $galley = new Galley();
+        $galley->setData('id', 2700);
+        $galley->setData('urlRemote', 'https://example.org/paper.pdf');
 
-        $actualDoi = $actualDoiData->getElementsByTagName("doi")->item(0);
-        $actualDoi->textContent = '10.5540/03.2020.007.01.0339';
+        $doiDataNode = $this->child($this->filter->createConferencePaperNode($this->doc, $this->createSubmission([], [$galley])), 'doi_data');
+        $textMiningNode = $this->child($doiDataNode, 'collection', 1);
+        $resourceNode = $this->child($textMiningNode, 'resource');
 
-        $actualResource = $actualDoiData->getElementsByTagName("resource")->item(0);
-        $actualResource->textContent = 'https://proceedings.sbmac.org.br/sbmac/article/view/2680';
+        $this->assertSame('text-mining', $textMiningNode->getAttribute('property'));
+        $this->assertStringEndsWith('/sbmac/article/download/2680/2700', $resourceNode->textContent);
+        $this->assertFalse($resourceNode->hasAttribute('mime_type'));
+    }
 
-        $actualCollection = $actualDoiData->getElementsByTagName("collection")->item(0);
-        $actualItem = $actualCollection->getElementsByTagName("item")->item(0);
-        $actualResource = $actualItem->getElementsByTagName("resource")->item(0);
-        $actualResource->textContent = 'https://proceedings.sbmac.org.br/sbmac/article/viewFile/2680/2700';
+    public function testProcessWrapsEachPaperInItsConference(): void
+    {
+        $this->exportPlugin->getCache()->add($this->createIssue(['conferencePlaceCity' => 'Uberlândia']), null);
+        $submissions = [$this->createSubmission()];
 
-        self::assertXmlStringEqualsXmlString(
-            $this->expectedFile->saveXML($expected),
-            $this->doc->saveXML($actual),
-            "actual xml is equal to expected xml"
+        $doc = $this->filter->process($submissions);
+        $conferenceNode = $this->child($doc->documentElement, 'conference');
+
+        $this->assertSame('doi_batch', $doc->documentElement->localName);
+        $this->assertNotNull($this->child($doc->documentElement, 'head'));
+        $this->assertSame(
+            ['event_metadata', 'proceedings_series_metadata', 'conference_paper'],
+            array_values(array_map(fn ($node) => $node->localName, array_filter(iterator_to_array($conferenceNode->childNodes), fn ($node) => $node instanceof DOMElement)))
         );
-
+        $this->assertSame('Uberlândia', $this->childText($conferenceNode, 'conference_location'));
     }
-
-    public function testGenerateXMLFile()
-    {
-
-        $xml_file_name = './plugins/importexport/crossrefConference/tests/conferenceGenerate-teste.xml';
-
-        $JournalDAO = &DAORegistry::getDAO('JournalDAO');
-        $contexts = $JournalDAO->getAll();
-        $context = ($contexts->toArray())[0];
-
-        $deployment = new CrossrefConferenceExportDeployment($context, $this->plugin);
-
-        $doc = $this->doc;
-        $crossRef = new PaperCrossrefXmlConferenceFilter($this->filterGroup);
-        $crossRef->setDeployment($deployment);
-
-        $submissionDao = &DAORegistry::getDAO('SubmissionDAO');
-        $submissions = $submissionDao->getByContextId(1);
-        $submission = $submissions->toArray();
-
-        $doc = $crossRef->process($submission);
-
-        $doc->save($xml_file_name);
-
-        self::assertTrue(is_file($xml_file_name));
-    }
-
-    private function getTestData()
-    {
-        $sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
-        return file_get_contents($sampleFile);
-    }
-
 }

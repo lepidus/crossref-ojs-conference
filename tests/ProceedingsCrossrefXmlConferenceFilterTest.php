@@ -1,170 +1,115 @@
 <?php
 
+require_once __DIR__ . '/CrossrefConferenceTestCase.php';
 
-import('lib.pkp.tests.PKPTestCase');
-import('plugins.importexport.crossrefConference.filter.ProceedingsCrossrefXmlConferenceFilter');
-import('plugins.importexport.crossrefConference.filter.PaperCrossrefXmlConferenceFilter');
-import('lib.pkp.classes.user.User');
-import('plugins.importexport.native.NativeImportExportDeployment');
-import('plugins.importexport.crossrefConference.tests.ContextMock');
-import('plugins.importexport.crossrefConference.tests.PluginMock');
-import('plugins.importexport.crossrefConference.CrossrefConferenceExportDeployment');
-import('classes.issue.Issue');
-import("classes.submission.Submission");
+use APP\plugins\generic\crossrefConference\filter\ProceedingsCrossrefXmlConferenceFilter;
 
-class ProceedingsCrossrefXmlConferenceFilterTest extends PKPTestCase
+class ProceedingsCrossrefXmlConferenceFilterTest extends CrossrefConferenceTestCase
 {
-    private $expectedFile;
-    private $doc;
-    private $filterGroup;
-    private $context;
-    private $plugin;
-    private $deployment;
-
+    private DOMDocument $doc;
+    private ProceedingsCrossrefXmlConferenceFilter $filter;
 
     protected function setUp(): void
     {
-
-        $this->expectedFile = new DOMDocument('1.0', 'utf-8');
-        $this->expectedFile->loadXML($this->getTestData());
-        $this->expectedFile->preserveWhiteSpace = true;
-        $this->doc = new DOMDocument('1.0', 'utf-8');
-        $this->doc->formatOutput = true;
-
-
-        $this->filterGroup = new FilterGroup();
-
-        $this->context = new ContextMock();
-        $this->plugin = new PluginMock();
-        $this->deployment = new CrossrefConferenceExportDeployment($this->context, $this->plugin);
-
         parent::setUp();
+        $this->doc = new DOMDocument('1.0', 'utf-8');
+        $this->filter = $this->createFilter(ProceedingsCrossrefXmlConferenceFilter::class);
     }
 
-    public function testCreateRootNode()
+    public function testRootNodeDeclaresCrossrefSchema436(): void
     {
+        $rootNode = $this->filter->createRootNode($this->doc);
 
-        $this->expectedFile->loadXML(file_get_contents('./plugins/importexport/crossrefConference/tests/rootConference-test.xml'));
-
-        $crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
-        $crossRef->setDeployment($this->deployment);
-        $doiBatch = $crossRef->createRootNode($this->doc);
-        $this->doc->appendChild($doiBatch);
-
-        $expected = $this->expectedFile->getElementsByTagName("doi_batch")->item(0);
-
-        $actual = $this->doc->getElementsByTagName("doi_batch")->item(0);
-
-        self::assertXmlStringEqualsXmlString(
-            $this->expectedFile->saveXML($expected),
-            $this->doc->saveXML($actual),
-            "actual xml is equal to expected xml"
+        $this->assertSame('doi_batch', $rootNode->localName);
+        $this->assertSame(self::NAMESPACE_URI, $rootNode->namespaceURI);
+        $this->assertSame('4.3.6', $rootNode->getAttribute('version'));
+        $this->assertSame(
+            self::NAMESPACE_URI . ' http://www.crossref.org/schema/deposit/crossref4.3.6.xsd',
+            $rootNode->getAttribute('xsi:schemaLocation')
         );
     }
 
-    public function testCreateHeadNode()
+    public function testHeadNodeIdentifiesDepositorAndRegistrant(): void
     {
+        $headNode = $this->filter->createHeadNode($this->doc);
 
-        $crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
-        $crossRef->setDeployment($this->deployment);
+        $this->assertStringStartsWith('proceeding_', $this->childText($headNode, 'doi_batch_id'));
+        $this->assertMatchesRegularExpression('/^\d{17}$/', $this->childText($headNode, 'timestamp'));
+        $this->assertSame('Lepidus Tecnologia', $this->childText($headNode, 'depositor_name'));
+        $this->assertSame('doi@lepidus.com.br', $this->childText($headNode, 'email_address'));
+        $this->assertSame('SBMAC', $this->childText($headNode, 'registrant'));
+    }
 
-        $head = $crossRef->createHeadNode($this->doc);
-        $head = $this->doc->appendChild($head);
+    public function testHeadNodeFallsBackToJournalSupportContactWithoutDepositorSettings(): void
+    {
+        unset($this->pluginSettings['depositorName'], $this->pluginSettings['depositorEmail']);
 
-        $expected = $this->expectedFile->getElementsByTagName('head')->item(0);
+        $headNode = $this->filter->createHeadNode($this->doc);
 
-        $actual = $this->doc->getElementsByTagName("head")->item(0);
+        $this->assertSame('Suporte SBMAC', $this->childText($headNode, 'depositor_name'));
+        $this->assertSame('suporte@sbmac.org.br', $this->childText($headNode, 'email_address'));
+    }
 
-        $actualDoiBatch = $actual->getElementsByTagName('doi_batch_id')->item(0);
-        $actualDoiBatch->textContent = 'proceeding_1606846180';
+    public function testConferenceNameIsTheCustomNameWhenConfigured(): void
+    {
+        $eventMetadataNode = $this->filter->createEventMetadataNode($this->doc, $this->createIssue());
 
-        $actualTimeStamp =  $actual->getElementsByTagName('timestamp')->item(0);
-        $actualTimeStamp->textContent = '1606846180';
-
-        $actualDepositor =  $actual->getElementsByTagName('depositor')->item(0);
-        $actualDepositorName = $actualDepositor->getElementsByTagName('name')->item(0);
-        $actualDepositorName->textContent = 'Lepidus Tecnologia';
-        $actualDepositorEmail = $actualDepositor->getElementsByTagName('email_address')->item(0);
-        $actualDepositorEmail->textContent = 'doi@lepidus.com.br';
-
-        $actualRegistrant =  $actual->getElementsByTagName('registrant')->item(0);
-        $actualRegistrant->textContent = 'SBMAC';
-
-        self::assertXmlStringEqualsXmlString(
-            $this->expectedFile->saveXML($expected),
-            $this->doc->saveXML($actual)
+        $this->assertSame(
+            'CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional',
+            $this->childText($eventMetadataNode, 'conference_name')
         );
-
     }
 
-    public function testCreateConferenceNode()
+    public function testConferenceNameIsTheIssueTitleWhenConfigured(): void
     {
+        $this->pluginSettings['conferenceNameOption'] = 'issueTitle';
 
-        $JournalDAO = &DAORegistry::getDAO('JournalDAO');
-        $contexts = $JournalDAO->getAll();
-        $context = ($contexts->toArray())[0];
+        $eventMetadataNode = $this->filter->createEventMetadataNode($this->doc, $this->createIssue());
 
-        $deployment = new CrossrefConferenceExportDeployment($context, $this->plugin);
+        $this->assertSame('CNMAC 2019', $this->childText($eventMetadataNode, 'conference_name'));
+    }
 
-        $crossRef = new ProceedingsCrossrefXmlConferenceFilter($this->filterGroup);
-        $crossRef->setDeployment($deployment);
+    public function testEventMetadataHasLocationAndDatesOfTheIssue(): void
+    {
+        $issue = $this->createIssue([
+            'conferencePlaceCity' => 'Uberlândia',
+            'conferencePlaceCountry' => 'Brasil',
+            'conferenceDateBegin' => '2019-09-16',
+            'conferenceDateEnd' => '2019-09-20',
+        ]);
 
-        $issue = new Issue();
-        $issue->setDatePublished(date("Y/m/d"));
+        $eventMetadataNode = $this->filter->createEventMetadataNode($this->doc, $issue);
+        $conferenceDateNode = $this->child($eventMetadataNode, 'conference_date');
 
-        $bodyNode = $this->doc->createElement('body');
-        $conference = $crossRef->createConferenceNode($this->doc, $issue);
-        $bodyNode->appendChild($conference);
-        $this->doc->appendChild($bodyNode);
-
-        $expected = $this->expectedFile->getElementsByTagName('body')->item(0);
-        $conference = $expected->getElementsByTagName('conference')->item(0);
-        $paper = $conference->getElementsByTagName('conference_paper')->item(0);
-        $removePaper = $conference->removeChild($paper);
-
-
-        $actual = $this->doc->getElementsByTagName("body")->item(0);
-        $actualConference = $actual->getElementsByTagName('conference')->item(0);
-
-        $actualEventMetada = $actualConference->getElementsByTagName('event_metadata')->item(0);
-        $actualConferenceName = $actualEventMetada->getElementsByTagName('conference_name')->item(0);
-        $actualConferenceName->textContent = 'CNMAC 2019 - XXXIX Congresso Nacional de Matemática Aplicada e Computacional';
-
-        $actualProceedingsSeriesMetada = $actualConference->getElementsByTagName('proceedings_series_metadata')->item(0);
-
-        $actualSeriesMetadata = $actualProceedingsSeriesMetada->getElementsByTagName('series_metadata')->item(0);
-
-        $actualTitles = $actualSeriesMetadata->getElementsByTagName('titles')->item(0);
-        $actualTitle = $actualTitles->getElementsByTagName('title')->item(0);
-        $actualTitle->textContent = 'Proceeding Series of the Brazilian Society of Computational and Applied Mathematics';
-
-        $actualISSN = $actualSeriesMetadata->getElementsByTagName('issn')->item(0);
-        $actualISSN->textContent = '2359-0793';
-
-        $actualPublisher = $actualProceedingsSeriesMetada->getElementsByTagName('publisher')->item(0);
-        $actualPublisherName = $actualPublisher->getElementsByTagName('publisher_name')->item(0);
-        $actualPublisherName->textContent = 'SBMAC';
-
-        $actualPublicationDate = $actualProceedingsSeriesMetada->getElementsByTagName('publication_date')->item(0);
-        $actualMonth = $actualPublicationDate->getElementsByTagName('month')->item(0);
-        $actualMonth->textContent = '02';
-        $actualDay = $actualPublicationDate->getElementsByTagName('day')->item(0);
-        $actualDay->textContent = '20';
-        $actualYear = $actualPublicationDate->getElementsByTagName('year')->item(0);
-        $actualYear->textContent = '2020';
-
-        self::assertXmlStringEqualsXmlString(
-            $this->expectedFile->saveXML($expected),
-            $this->doc->saveXML($actual),
-            "actual xml is equal to expected xml"
+        $this->assertSame('Uberlândia, Brasil', $this->childText($eventMetadataNode, 'conference_location'));
+        $this->assertSame(
+            ['16', '09', '2019', '20', '09', '2019'],
+            array_map(fn ($attribute) => $conferenceDateNode->getAttribute($attribute), ['start_day', 'start_month', 'start_year', 'end_day', 'end_month', 'end_year'])
         );
-
     }
 
-    private function getTestData()
+    public function testEventMetadataHasOnlyTheNameWhenIssueHasNoLocationOrDates(): void
     {
-        $sampleFile = './plugins/importexport/crossrefConference/tests/conference-test.xml';
-        return file_get_contents($sampleFile);
+        $eventMetadataNode = $this->filter->createEventMetadataNode($this->doc, $this->createIssue());
+
+        $this->assertNull($this->child($eventMetadataNode, 'conference_location'));
+        $this->assertNull($this->child($eventMetadataNode, 'conference_date'));
     }
 
+    public function testProceedingsSeriesMetadataDescribesTheJournal(): void
+    {
+        $seriesNode = $this->filter->createProceedingsSeriesMetadataNode($this->doc, $this->createIssue());
+        $issnNode = $this->child($seriesNode, 'issn');
+        $publicationDateNode = $this->child($seriesNode, 'publication_date');
+
+        $this->assertSame('Proceeding Series of the Brazilian Society of Computational and Applied Mathematics', $this->childText($seriesNode, 'title'));
+        $this->assertSame('2359-0793', $issnNode->textContent);
+        $this->assertSame('electronic', $issnNode->getAttribute('media_type'));
+        $this->assertSame('SBMAC', $this->childText($seriesNode, 'publisher_name'));
+        $this->assertSame(['02', '20', '2020'], [
+            $this->childText($publicationDateNode, 'month'),
+            $this->childText($publicationDateNode, 'day'),
+            $this->childText($publicationDateNode, 'year'),
+        ]);
+    }
 }

@@ -149,3 +149,9 @@ msgstr "Usar título da edição"
 
 msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
 msgstr "Inserir nome da conferência"
+
+msgid "plugins.importexport.crossrefConference.registrationAgency.name"
+msgstr "Crossref (Conferência)"
+
+msgid "plugins.importexport.crossrefConference.issues.notSupported"
+msgstr "O Crossref Conferência registra apenas os DOIs de trabalhos de conferência. DOIs de edições não são depositados."

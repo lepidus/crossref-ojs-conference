@@ -141,3 +141,9 @@ msgstr "Use issue title"
 
 msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
 msgstr "Enter conference name"
+
+msgid "plugins.importexport.crossrefConference.registrationAgency.name"
+msgstr "Crossref (Conference)"
+
+msgid "plugins.importexport.crossrefConference.issues.notSupported"
+msgstr "Crossref Conference registers the DOIs of conference papers only. Issue DOIs are not deposited."

@@ -2,14 +2,12 @@
 <!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
 
 <!--
-  * plugins/importexport/crossrefConference/version.xml
-  *
   * Plugin version information.
   -->
 <version>
 	<application>crossrefConference</application>
-	<type>plugins.importexport</type>
+	<type>plugins.generic</type>
 	<release>1.0.6.0</release>
 	<date>2026-01-23</date>
-  <class>CrossrefConferenceExportPlugin</class>
+	<class>CrossrefConferencePlugin</class>
 </version>

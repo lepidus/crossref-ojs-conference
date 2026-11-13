@@ -1,15 +1,20 @@
 <?php
 
 /**
- * @file plugins/importexport/crossrefConference/filter/ProceedingsCrossrefXmlConferenceFilter.inc.php
- *
  * @class ProceedingsCrossrefXmlConferenceFilter
  * @ingroup plugins_importexport_crossrefConference
  *
  * @brief Class that converts an Proceedings to a Crossref Conference XML document.
  */
 
-import('lib.pkp.plugins.importexport.native.filter.NativeExportFilter');
+namespace APP\plugins\generic\crossrefConference\filter;
+
+use APP\facades\Repo;
+use APP\issue\Issue;
+use APP\plugins\generic\crossrefConference\classes\CrossrefConferenceSettings;
+use APP\submission\Submission;
+use DOMDocument;
+use PKP\plugins\importexport\native\filter\NativeExportFilter;
 
 class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
 {
@@ -19,18 +24,12 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         parent::__construct($filterGroup);
     }
 
-    public function getClassName()
-    {
-        return 'plugins.importexport.crossrefConference.filter.ProceedingsCrossrefConferenceXmlFilter';
-    }
-
     public function &process(&$pubObjects)
     {
         $doc = new DOMDocument('1.0', 'utf-8');
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
         $deployment = $this->getDeployment();
-        $context = $deployment->getContext();
 
         $rootNode = $this->createRootNode($doc);
         $doc->appendChild($rootNode);
@@ -76,13 +75,13 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
             $depositorEmail = $context->getData('supportEmail');
         }
 
-        $depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'depositor_name', htmlspecialchars($depositorName, ENT_COMPAT, 'UTF-8')));
-        $depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'email_address', htmlspecialchars($depositorEmail, ENT_COMPAT, 'UTF-8')));
+        $depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'depositor_name', htmlspecialchars((string) $depositorName, ENT_COMPAT, 'UTF-8')));
+        $depositorNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'email_address', htmlspecialchars((string) $depositorEmail, ENT_COMPAT, 'UTF-8')));
 
         $headNode->appendChild($depositorNode);
         $publisherInstitution = $context->getData('publisherInstitution');
 
-        $headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'registrant', htmlspecialchars($publisherInstitution, ENT_COMPAT, 'UTF-8')));
+        $headNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'registrant', htmlspecialchars((string) $publisherInstitution, ENT_COMPAT, 'UTF-8')));
         return $headNode;
     }
 
@@ -100,33 +99,23 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $deployment = $this->getDeployment();
         $context = $deployment->getContext();
         $plugin = $deployment->getPlugin();
-        $cache = $deployment->getCache();
 
-        if (is_a($pubObject, 'Issue')) {
+        if ($pubObject instanceof Issue) {
             $issue = $pubObject;
-        } elseif (is_a($pubObject, 'Submission')) {
-            $issueId = $pubObject->getCurrentPublication()->getData('issueId');
-            if ($cache->isCached('issues', $issueId)) {
-                $issue = $cache->get('issues', $issueId);
-            } else {
-                $issueDao = DAORegistry::getDAO('IssueDAO'); /* @var $issueDao IssueDAO */
-                $issue = $issueDao->getById($issueId, $context->getId());
-                if ($issue) {
-                    $cache->add($issue, null);
-                }
-            }
+        } elseif ($pubObject instanceof Submission) {
+            $issue = $this->getIssueOfSubmission($pubObject);
         } else {
             return;
         }
 
         $conferenceNameOption = $plugin->getSetting($context->getId(), 'conferenceNameOption');
-        if ($conferenceNameOption === 'issueTitle' && $issue->getLocalizedTitle() != '') {
+        if ($conferenceNameOption === CrossrefConferenceSettings::CONFERENCE_NAME_FROM_ISSUE_TITLE && $issue->getLocalizedTitle() != '') {
             $conferenceName = $issue->getLocalizedTitle();
         } else {
             $conferenceName = $plugin->getSetting($context->getId(), 'conferenceName');
         }
         $eventMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'event_metadata');
-        $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_name', htmlspecialchars($conferenceName, ENT_COMPAT, 'UTF-8')));
+        $eventMetadataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'conference_name', htmlspecialchars((string) $conferenceName, ENT_COMPAT, 'UTF-8')));
 
         $conferencePlaceCity = $issue->getData('conferencePlaceCity');
         $conferencePlaceCountry = $issue->getData('conferencePlaceCountry');
@@ -143,12 +132,12 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $conferenceDateBegin = $issue->getData('conferenceDateBegin');
         $conferenceDateEnd = $issue->getData('conferenceDateEnd');
         if (!empty($conferenceDateBegin) || !empty($conferenceDateEnd)) {
-            $start_day = date('d', strtotime($conferenceDateBegin));
-            $start_month = date('m', strtotime($conferenceDateBegin));
-            $start_year = date('Y', strtotime($conferenceDateBegin));
-            $end_day = date('d', strtotime($conferenceDateEnd));
-            $end_month = date('m', strtotime($conferenceDateEnd));
-            $end_year = date('Y', strtotime($conferenceDateEnd));
+            $start_day = date('d', strtotime((string) $conferenceDateBegin));
+            $start_month = date('m', strtotime((string) $conferenceDateBegin));
+            $start_year = date('Y', strtotime((string) $conferenceDateBegin));
+            $end_day = date('d', strtotime((string) $conferenceDateEnd));
+            $end_month = date('m', strtotime((string) $conferenceDateEnd));
+            $end_year = date('Y', strtotime((string) $conferenceDateEnd));
             $conferenceDateNode = $doc->createElementNS($deployment->getNamespace(), 'conference_date');
             $conferenceDateNode->setAttribute('start_month', $start_month);
             $conferenceDateNode->setAttribute('start_year', $start_year);
@@ -167,8 +156,6 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
         $deployment = $this->getDeployment();
         $context = $deployment->getContext();
 
-        $journalIssueNode = $doc->createElementNS($deployment->getNamespace(), 'journal_issue');
-
         $proceedingsSeriesMetadataNode = $doc->createElementNS($deployment->getNamespace(), 'proceedings_series_metadata');
         $seriesMetadata = $doc->createElementNS($deployment->getNamespace(), 'series_metadata');
         $proceedingsTitle = $context->getName($context->getPrimaryLocale());
@@ -176,7 +163,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
             $proceedingsTitle = $context->getData('abbreviation', $context->getPrimaryLocale());
         }
         $titles = $seriesMetadata->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'titles'));
-        $titles->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'title', htmlspecialchars($proceedingsTitle, ENT_COMPAT, 'UTF-8')));
+        $titles->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'title', htmlspecialchars((string) $proceedingsTitle, ENT_COMPAT, 'UTF-8')));
         if ($ISSN = $context->getData('onlineIssn')) {
             $seriesMetadata->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'issn', $ISSN));
             $node->setAttribute('media_type', 'electronic');
@@ -190,7 +177,7 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
 
         $publisher = $doc->createElementNS($deployment->getNamespace(), 'publisher');
         $publisherName = $context->getData('publisherInstitution');
-        $publisher->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'publisher_name', $publisherName));
+        $publisher->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'publisher_name', (string) $publisherName));
         $proceedingsSeriesMetadataNode->appendChild($publisher);
         if ($issue->getDatePublished()) {
             $proceedingsSeriesMetadataNode->appendChild($this->createPublicationDateNode($doc, $issue->getDatePublished()));
@@ -219,8 +206,24 @@ class ProceedingsCrossrefXmlConferenceFilter extends NativeExportFilter
     {
         $deployment = $this->getDeployment();
         $doiDataNode = $doc->createElementNS($deployment->getNamespace(), 'doi_data');
-        $doiDataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'doi', htmlspecialchars($doi, ENT_COMPAT, 'UTF-8')));
+        $doiDataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'doi', htmlspecialchars((string) $doi, ENT_COMPAT, 'UTF-8')));
         $doiDataNode->appendChild($node = $doc->createElementNS($deployment->getNamespace(), 'resource', $url));
         return $doiDataNode;
+    }
+
+    protected function getIssueOfSubmission(Submission $submission): ?Issue
+    {
+        $deployment = $this->getDeployment();
+        $cache = $deployment->getCache();
+        $issueId = $submission->getCurrentPublication()->getData('issueId');
+        if ($cache->isCached('issues', $issueId)) {
+            return $cache->get('issues', $issueId);
+        }
+
+        $issue = $issueId ? Repo::issue()->get($issueId, $deployment->getContext()->getId()) : null;
+        if ($issue) {
+            $cache->add($issue, null);
+        }
+        return $issue;
     }
 }

@@ -141,3 +141,9 @@ msgstr "Utilizar el título del número"
 
 msgid "plugins.importexport.crossrefConference.settings.form.conferenceNameOptionCustom"
 msgstr "Introducir el nombre de la conferencia"
+
+msgid "plugins.importexport.crossrefConference.registrationAgency.name"
+msgstr "Crossref (Conferencia)"
+
+msgid "plugins.importexport.crossrefConference.issues.notSupported"
+msgstr "Crossref Conferencia registra únicamente los DOI de trabajos de conferencia. Los DOI de números no se depositan."
