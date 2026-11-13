@@ -58,6 +58,9 @@ class CrossrefConferenceSettings extends RegistrationAgencySettings
     protected function addValidationChecks(Validator &$validator, array $props): void
     {
         $validator->after(function (Validator $validator) use ($props) {
+            if (($props['password'] ?? '') !== '' && !$this->agencyPlugin->getApiKeyEncryption()->secretConfigExists()) {
+                $validator->errors()->add('password', __('plugins.importexport.crossrefConference.settings.apiKeySecretMissing'));
+            }
             if (($props['conferenceNameOption'] ?? null) === self::CONFERENCE_NAME_CUSTOM && empty($props['conferenceName'])) {
                 $validator->errors()->add('conferenceName', __('plugins.importexport.crossrefConference.settings.form.conferenceNameRequired'));
             }
@@ -67,6 +70,7 @@ class CrossrefConferenceSettings extends RegistrationAgencySettings
     public function getFields(Context $context): array
     {
         $contextId = $context->getId();
+        $hasStoredPassword = (bool) $this->agencyPlugin->getSetting($contextId, 'password');
 
         return [
             new FieldHTML('preamble', [
@@ -92,8 +96,10 @@ class CrossrefConferenceSettings extends RegistrationAgencySettings
             ]),
             new FieldText('password', [
                 'label' => __('plugins.importexport.common.settings.form.password'),
-                'description' => __('plugins.importexport.common.settings.form.password.description'),
-                'value' => $this->agencyPlugin->getSetting($contextId, 'password'),
+                'description' => $hasStoredPassword
+                    ? __('plugins.importexport.crossrefConference.settings.form.password.stored')
+                    : __('plugins.importexport.common.settings.form.password.description'),
+                'value' => '',
                 'inputType' => 'password',
             ]),
             new FieldOptions('testMode', [
@@ -140,6 +146,10 @@ class CrossrefConferenceSettings extends RegistrationAgencySettings
 
         if (!$context->getData('onlineIssn') && !$context->getData('printIssn')) {
             $notices[] = __('plugins.importexport.crossrefConference.error.issnNotConfigured', ['journalSettingsUrl' => $journalSettingsUrl]);
+        }
+
+        if (!$this->agencyPlugin->getApiKeyEncryption()->secretConfigExists()) {
+            $notices[] = __('plugins.importexport.crossrefConference.settings.apiKeySecretMissing');
         }
 
         $text = '';

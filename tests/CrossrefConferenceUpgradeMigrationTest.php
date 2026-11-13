@@ -1,6 +1,7 @@
 <?php
 
 use APP\core\Application;
+use APP\plugins\generic\crossrefConference\classes\APIKeyEncryption;
 use APP\plugins\generic\crossrefConference\classes\migration\CrossrefConferenceUpgradeMigration;
 use APP\plugins\generic\crossrefConference\CrossrefConferencePlugin;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +22,12 @@ class CrossrefConferenceUpgradeMigrationTest extends PKPTestCase
         parent::setUp();
         DB::beginTransaction();
 
-        $this->plugin = new CrossrefConferencePlugin();
+        $this->plugin = new class () extends CrossrefConferencePlugin {
+            public function getApiKeyEncryption(): APIKeyEncryption
+            {
+                return new APIKeyEncryption('a-secret-for-the-unit-tests');
+            }
+        };
         $contextDao = Application::getContextDAO();
         $this->contextId = (int) DB::table($contextDao->tableName)->value($contextDao->primaryKeyColumn);
 
@@ -128,6 +134,21 @@ class CrossrefConferenceUpgradeMigrationTest extends PKPTestCase
         $this->assertSame('1', $this->contextSetting(Context::SETTING_DOI_AUTOMATIC_DEPOSIT));
         $this->assertSame(['publication'], json_decode($this->contextSetting(Context::SETTING_ENABLED_DOI_TYPES), true));
         $this->assertSame(0, DB::table('plugin_settings')->where('plugin_name', '=', 'crossrefconferenceexportplugin')->count());
+    }
+
+    public function testPlainTextPasswordIsStoredEncrypted(): void
+    {
+        $this->insertLegacyPluginSettings(['depositorName' => 'Lepidus Tecnologia', 'password' => 'crossref-password']);
+
+        $this->runMigration();
+
+        $storedPassword = DB::table('plugin_settings')
+            ->where('context_id', '=', $this->contextId)
+            ->where('plugin_name', '=', 'crossrefconferenceplugin')
+            ->where('setting_name', '=', 'password')
+            ->value('setting_value');
+        $this->assertStringStartsWith('base64:', $storedPassword);
+        $this->assertSame('crossref-password', $this->plugin->getDepositPassword($this->contextId));
     }
 
     public function testJournalWithAnotherAgencyKeepsIt(): void

@@ -4,6 +4,7 @@ namespace APP\plugins\generic\crossrefConference;
 
 use APP\core\Application;
 use APP\facades\Repo;
+use APP\plugins\generic\crossrefConference\classes\APIKeyEncryption;
 use APP\plugins\generic\crossrefConference\classes\CrossrefConferenceSettings;
 use APP\plugins\generic\crossrefConference\classes\migration\CrossrefConferenceUpgradeMigration;
 use APP\plugins\IDoiRegistrationAgency;
@@ -250,6 +251,42 @@ class CrossrefConferencePlugin extends GenericPlugin implements IDoiRegistration
             'hasErrors' => true,
             'responseMessage' => 'plugins.importexport.crossrefConference.issues.notSupported',
         ];
+    }
+
+    public function updateSetting($contextId, $name, $value, $type = null)
+    {
+        if ($name !== 'password') {
+            parent::updateSetting($contextId, $name, $value, $type);
+            return;
+        }
+
+        if ($value === null || $value === '') {
+            return;
+        }
+
+        $encryption = $this->getApiKeyEncryption();
+        if (!$encryption->textIsEncrypted((string) $value)) {
+            if (!$encryption->secretConfigExists()) {
+                error_log('Crossref Conference Plugin - The Crossref password was not stored because api_key_secret is not set in config.inc.php');
+                return;
+            }
+            $value = $encryption->encryptString((string) $value);
+        }
+
+        parent::updateSetting($contextId, $name, $value, $type);
+    }
+
+    public function getDepositPassword(int $contextId): string
+    {
+        $password = (string) $this->getSetting($contextId, 'password');
+        $encryption = $this->getApiKeyEncryption();
+
+        return $encryption->textIsEncrypted($password) ? $encryption->decryptString($password) : $password;
+    }
+
+    public function getApiKeyEncryption(): APIKeyEncryption
+    {
+        return new APIKeyEncryption();
     }
 
     public function getFailedMsgSettingName(): string

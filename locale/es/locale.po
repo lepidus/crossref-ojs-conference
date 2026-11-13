@@ -34,3 +34,9 @@ msgstr "Crossref (Conferencia)"
 
 msgid "plugins.importexport.crossrefConference.issues.notSupported"
 msgstr "Crossref Conferencia registra únicamente los DOI de trabajos de conferencia. Los DOI de números no se depositan."
+
+msgid "plugins.importexport.crossrefConference.settings.form.password.stored"
+msgstr "Ya hay una contraseña almacenada. Deje este campo vacío para conservarla o escriba una nueva para reemplazarla."
+
+msgid "plugins.importexport.crossrefConference.settings.apiKeySecretMissing"
+msgstr "La contraseña de Crossref no puede almacenarse de forma segura: el administrador del sitio debe definir api_key_secret en la sección [security] de config.inc.php."

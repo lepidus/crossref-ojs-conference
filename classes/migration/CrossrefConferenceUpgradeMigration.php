@@ -122,6 +122,10 @@ class CrossrefConferenceUpgradeMigration extends Migration
                 if ($value === null || $pluginSettingsDao->getSetting($contextId, $pluginName, $settingName) !== null) {
                     continue;
                 }
+                if ($settingName === 'password') {
+                    $this->plugin->updateSetting($contextId, $settingName, $value, $settingType);
+                    continue;
+                }
                 $pluginSettingsDao->updateSetting($contextId, $pluginName, $settingName, $settingType === 'bool' ? (bool) $value : $value, $settingType);
             }
 

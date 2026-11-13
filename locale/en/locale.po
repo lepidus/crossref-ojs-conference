@@ -67,3 +67,9 @@ msgstr "Crossref (Conference)"
 
 msgid "plugins.importexport.crossrefConference.issues.notSupported"
 msgstr "Crossref Conference registers the DOIs of conference papers only. Issue DOIs are not deposited."
+
+msgid "plugins.importexport.crossrefConference.settings.form.password.stored"
+msgstr "A password is already stored. Leave this field empty to keep it, or type a new one to replace it."
+
+msgid "plugins.importexport.crossrefConference.settings.apiKeySecretMissing"
+msgstr "The Crossref password cannot be stored securely: the site administrator must set api_key_secret in the [security] section of config.inc.php."

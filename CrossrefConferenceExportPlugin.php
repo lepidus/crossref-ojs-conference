@@ -156,7 +156,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                         ],
                         [
                             'name' => 'pwd',
-                            'contents' => $this->getSetting($context->getId(), 'password'),
+                            'contents' => $this->agencyPlugin->getDepositPassword($context->getId()),
                         ],
                         [
                             'name' => 'operation',
