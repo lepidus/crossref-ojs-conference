@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @defgroup plugins_importexport_crossrefConference CrossrefConference export plugin
  */

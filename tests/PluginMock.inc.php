@@ -470,7 +470,7 @@ class PluginMock
     {
         $locale = $locale ?? AppLocale::getLocale();
         if ($localeFilenames = $this->getLocaleFilename($locale)) {
-            foreach((array) $localeFilenames as $localeFilename) {
+            foreach ((array) $localeFilenames as $localeFilename) {
                 AppLocale::registerLocaleFile($locale, $localeFilename);
             }
             return true;
@@ -733,7 +733,7 @@ class PluginMock
 
         // Run through the config file positions and see
         // whether one of these exists and needs to be installed.
-        foreach($filterConfigFiles as $filterConfigFile) {
+        foreach ($filterConfigFiles as $filterConfigFile) {
             // Is there a filter configuration?
             if (!file_exists($filterConfigFile)) {
                 continue;

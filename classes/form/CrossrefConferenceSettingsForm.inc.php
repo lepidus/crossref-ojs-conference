@@ -63,7 +63,7 @@ class CrossrefConferenceSettingsForm extends Form
     {
         $contextId = $this->_getContextId();
         $plugin = $this->_getPlugin();
-        foreach($this->getFormFields() as $fieldName => $fieldType) {
+        foreach ($this->getFormFields() as $fieldName => $fieldType) {
             $this->setData($fieldName, $plugin->getSetting($contextId, $fieldName));
         }
     }
@@ -77,7 +77,7 @@ class CrossrefConferenceSettingsForm extends Form
     {
         $plugin = $this->_getPlugin();
         $contextId = $this->_getContextId();
-        foreach($this->getFormFields() as $fieldName => $fieldType) {
+        foreach ($this->getFormFields() as $fieldName => $fieldType) {
             $plugin->updateSetting($contextId, $fieldName, $this->getData($fieldName), $fieldType);
         }
         parent::execute(...$functionArgs);

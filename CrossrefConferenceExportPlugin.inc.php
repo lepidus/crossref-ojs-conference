@@ -211,7 +211,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                     );
                 }
             } else {
-                foreach($resultErrors as $errors) {
+                foreach ($resultErrors as $errors) {
                     foreach ($errors as $error) {
                         assert(is_array($error) && count($error) >= 1);
                         $this->_sendNotification(
@@ -388,7 +388,7 @@ class CrossrefConferenceExportPlugin extends DOIPubIdExportPlugin
                     }
                 } else {
                     echo __('plugins.importexport.common.cliError') . "\n";
-                    foreach($resultErrors as $errors) {
+                    foreach ($resultErrors as $errors) {
                         foreach ($errors as $error) {
                             assert(is_array($error) && count($error) >= 1);
                             $errorMessage = __($error[0], array('param' => (isset($error[1]) ? $error[1] : null)));

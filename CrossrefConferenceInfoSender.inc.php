@@ -66,7 +66,7 @@ class CrossrefConferenceInfoSender extends ScheduledTask
         $journalFactory = $contextDao->getAll(true);
 
         $journals = array();
-        while($journal = $journalFactory->next()) {
+        while ($journal = $journalFactory->next()) {
             $journalId = $journal->getId();
             if (!$plugin->getSetting($journalId, 'username') || !$plugin->getSetting($journalId, 'password') || !$plugin->getSetting($journalId, 'automaticRegistration')) {
                 continue;
@@ -112,7 +112,7 @@ class CrossrefConferenceInfoSender extends ScheduledTask
     public function _addLogEntry($result)
     {
         if (is_array($result)) {
-            foreach($result as $error) {
+            foreach ($result as $error) {
                 assert(is_array($error) && count($error) >= 1);
                 $this->addExecutionLogEntry(
                     __($error[0], array('param' => (isset($error[1]) ? $error[1] : null))),
